@@ -1,0 +1,1461 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Keep aspect ratio if custom image width or height is specified
+    \setkeys{Gin}{keepaspectratio}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{04-TransformationSpatiales}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{sec-chap04}{%
+\section{Transformations spatiales}\label{sec-chap04}}
+
+\hypertarget{rocket-pruxe9ambule}{%
+\subsection{:rocket: Préambule}\label{rocket-pruxe9ambule}}
+
+Assurez-vous de lire ce préambule avant d'exécutez le reste du notebook.
+
+\hypertarget{dart-objectifs}{%
+\subsubsection{:dart: Objectifs}\label{dart-objectifs}}
+
+Dans ce chapitre, nous abordons quelques techniques de traitement
+d'images dans le domaine spatial uniquement. Ce chapitre est aussi
+disponible sous la forme d'un notebook Python sur Google Colab:
+
+\href{https://colab.research.google.com/github/sfoucher/TraitementImagesPythonVol1/blob/main/notebooks/04-TransformationSpatiales.ipynb}{\includegraphics{images/colab-badge.svg}}
+
+\hypertarget{librairies}{%
+\subsubsection{Librairies}\label{librairies}}
+
+Les librairies qui vont être explorées dans ce chapitre sont les
+suivantes:
+
+\begin{itemize}
+\item
+  \href{https://scipy.org/}{SciPy -}
+\item
+  \href{https://numpy.org/}{NumPy -}
+\item
+  \href{https://pypi.org/project/opencv-python/}{opencv-python · PyPI}
+\item
+  \href{https://scikit-image.org/}{scikit-image}
+\item
+  \href{https://rasterio.readthedocs.io/en/stable/}{Rasterio}
+\item
+  \href{https://docs.xarray.dev/en/stable/}{Xarray}
+\item
+  \href{https://corteva.github.io/rioxarray/stable/index.html}{rioxarray}
+\end{itemize}
+
+Dans l'environnement Google Colab, seul \texttt{rioxarray} doit être
+installés:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}\PYZpc{}capture}
+\PY{err}{!}\PY{n}{pip} \PY{n}{install} \PY{o}{\PYZhy{}}\PY{n}{qU} \PY{n}{matplotlib} \PY{n}{rioxarray} \PY{n}{xrscipy} \PY{n}{scikit}\PY{o}{\PYZhy{}}\PY{n}{image}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Vérifier les importations:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{rioxarray} \PY{k}{as} \PY{n+nn}{rxr}
+\PY{k+kn}{from} \PY{n+nn}{scipy} \PY{k+kn}{import} \PY{n}{signal}
+\PY{k+kn}{import} \PY{n+nn}{xarray} \PY{k}{as} \PY{n+nn}{xr}
+\PY{k+kn}{import} \PY{n+nn}{xrscipy}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{images-utilisuxe9es}{%
+\subsubsection{Images utilisées}\label{images-utilisuxe9es}}
+
+Nous allons utilisez les images suivantes dans ce chapitre:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}\PYZpc{}capture}
+\PY{err}{!}\PY{n}{wget} \PY{n}{https}\PY{p}{:}\PY{o}{/}\PY{o}{/}\PY{n}{github}\PY{o}{.}\PY{n}{com}\PY{o}{/}\PY{n}{sfoucher}\PY{o}{/}\PY{n}{TraitementImagesPythonVol1}\PY{o}{/}\PY{n}{raw}\PY{o}{/}\PY{n}{refs}\PY{o}{/}\PY{n}{heads}\PY{o}{/}\PY{n}{main}\PY{o}{/}\PY{n}{data}\PY{o}{/}\PY{n}{chapitre01}\PY{o}{/}\PY{n}{subset\PYZus{}RGBNIR\PYZus{}of\PYZus{}S2A\PYZus{}MSIL2A\PYZus{}20240625T153941\PYZus{}N0510\PYZus{}R011\PYZus{}T18TYR\PYZus{}20240625T221903}\PY{o}{.}\PY{n}{tif} \PY{o}{\PYZhy{}}\PY{n}{O} \PY{n}{RGBNIR\PYZus{}of\PYZus{}S2A}\PY{o}{.}\PY{n}{tif}
+\PY{err}{!}\PY{n}{wget} \PY{n}{https}\PY{p}{:}\PY{o}{/}\PY{o}{/}\PY{n}{github}\PY{o}{.}\PY{n}{com}\PY{o}{/}\PY{n}{sfoucher}\PY{o}{/}\PY{n}{opengeos}\PY{o}{\PYZhy{}}\PY{n}{data}\PY{o}{/}\PY{n}{raw}\PY{o}{/}\PY{n}{refs}\PY{o}{/}\PY{n}{heads}\PY{o}{/}\PY{n}{main}\PY{o}{/}\PY{n}{raster}\PY{o}{/}\PY{n}{landsat7}\PY{o}{.}\PY{n}{tif} \PY{o}{\PYZhy{}}\PY{n}{O} \PY{n}{landsat7}\PY{o}{.}\PY{n}{tif}
+\PY{err}{!}\PY{n}{wget} \PY{n}{https}\PY{p}{:}\PY{o}{/}\PY{o}{/}\PY{n}{github}\PY{o}{.}\PY{n}{com}\PY{o}{/}\PY{n}{sfoucher}\PY{o}{/}\PY{n}{opengeos}\PY{o}{\PYZhy{}}\PY{n}{data}\PY{o}{/}\PY{n}{raw}\PY{o}{/}\PY{n}{refs}\PY{o}{/}\PY{n}{heads}\PY{o}{/}\PY{n}{main}\PY{o}{/}\PY{n}{images}\PY{o}{/}\PY{n}{berkeley}\PY{o}{.}\PY{n}{jpg} \PY{o}{\PYZhy{}}\PY{n}{O} \PY{n}{berkeley}\PY{o}{.}\PY{n}{jpg}
+\PY{err}{!}\PY{n}{wget} \PY{n}{https}\PY{p}{:}\PY{o}{/}\PY{o}{/}\PY{n}{github}\PY{o}{.}\PY{n}{com}\PY{o}{/}\PY{n}{sfoucher}\PY{o}{/}\PY{n}{TraitementImagesPythonVol1}\PY{o}{/}\PY{n}{raw}\PY{o}{/}\PY{n}{refs}\PY{o}{/}\PY{n}{heads}\PY{o}{/}\PY{n}{main}\PY{o}{/}\PY{n}{data}\PY{o}{/}\PY{n}{chapitre01}\PY{o}{/}\PY{n}{subset\PYZus{}0\PYZus{}of\PYZus{}S1A\PYZus{}split\PYZus{}NR\PYZus{}Cal\PYZus{}Deb\PYZus{}ML\PYZus{}Spk\PYZus{}SRGR}\PY{o}{.}\PY{n}{tif} \PY{o}{\PYZhy{}}\PY{n}{O} \PY{n}{SAR}\PY{o}{.}\PY{n}{tif}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Vérifiez que vous êtes capable de les lire :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{c+c1}{\PYZsh{}| output: false}
+
+\PY{k}{with} \PY{n}{rxr}\PY{o}{.}\PY{n}{open\PYZus{}rasterio}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{berkeley.jpg}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{mask\PYZus{}and\PYZus{}scale}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)} \PY{k}{as} \PY{n}{img\PYZus{}rgb}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{img\PYZus{}rgb}\PY{p}{)}
+\PY{k}{with} \PY{n}{rxr}\PY{o}{.}\PY{n}{open\PYZus{}rasterio}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RGBNIR\PYZus{}of\PYZus{}S2A.tif}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{mask\PYZus{}and\PYZus{}scale}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)} \PY{k}{as} \PY{n}{img\PYZus{}rgbnir}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{img\PYZus{}rgbnir}\PY{p}{)}
+\PY{k}{with} \PY{n}{rxr}\PY{o}{.}\PY{n}{open\PYZus{}rasterio}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{SAR.tif}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{mask\PYZus{}and\PYZus{}scale}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)} \PY{k}{as} \PY{n}{img\PYZus{}SAR}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{img\PYZus{}SAR}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+<xarray.DataArray (band: 3, y: 771, x: 1311)> Size: 12MB
+[3032343 values with dtype=float32]
+Coordinates:
+  * band         (band) int64 24B 1 2 3
+  * x            (x) float64 10kB 0.5 1.5 2.5 {\ldots} 1.308e+03 1.31e+03 1.31e+03
+  * y            (y) float64 6kB 0.5 1.5 2.5 3.5 4.5 {\ldots} 767.5 768.5 769.5 770.5
+    spatial\_ref  int64 8B 0
+<xarray.DataArray (band: 4, y: 1926, x: 2074)> Size: 64MB
+[15978096 values with dtype=float32]
+Coordinates:
+  * band         (band) int64 32B 1 2 3 4
+  * x            (x) float64 17kB 7.318e+05 7.318e+05 {\ldots} 7.525e+05 7.525e+05
+  * y            (y) float64 15kB 5.041e+06 5.041e+06 {\ldots} 5.022e+06 5.022e+06
+    spatial\_ref  int64 8B 0
+Attributes:
+    TIFFTAG\_IMAGEDESCRIPTION:  subset\_RGBNIR\_of\_S2A\_MSIL2A\_20240625T153941\_N0{\ldots}
+    TIFFTAG\_XRESOLUTION:       1
+    TIFFTAG\_YRESOLUTION:       1
+    TIFFTAG\_RESOLUTIONUNIT:    1 (unitless)
+    AREA\_OR\_POINT:             Area
+    STATISTICS\_MAXIMUM:        15104
+    STATISTICS\_MEAN:           1426.6252674912
+    STATISTICS\_MINIMUM:        86
+    STATISTICS\_STDDEV:         306.56427126942
+    STATISTICS\_VALID\_PERCENT:  100
+<xarray.DataArray (band: 2, y: 1188, x: 1599)> Size: 15MB
+[3799224 values with dtype=float32]
+Coordinates:
+  * band         (band) int64 16B 1 2
+  * x            (x) float64 13kB -73.98 -73.98 -73.98 {\ldots} -73.51 -73.51 -73.51
+  * y            (y) float64 10kB 45.27 45.27 45.27 45.27 {\ldots} 44.93 44.93 44.93
+    spatial\_ref  int64 8B 0
+Attributes:
+    TIFFTAG\_XRESOLUTION:     1
+    TIFFTAG\_YRESOLUTION:     1
+    TIFFTAG\_RESOLUTIONUNIT:  1 (unitless)
+    AREA\_OR\_POINT:           Area
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/sfoucher/miniconda3/lib/python3.10/site-packages/rioxarray/\_io.py:1143:
+NotGeoreferencedWarning: Dataset has no geotransform, gcps, or rpcs. The
+identity matrix will be returned.
+  warnings.warn(str(rio\_warning.message), type(rio\_warning.message))  \# type:
+ignore
+Warning 1: TIFFReadDirectory:Sum of Photometric type-related color channels and
+ExtraSamples doesn't match SamplesPerPixel. Defining non-color channels as
+ExtraSamples.
+Warning 1: TIFFReadDirectory:Sum of Photometric type-related color channels and
+ExtraSamples doesn't match SamplesPerPixel. Defining non-color channels as
+ExtraSamples.
+    \end{Verbatim}
+
+    \hypertarget{analyse-fruxe9quentielle}{%
+\subsection{Analyse fréquentielle}\label{analyse-fruxe9quentielle}}
+
+L'analyse fréquentielle, issue du traitement du signal, permet d'avoir
+un autre point de vue sur les données à partir de ses composantes
+harmoniques. La modifications de ces composantes de Fourier modifie
+l'ensemble de l'image et permet de corriger des problèmes systématiques
+comme des artefacts ou du bruit de capteur. Bien que ce domaine soit un
+peu éloigné de la télédétection, les images fourniment par les capteurs
+sont tous sujets à des étapes de traitement du signal et il faut donc en
+connaître les grands principes afin de pouvoir comprendre certains
+enjeux lors des traitements.
+
+\hypertarget{la-transformuxe9e-de-fourier}{%
+\subsubsection{La transformée de
+Fourier}\label{la-transformuxe9e-de-fourier}}
+
+La transformée de Fourier permet de transformer une image dans un espace
+fréquentielle. Cette transformée est complètement reversible. Dans le
+cas des images numériques, on parle de \texttt{2D-DFT}
+(\emph{2D-Discrete Fourier Transform}) qui est un algorithme optimisé
+pour le calcul fréquentiel {[}@Cooley-1965{]}. La \emph{1D-DFT} peu
+s'écrire simplement comme une projection sur une série d'exponentielles
+complexes:
+
+\[X[k] = \sum_{n=0 \ldots N-1} x[n] \times \exp(-j \times 2\pi \times k \times n/N))\]
+\{\#eq-dft\}
+
+La transformée inverse prend une forme similaire:
+
+\[x[k] = \frac{1}{N}\sum_{n=0 \ldots N-1} X[n] \times \exp(j \times 2\pi \times k \times n/N))\]
+\{\#eq-idft\}
+
+Le signal d'origine est donc reconstruit à partir d'une somme de
+sinusoïde complexe \(\exp(j2\pi \frac{k}{N}n))\) de fréquence \(k/N\).
+Noter qu'à partir de \(k=N/2\), les sinusoïdes se répètent à un signe
+près et forme un miroir des composantes, la convention est lors de
+mettre ces composantes dans une espace négatif \([-N/2,\ldots,-1]\).
+
+Dans le cas d'un simple signal périodique à une dimension avec une
+fréquence de 4/16 (donc 4 périodes sur 16) on obtient deux pics de
+fréquence à la position de 4 cycles observés sur \(N=16\) observations.
+Les puissances de Fourier sont affichés dans un espace fréquentiel en
+cycles par unité d'espacement de l'échantillon (avec zéro au début)
+variant entre -1 et +1. Par exemple, si l'espacement des échantillons
+est en secondes, l'unité de fréquence est cycles/seconde (ou Hz). Dans
+le cas de N échantillons, le pic sera observé à la fréquence
+\(+/- 4/16=0.25\) cycles/secondes. La fréquence d'échantillonnage
+\(F_s\) du signal a aussi beaucoup d'importance aussi et doit être au
+moins a deux fois la plus haute fréquence observée (ici \(F_s > 0.5\))
+sinon un phénomène de repliement appelé aliasing sera observé.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+
+\PY{k+kn}{import} \PY{n+nn}{math}
+\PY{n}{Fs}\PY{o}{=} \PY{l+m+mf}{2.0}
+\PY{n}{Ts}\PY{o}{=} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{Fs}
+\PY{n}{N}\PY{o}{=} \PY{l+m+mi}{16}
+\PY{n}{arr} \PY{o}{=} \PY{n}{xr}\PY{o}{.}\PY{n}{DataArray}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{math}\PY{o}{.}\PY{n}{pi}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{Ts}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{4}\PY{o}{/}\PY{l+m+mi}{16}\PY{p}{)}\PY{p}{,}
+                   \PY{n}{dims}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,} \PY{n}{coords}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{Ts}\PY{p}{)}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{fourier} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{fft}\PY{o}{.}\PY{n}{fft}\PY{p}{(}\PY{n}{arr}\PY{p}{)}
+\PY{n}{freq} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{fft}\PY{o}{.}\PY{n}{fftfreq}\PY{p}{(}\PY{n}{fourier}\PY{o}{.}\PY{n}{size}\PY{p}{,} \PY{n}{d}\PY{o}{=}\PY{n}{Ts}\PY{p}{)}
+\PY{n}{fourier} \PY{o}{=} \PY{n}{xr}\PY{o}{.}\PY{n}{DataArray}\PY{p}{(}\PY{n}{fourier}\PY{p}{,}
+                   \PY{n}{dims}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{f}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,} \PY{n}{coords}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{f}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{freq}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{nrows}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{ncols}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{arr}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{line}\PY{p}{(}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{markerfacecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Signal périodique}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{fourier}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{line}\PY{p}{(}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{markerfacecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Composantes de Fourier (amplitude)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_9_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{filtrage-fruxe9quentielle}{%
+\subsubsection{Filtrage fréquentielle}\label{filtrage-fruxe9quentielle}}
+
+Un filtrage fréquentielle consiste à modifier le spectre de Fourier afin
+d'éliminer ou de réduire certaines composantes fréquentielles. On peut
+distinguer trois grandes catégories de filtres fréquentielles:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Les filtres passe-bas qui ne préservent que les basses fréquences
+  pour, par exemple, lisser une image.
+\item
+  Les filtres passe-haut qui ne préservent que les hautes fréquences
+  pour ne préserver que les détails.
+\item
+  Les filtres passe-bandes qui vont préserver les fréquences dans une
+  bandes particulières.
+\end{enumerate}
+
+La librairie Scipy contient différents filtres fréquentielles. Notez,
+qu'un filtrage fréquentielle est une simple multiplication de la réponse
+du filtre \(F[k]\) par les composantes fréquentielles du signal à
+filtrer \(X[k]\):
+
+\[
+X_f[k] = F[k] \times X[k]
+\] \{\#eq-fourier-filter\}
+
+À noter que cette multiplication dans l'espace de Fourier est
+équivalente à une opération de convolution dans l'espace originale du
+signal \(x\):
+
+\[
+x_f = IDFT^{-1}[F]*x
+\] \{\#eq-convolve\}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+
+\PY{k+kn}{from} \PY{n+nn}{scipy} \PY{k+kn}{import} \PY{n}{ndimage}
+\PY{k+kn}{import} \PY{n+nn}{numpy}\PY{n+nn}{.}\PY{n+nn}{fft}
+
+\PY{n}{fig}\PY{p}{,} \PY{p}{(}\PY{n}{ax1}\PY{p}{,} \PY{n}{ax2}\PY{p}{)} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{input\PYZus{}} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{fft}\PY{o}{.}\PY{n}{fft2}\PY{p}{(}\PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{)} 
+\PY{n}{result} \PY{o}{=} \PY{p}{[}\PY{n}{ndimage}\PY{o}{.}\PY{n}{fourier\PYZus{}gaussian}\PY{p}{(}\PY{n}{input\PYZus{}}\PY{p}{[}\PY{n}{b}\PY{p}{]}\PY{p}{,} \PY{n}{sigma}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{)} \PY{k}{for} \PY{n}{b} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{]} \PY{c+c1}{\PYZsh{} on filtre chaque bande avec un filtre Gaussien}
+\PY{n}{result} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{fft}\PY{o}{.}\PY{n}{ifft2}\PY{p}{(}\PY{n}{result}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{uint8}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Originale}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{result}\PY{o}{.}\PY{n}{real}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{uint8}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} La partie imaginaire n\PYZsq{}est pas utile ici}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Filtrage Gaussien}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/sfoucher/miniconda3/lib/python3.10/site-packages/rasterio/\_\_init\_\_.py:356:
+NotGeoreferencedWarning: Dataset has no geotransform, gcps, or rpcs. The
+identity matrix will be returned.
+  dataset = DatasetReader(path, driver=driver, sharing=sharing, **kwargs)
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_11_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{laliasing}{%
+\subsubsection{L'aliasing}\label{laliasing}}
+
+L'aliasing est un problème fréquent en traitement du signal. Il résulte
+d'une fréquence d'échantillonnage trop faible par rapport au contenu
+fréquentielle du signal. Ceci peut se produire lorsque vous
+sous-échantillonner fortement une image avec un facteur de décimation
+(par exemple 1 pixel sur 2). En prenant un pixel sur 2, on réduit la
+fréquence d'échantillonnage d'un facteur 2 ce qui nous impose de réduire
+le contenu fréquentielle de l'image et donc les fréquences maximales de
+l'image. L'image présente alors un aspect faussement texturée avec
+beaucoup de haute fréquences:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{nrows}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{ncols}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{int}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{rgb}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{band}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Originale}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{img\PYZus{}rgb}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{,}\PY{p}{:}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{]}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{int}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{rgb}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{band}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Décimée par un facteur 4}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_13_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Une façon de réduire le contenu fréquentiel est de filtrer par un filtre
+passe-bas pour réduire les hautes fréquences par exemple avec un filtre
+Gaussien:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{ndimage} \PY{k+kn}{import} \PY{n}{gaussian\PYZus{}filter}
+
+\PY{n}{q}\PY{o}{=} \PY{l+m+mi}{4}
+\PY{n}{sigma}\PY{o}{=} \PY{n}{q}\PY{o}{*}\PY{l+m+mf}{1.1774}\PY{o}{/}\PY{n}{math}\PY{o}{.}\PY{n}{pi}
+\PY{n}{arr} \PY{o}{=} \PY{n}{xr}\PY{o}{.}\PY{n}{DataArray}\PY{p}{(}\PY{n}{gaussian\PYZus{}filter}\PY{p}{(}\PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{sigma}\PY{o}{=} \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{sigma}\PY{p}{,}\PY{n}{sigma}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{dims}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{band}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,} \PY{n}{coords}\PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{coords}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{coords}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{spatial\PYZus{}ref}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+m+mi}{0}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{nrows}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{ncols}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{int}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{rgb}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{band}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Originale}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{arr}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{:}\PY{n}{q}\PY{p}{,}\PY{p}{:}\PY{p}{:}\PY{n}{q}\PY{p}{]}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{int}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{rgb}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{band}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Décimée par un facteur 4}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_15_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{k+kn}{import} \PY{n+nn}{xrscipy}\PY{n+nn}{.}\PY{n+nn}{signal} \PY{k}{as} \PY{n+nn}{dsp}
+
+\PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{nrows}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{ncols}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{int}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{rgb}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{band}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Originale}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{dsp}\PY{o}{.}\PY{n}{decimate}\PY{p}{(}\PY{n}{img\PYZus{}rgb}\PY{p}{,} \PY{n}{q}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{,} \PY{n}{dim}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{int}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{rgb}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{band}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Décimée par un facteur 4}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Clipping input data to the valid range for imshow with RGB data ([0..1] for
+floats or [0..255] for integers). Got range [3..265].
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Décimée par un facteur 4')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_16_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{filtrage-dimage}{%
+\subsection{Filtrage d'image}\label{filtrage-dimage}}
+
+Le filtrage d'image a plusieurs objectifs en télédétection:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  La réduction du bruit afin d'améliorer la résolution radiométrique et
+  améliorer la lisibilité de l'image.
+\item
+  Le réhaussement de l'image afin d'améliorer le contraste ou faire
+  ressortir les contours.
+\item
+  La production de nouvelles caractéristiques: c.à.d dériver de
+  nouvelles images mettant en valeur certaines informations dans l'image
+  comme la texture, les contours, etc.
+\end{enumerate}
+
+Il existe de nombreuses méthodes de filtrage dans la littérature, on
+peut rassembler ces filtres en quatre grandes catégories:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Le filtrage peut-être global ou local, c.à.d prendre en compte toute
+  l'image pour filtrer (ex: filtrage par Fourier) ou seulement
+  localement avec une fenêtre ou un voisinage local.
+\item
+  La fonction de filtrage peut-être linéaire ou non linéaire.
+\item
+  La fonction de filtrage peut être stationnaire ou adaptative
+\item
+  Le filtrage peut-être mono-échelle ou multi-échelles
+\end{enumerate}
+
+La librairie Scipy
+(\href{https://docs.scipy.org/doc/scipy/reference/ndimage.html}{Multidimensional
+image processing (scipy.ndimage)}) contient une panoplie complète de
+filtres.
+
+\hypertarget{filtrage-linuxe9aire-stationnaire}{%
+\subsubsection{Filtrage linéaire
+stationnaire}\label{filtrage-linuxe9aire-stationnaire}}
+
+Un filtrage linéaire stationnaire consiste à appliquer une même
+pondération locale des valeurs des pixels dans une fenêtre glissante. La
+taille de cette fenêtre est généralement impaire (3,5, etc.) afin de
+définir une position centrale et une fenêtre symétrique.
+
+Mettre une figure ici
+
+Le filtre le plus simple est certainement le filtre moyen qui consiste à
+appliquer le même poids uniforme dans la fenêtre glissante.
+
+\[
+F= \frac{1}{25}\left[
+\begin{array}{c|c|c|c|c}
+1 & 1 & 1 & 1 & 1 \\
+\hline
+1 & 1 & 1 & 1 & 1 \\
+\hline
+1 & 1 & 1 & 1 & 1 \\
+\hline
+1 & 1 & 1 & 1 & 1 \\
+\hline
+1 & 1 & 1 & 1 & 1
+\end{array}
+\right]
+\]\{\#eq-boxfilter\}
+
+En python, on dispose des fonctions \texttt{rolling} et
+\texttt{sliding\_window} définis dans la librairie numpy. Par exemple
+pour le cas du filtre moyen on peut construire une nouvelle vue de
+l'image avec deux nouvelles dimensions \texttt{x\_win} et
+\texttt{y\_win}:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{k+kn}{import} \PY{n+nn}{rioxarray} \PY{k}{as} \PY{n+nn}{rxr}
+\PY{n}{rolling\PYZus{}win} \PY{o}{=} \PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{rolling}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,}  \PY{n}{min\PYZus{}periods}\PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,} \PY{n}{center}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{construct}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x\PYZus{}win}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y\PYZus{}win}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{keep\PYZus{}attrs}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{rolling\PYZus{}win}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{o}{.}\PY{o}{.}\PY{o}{.}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{rolling\PYZus{}win}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+<xarray.DataArray (x\_win: 5, y\_win: 5)> Size: 100B
+array([[ nan,  nan,  nan,  nan,  nan],
+       [ nan,  nan, 209., 210., 209.],
+       [ nan,  nan, 213., 214., 212.],
+       [ nan,  nan, 213., 212., 210.],
+       [ nan,  nan, 210., 209., 206.]], dtype=float32)
+Coordinates:
+    band         int64 8B 1
+    x            float64 8B 1.5
+    y            float64 8B 0.5
+    spatial\_ref  int64 8B 0
+Dimensions without coordinates: x\_win, y\_win
+(3, 771, 1311, 5, 5)
+    \end{Verbatim}
+
+    L'avantage de cette approche est qu'il n'y a pas d'utilisation inutile
+de la mémoire. Noter les \texttt{nan} sur les bords de l'image car la
+fenêtre déborde sur les bordures de l'image. Par la suite un opérateur
+moyenne peut être appliqué.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{n}{filtre\PYZus{}moyen}\PY{o}{=} \PY{n}{rolling\PYZus{}win}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{dim}\PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x\PYZus{}win}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y\PYZus{}win}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{skipna}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+\PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{nrows}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{ncols}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{filtre\PYZus{}moyen}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{int}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{rgb}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{band}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Filtre moyen 5x5}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Filtre moyen 5x5')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_20_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Filtre de Sobel, filtre Prewitt
+
+\hypertarget{filtrage-par-convolution}{%
+\paragraph{Filtrage par convolution}\label{filtrage-par-convolution}}
+
+La façon la plus efficace d'appliquer un filtre linéaire est d'appliquer
+une convolution. La convolution est généralement très efficace car elle
+est peut être calculée dans le domaine fréquentielle. Prenons l'exemple
+du filtre de Scharr {[}@Scharr1999{]}, ce filtre permet de détecter les
+contours horizontaux et verticaux:
+
+\[
+F= \left[
+\begin{array}{ccc}
+-3-3j & 0-10j & +3-3j \\
+-10+0j & 0+0j & +10+0j \\
+-3+3j & 0+10j & +3+3j
+\end{array}
+\right]
+\]\{\#eq-scharr-filter\}
+
+Remarquez l'utilisation de chiffres complexes afin de passer deux
+filtres différents sur la partie réelle et imaginaire.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+
+\PY{n}{scharr} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[} \PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{n}{j}\PY{p}{,} \PY{l+m+mi}{0}\PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{n}{j}\PY{p}{,}  \PY{o}{+}\PY{l+m+mi}{3} \PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{n}{j}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{o}{+}\PY{l+m+mi}{0}\PY{n}{j}\PY{p}{,} \PY{l+m+mi}{0}\PY{o}{+} \PY{l+m+mi}{0}\PY{n}{j}\PY{p}{,} \PY{o}{+}\PY{l+m+mi}{10} \PY{o}{+}\PY{l+m+mi}{0}\PY{n}{j}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[} \PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{o}{+}\PY{l+m+mi}{3}\PY{n}{j}\PY{p}{,} \PY{l+m+mi}{0}\PY{o}{+}\PY{l+m+mi}{10}\PY{n}{j}\PY{p}{,}  \PY{o}{+}\PY{l+m+mi}{3} \PY{o}{+}\PY{l+m+mi}{3}\PY{n}{j}\PY{p}{]}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} Gx + j*Gy}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{isel}\PY{p}{(}\PY{n}{band}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n}{grad} \PY{o}{=} \PY{n}{signal}\PY{o}{.}\PY{n}{convolve2d}\PY{p}{(}\PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{isel}\PY{p}{(}\PY{n}{band}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{scharr}\PY{p}{,} \PY{n}{boundary}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{symm}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{mode}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{same}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} on reconstruit un xarray à partir du résultat:}
+\PY{n}{arr} \PY{o}{=} \PY{n}{xr}\PY{o}{.}\PY{n}{DataArray}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{grad}\PY{p}{)}\PY{p}{,} \PY{n}{dims}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,} \PY{n}{coords}\PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{coords}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{coords}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{spatial\PYZus{}ref}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+m+mi}{0}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{arr}\PY{p}{)}
+\PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{nrows}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{ncols}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{arr}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Amplitude du filtre de Scharr}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+(771, 1311)
+<xarray.DataArray (y: 771, x: 1311)> Size: 8MB
+array([[  65.96969001,   58.85575588,   54.91812087, {\ldots}, 1474.        ,
+        1037.01205393,  389.99487176],
+       [  61.07372594,   39.8246155 ,   89.18520057, {\ldots}, 1763.79647352,
+         864.92543031,  270.20362692],
+       [  98.48857802,  112.44554237,  168.10710871, {\ldots}, 2110.61365484,
+         870.36658943,  204.40156555],
+       {\ldots},
+       [ 143.17821063,  597.00753764, 2479.42977315, {\ldots},  216.00925906,
+         248.33847869,  200.89798406],
+       [ 106.07544485,  393.67245268, 2188.78824924, {\ldots},  124.96399481,
+         159.90622252,  346.34087255],
+       [  41.59326869,  229.05894438, 1845.1216762 , {\ldots},  175.16278143,
+          33.37663854,  414.3911196 ]], shape=(771, 1311))
+Coordinates:
+  * x            (x) float64 10kB 0.5 1.5 2.5 {\ldots} 1.308e+03 1.31e+03 1.31e+03
+  * y            (y) float64 6kB 0.5 1.5 2.5 3.5 4.5 {\ldots} 767.5 768.5 769.5 770.5
+    spatial\_ref  int64 8B 0
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Amplitude du filtre de Scharr')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_22_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{gestion-des-bordures}{%
+\subparagraph{Gestion des bordures}\label{gestion-des-bordures}}
+
+L'application de filtres à l'intérieur de fenêtres glissantes implique
+de gérer les bords de l'image car la fenêtre de traitement va
+nécessairement déborder de quelques pixels en dehors de l'image
+(généralement la moitié de la fenêtre déborde). On peut soit décider
+d'ignorer les valeurs en dehors de l'image en imposant une valeur
+\texttt{nan}, prolonger l'image de quelques lignes et colonnes avec des
+valeurs mirroirs ou constantes.
+
+\hypertarget{filtrage-par-une-couche-convolutionnelle}{%
+\paragraph{Filtrage par une couche
+convolutionnelle}\label{filtrage-par-une-couche-convolutionnelle}}
+
+Cette section nécessite la librairie Pytorch avec un GPU et ne
+fonctionnera que sur Colab.
+
+Une couche convolutionnelle est simplement un ensemble de filtres
+appliqués sur la donnée d'entrée. Ce type de filtrage est à la base des
+réseaux dits convolutionnels qui seront abordés dans le tome 2. On peut
+ici imposer les mêmes filtres de gradient dans la couche
+convolutionnelle:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{k+kn}{import} \PY{n+nn}{torch}
+\PY{k+kn}{import} \PY{n+nn}{torch}\PY{n+nn}{.}\PY{n+nn}{nn} \PY{k}{as} \PY{n+nn}{nn}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{n}{normalized\PYZus{}img}\PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{tensor}\PY{p}{(}\PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\PY{n}{nchannels}\PY{o}{=} \PY{n}{normalized\PYZus{}img}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{c+c1}{\PYZsh{} nombre de canaux de l\PYZsq{}image}
+
+\PY{c+c1}{\PYZsh{} Define a conv2d layer}
+\PY{n}{conv\PYZus{}layer} \PY{o}{=} \PY{n}{nn}\PY{o}{.}\PY{n}{Conv2d}\PY{p}{(}\PY{n}{in\PYZus{}channels}\PY{o}{=} \PY{n}{nchannels}\PY{p}{,} \PY{n}{out\PYZus{}channels}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{kernel\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{padding}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{dilation}\PY{o}{=} \PY{l+m+mi}{1}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Filtre de Sobel}
+\PY{n}{sobel\PYZus{}x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{sobel\PYZus{}y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+
+\PY{n}{kernel} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{stack}\PY{p}{(}\PY{p}{[}\PY{n}{sobel\PYZus{}x}\PY{p}{,} \PY{n}{sobel\PYZus{}y}\PY{p}{]}\PY{p}{)}
+\PY{n}{kernel} \PY{o}{=} \PY{n}{kernel}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}
+
+\PY{n}{kernel} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{tile}\PY{p}{(}\PY{n}{kernel}\PY{p}{,}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{nchannels}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{kernel}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n}{kernel} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{as\PYZus{}tensor}\PY{p}{(}\PY{n}{kernel}\PY{p}{,}\PY{n}{dtype}\PY{o}{=}\PY{n}{torch}\PY{o}{.}\PY{n}{float32}\PY{p}{)}
+\PY{n}{conv\PYZus{}layer}\PY{o}{.}\PY{n}{weight} \PY{o}{=} \PY{n}{nn}\PY{o}{.}\PY{n}{Parameter}\PY{p}{(}\PY{n}{kernel}\PY{p}{)}
+\PY{n}{conv\PYZus{}layer}\PY{o}{.}\PY{n}{bias} \PY{o}{=} \PY{n}{nn}\PY{o}{.}\PY{n}{Parameter}\PY{p}{(}\PY{n}{torch}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{p}{)}\PY{p}{)}
+
+\PY{n+nb}{input}\PY{o}{=} \PY{n}{normalized\PYZus{}img}\PY{o}{.}\PY{n}{unsqueeze}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)} \PY{c+c1}{\PYZsh{} il faut ajouter une dimension pour le nombre d\PYZsq{}échantillons}
+\PY{n+nb}{print}\PY{p}{(}\PY{n+nb}{input}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Visualize the filters}
+\PY{n}{fig}\PY{p}{,} \PY{n}{axs} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+    \PY{n}{axs}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{conv\PYZus{}layer}\PY{o}{.}\PY{n}{weight}\PY{o}{.}\PY{n}{data}\PY{o}{.}\PY{n}{numpy}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{n}{axs}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Filtre }\PY{l+s+si}{\PYZob{}}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+(2, 3, 3, 3)
+torch.Size([1, 3, 771, 1311])
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_24_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Le résultat est alors calculé sur GPU (si disponible):
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{k+kn}{import} \PY{n+nn}{torch}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+
+\PY{n}{output} \PY{o}{=} \PY{n}{conv\PYZus{}layer}\PY{p}{(}\PY{n+nb}{input}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Image (BxCxHxW): }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{input}\PY{o}{.}\PY{n}{shape}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Sortie (BxFxHxW): }\PY{l+s+si}{\PYZob{}}\PY{n}{output}\PY{o}{.}\PY{n}{shape}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{fig}\PY{p}{,} \PY{n}{axs} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+    \PY{n}{axs}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{output}\PY{o}{.}\PY{n}{detach}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{data}\PY{o}{.}\PY{n}{numpy}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{vmin}\PY{o}{=}\PY{o}{\PYZhy{}}\PY{l+m+mi}{5000}\PY{p}{,} \PY{n}{vmax}\PY{o}{=}\PY{l+m+mi}{5000}\PY{p}{,} \PY{n}{cmap}\PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{axs}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Filtrage }\PY{l+s+si}{\PYZob{}}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Image (BxCxHxW): torch.Size([1, 3, 771, 1311])
+Sortie (BxFxHxW): torch.Size([1, 2, 771, 1311])
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_26_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{filtrage-adaptatif}{%
+\subsubsection{Filtrage adaptatif}\label{filtrage-adaptatif}}
+
+Les filtrages adaptatifs consistent à appliquer un traitement en
+fonction du contenu local d'une image. Le filtre n'est alors plus
+stationnaire et sa réponse peut varier en fonction du contenu local. Ce
+type de filtre est très utilisé pour filtrer les images SAR (Synthetic
+Aperture Radar) qui sont dégradées par un bruit multiplicatif que l'on
+appelle \emph{speckle}. On peut voir un exemple d'une image Sentinel-1
+(bande HH) sur la région de Montréal, remarquée que l'image est affichée
+en dB en appliquant la fonction \texttt{log10}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{img\PYZus{}SAR}\PY{o}{.}\PY{n}{rio}\PY{o}{.}\PY{n}{resolution}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{img\PYZus{}SAR}\PY{o}{.}\PY{n}{rio}\PY{o}{.}\PY{n}{crs}\PY{p}{)}
+\PY{n}{fig}\PY{p}{,} \PY{n}{axs} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{xr}\PY{o}{.}\PY{n}{ufuncs}\PY{o}{.}\PY{n}{log10}\PY{p}{(}\PY{n}{img\PYZus{}SAR}\PY{o}{.}\PY{n}{sel}\PY{p}{(}\PY{n}{band}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{band}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{p}{)}
+\PY{n}{axs}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Image SAR Sentinel\PYZhy{}1 (dB)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+(0.00029254428869762705, -0.000287092818453516)
+EPSG:4326
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/tmp/ipykernel\_5972/2357378870.py:5: DeprecationWarning: dropping variables
+using `drop` is deprecated; use drop\_vars.
+  xr.ufuncs.log10(img\_SAR.sel(band=1).drop("band")).plot()
+Warning 1: TIFFReadDirectory:Sum of Photometric type-related color channels and
+ExtraSamples doesn't match SamplesPerPixel. Defining non-color channels as
+ExtraSamples.
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Image SAR Sentinel-1 (dB)')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_28_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Un des filtres les plus simples pour réduire le bruit est d'appliquer un
+filtre moyenne, par exemple un \(5x5\) ci dessous:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{n}{rolling\PYZus{}win} \PY{o}{=} \PY{n}{img\PYZus{}SAR}\PY{o}{.}\PY{n}{sel}\PY{p}{(}\PY{n}{band}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{rolling}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,}  \PY{n}{min\PYZus{}periods}\PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,} \PY{n}{center}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{construct}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x\PYZus{}win}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y\PYZus{}win}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{keep\PYZus{}attrs}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+\PY{n}{filtre\PYZus{}moyen}\PY{o}{=} \PY{n}{rolling\PYZus{}win}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{dim}\PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x\PYZus{}win}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y\PYZus{}win}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{skipna}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+\PY{n}{fig}\PY{p}{,} \PY{n}{axs} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{xr}\PY{o}{.}\PY{n}{ufuncs}\PY{o}{.}\PY{n}{log10}\PY{p}{(}\PY{n}{filtre\PYZus{}moyen}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{p}{)}
+\PY{n}{axs}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Filtrage moyen 5x5 (dB)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Filtrage moyen 5x5 (dB)')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_30_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Au lieu d'appliquer un filtre moyen de manière indiscriminée, le filtre
+de Lee {[}@Lee-1986{]} applique une pondération en fonction du contenu
+local de l'image \(I\) dans sa forme la plus simple:
+
+\[ 
+\begin{aligned}
+I_F & = I_M + K \times (I - I_M) \\
+K & = \frac{\sigma^2_I}{\sigma^2_I + \sigma^2_{bruit}}
+\end{aligned}
+\]\{\#eq-lee-filter\}
+
+Ainsi si la variance locale est élevée \(K\) s'approche de \(1\)
+préservant ainsi les détails de l'image sinon l'image moyenne \(I_M\)
+est appliquée.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{n}{rolling\PYZus{}win} \PY{o}{=} \PY{n}{img\PYZus{}SAR}\PY{o}{.}\PY{n}{sel}\PY{p}{(}\PY{n}{band}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{rolling}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,}  \PY{n}{min\PYZus{}periods}\PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,} \PY{n}{center}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{construct}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x\PYZus{}win}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y\PYZus{}win}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{keep\PYZus{}attrs}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+\PY{n}{filtre\PYZus{}moyen}\PY{o}{=} \PY{n}{rolling\PYZus{}win}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{dim}\PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x\PYZus{}win}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y\PYZus{}win}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{skipna}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+\PY{n}{ecart\PYZus{}type}\PY{o}{=} \PY{n}{rolling\PYZus{}win}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{dim}\PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x\PYZus{}win}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y\PYZus{}win}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{skipna}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+\PY{n}{cv}\PY{o}{=} \PY{n}{ecart\PYZus{}type}\PY{o}{/}\PY{n}{filtre\PYZus{}moyen}
+\PY{n}{ponderation} \PY{o}{=} \PY{p}{(}\PY{n}{cv} \PY{o}{\PYZhy{}} \PY{l+m+mf}{0.25}\PY{p}{)} \PY{o}{/} \PY{n}{cv}
+
+\PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{nrows}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{ncols}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{cv}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(} \PY{n}{vmin}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{vmax}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CV}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{ponderation}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(} \PY{n}{vmin}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{vmax}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)} 
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Pondération}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Pondération')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_32_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    On zoomant sur l'image on peut clairement voir que les détails de
+l'image sont mieux préservés:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{c+c1}{\PYZsh{}| echo: false}
+
+\PY{n}{filtered}\PY{o}{=} \PY{n}{filtre\PYZus{}moyen} \PY{o}{+} \PY{n}{ponderation} \PY{o}{*} \PY{p}{(}\PY{n}{img\PYZus{}SAR}\PY{o}{.}\PY{n}{sel}\PY{p}{(}\PY{n}{band}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{band}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{filtre\PYZus{}moyen}\PY{p}{)}
+\PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{nrows}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{ncols}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{xr}\PY{o}{.}\PY{n}{ufuncs}\PY{o}{.}\PY{n}{log10}\PY{p}{(}\PY{n}{filtre\PYZus{}moyen}\PY{p}{)}\PY{o}{.}\PY{n}{isel}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{n+nb}{slice}\PY{p}{(}\PY{k+kc}{None}\PY{p}{,} \PY{l+m+mi}{250}\PY{p}{)}\PY{p}{,}\PY{n}{y}\PY{o}{=}\PY{n+nb}{slice}\PY{p}{(}\PY{k+kc}{None}\PY{p}{,} \PY{l+m+mi}{250}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{p}{)}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Filtre moyen}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{xr}\PY{o}{.}\PY{n}{ufuncs}\PY{o}{.}\PY{n}{log10}\PY{p}{(}\PY{n}{filtered}\PY{p}{)}\PY{o}{.}\PY{n}{isel}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{n+nb}{slice}\PY{p}{(}\PY{k+kc}{None}\PY{p}{,} \PY{l+m+mi}{250}\PY{p}{)}\PY{p}{,}\PY{n}{y}\PY{o}{=}\PY{n+nb}{slice}\PY{p}{(}\PY{k+kc}{None}\PY{p}{,} \PY{l+m+mi}{250}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{}cmap=plt.get\PYZus{}cmap(\PYZsq{}hot\PYZsq{}),}
+\PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Filtre de Lee}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/tmp/ipykernel\_5972/2599367426.py:4: DeprecationWarning: dropping variables
+using `drop` is deprecated; use drop\_vars.
+  filtered= filtre\_moyen + ponderation * (img\_SAR.sel(band=1).drop("band") -
+filtre\_moyen)
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Filtre de Lee')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_34_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{segmentation}{%
+\subsection{Segmentation}\label{segmentation}}
+
+La segmentation d'image consiste à séparer une image en régions
+homogènes spatialement connexes (segments) où les valeurs sont uniformes
+selon un certain critère (couleurs, texture, etc.). Une image présente
+généralement beaucoup de pixels redondants, l'intérêt de ce type de
+méthode est essentiellement de réduire la quantité de pxiels nécessaire.
+En télédétection, on parle souvent d'approche objet. En vision par
+ordinateur, on parle parfois de super-pixel. Il existe de nombreuses
+méthodes de segmentation, la librairie \texttt{sickit-image} rend
+disponible plusieurs implémentations sur des images RVB
+(\href{https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_segmentations.html\#sphx-glr-auto-examples-segmentation-plot-segmentations-py}{Comparison
+of segmentation and superpixel algorithms --- skimage 0.25.0
+documentation}).
+
+\hypertarget{super-pixel}{%
+\subsubsection{Super-pixel}\label{super-pixel}}
+
+Ce type de méthode cherche à former des régions homogènes et compactes
+dans l'image {[}@Achanta-2012{]}. Une des méthodes les plus simples est
+la méthode SLIC (\emph{Simple Linear Iterative Clustering}), elle
+combine un regroupement de type K-moyenne avec une distance hybride qui
+prend en compte les différences de couleur entre pixels mais aussi leur
+distance par rapport centre du super-pixel:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Décomposer l'image en N régions régulières de taille \(S \times S\)
+\item
+  Initialiser les centres \(C_k\) de chaque segment \(k\)
+\item
+  Rechercher les pixels qui ont la distance la plus petite dans une
+  région \(2S \times 2S\):
+\end{enumerate}
+
+\[
+D_{SLIC}= d_{couleur} + \frac{m}{S}d_{xy}
+\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Mettre à jour les centre \(C_k\) de chaque segment \(k\), retourner à
+  l'étape 3
+\end{enumerate}
+
+Les régions évoluent rapidement avec les itérations, plus le poids \(m\)
+est élevé, plus la forme du super-pixel est contrainte et ne suivra pas
+vraiment le contenu de l'image:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+
+\PY{k+kn}{from} \PY{n+nn}{skimage}\PY{n+nn}{.}\PY{n+nn}{color} \PY{k+kn}{import} \PY{n}{rgb2gray}
+
+\PY{k+kn}{from} \PY{n+nn}{skimage}\PY{n+nn}{.}\PY{n+nn}{segmentation} \PY{k+kn}{import} \PY{n}{slic}\PY{p}{,} \PY{n}{mark\PYZus{}boundaries}
+
+\PY{n}{img} \PY{o}{=} \PY{n}{img\PYZus{}rgb}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{uint8}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{)} 
+
+\PY{n}{segments\PYZus{}slic1} \PY{o}{=} \PY{n}{slic}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{n\PYZus{}segments}\PY{o}{=}\PY{l+m+mi}{250}\PY{p}{,} \PY{n}{compactness}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{sigma}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{start\PYZus{}label}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{max\PYZus{}num\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{segments\PYZus{}slic2} \PY{o}{=} \PY{n}{slic}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{n\PYZus{}segments}\PY{o}{=}\PY{l+m+mi}{250}\PY{p}{,} \PY{n}{compactness}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{sigma}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{start\PYZus{}label}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{max\PYZus{}num\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{segments\PYZus{}slic100} \PY{o}{=} \PY{n}{slic}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{n\PYZus{}segments}\PY{o}{=}\PY{l+m+mi}{250}\PY{p}{,} \PY{n}{compactness}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{sigma}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{start\PYZus{}label}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{max\PYZus{}num\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n}{segments\PYZus{}slic100b} \PY{o}{=} \PY{n}{slic}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{n\PYZus{}segments}\PY{o}{=}\PY{l+m+mi}{250}\PY{p}{,} \PY{n}{compactness}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{sigma}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{start\PYZus{}label}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{max\PYZus{}num\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{SLIC nombre de segments: }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{len}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{n}{segments\PYZus{}slic1}\PY{p}{)}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{,} \PY{n}{sharex}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{sharey}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{mark\PYZus{}boundaries}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{segments\PYZus{}slic1}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Initialisation}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{mark\PYZus{}boundaries}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{segments\PYZus{}slic2}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2 itérations}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{mark\PYZus{}boundaries}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{segments\PYZus{}slic100}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{10 itérations avec m=100}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{mark\PYZus{}boundaries}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{segments\PYZus{}slic100b}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{10 itérations avec m=10}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{a} \PY{o+ow}{in} \PY{n}{ax}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{a}\PY{o}{.}\PY{n}{set\PYZus{}axis\PYZus{}off}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+SLIC nombre de segments: 240
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_36_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Le nombre de segments initial est probablement le paramètre le plus
+important. Une manière de l'estimer est d'évaluer l'échelle moyenne des
+segments homogènes dans l'image à analyser. On peut observer ci-dessous
+l'impact de passer d'une échelle \(40 \times 40\) à \(20 \times 20\). En
+prenant la moyenne de chaque segment, on peut voir tout de suite que
+\(40 \times 40\) résulte en des segments trop grands mélangeant
+différentes classes.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{k+kn}{from} \PY{n+nn}{skimage} \PY{k+kn}{import} \PY{n}{color}\PY{p}{,} \PY{n}{segmentation}
+\PY{n}{n\PYZus{}regions} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{img}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*} \PY{n}{img}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{l+m+mi}{40}\PY{o}{*}\PY{l+m+mi}{40}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Nb segments: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{n\PYZus{}regions}\PY{p}{)}
+\PY{n}{segments\PYZus{}slic\PYZus{}40} \PY{o}{=} \PY{n}{slic}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{n\PYZus{}segments}\PY{o}{=}\PY{n}{n\PYZus{}regions}\PY{p}{,} \PY{n}{compactness}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{sigma}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{start\PYZus{}label}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{max\PYZus{}num\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{SLIC nombre de segments: }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{len}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{n}{segments\PYZus{}slic\PYZus{}40}\PY{p}{)}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{out} \PY{o}{=} \PY{n}{color}\PY{o}{.}\PY{n}{label2rgb}\PY{p}{(}\PY{n}{segments\PYZus{}slic\PYZus{}40}\PY{p}{,} \PY{n}{img}\PY{p}{,} \PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{bg\PYZus{}label}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{out\PYZus{}40} \PY{o}{=} \PY{n}{segmentation}\PY{o}{.}\PY{n}{mark\PYZus{}boundaries}\PY{p}{(}\PY{n}{out}\PY{p}{,} \PY{n}{segments\PYZus{}slic\PYZus{}40}\PY{p}{,} \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{n\PYZus{}regions} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{img}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*} \PY{n}{img}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{l+m+mi}{20}\PY{o}{*}\PY{l+m+mi}{20}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Nb segments: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{n\PYZus{}regions}\PY{p}{)}
+\PY{n}{segments\PYZus{}slic\PYZus{}20} \PY{o}{=} \PY{n}{slic}\PY{p}{(}\PY{n}{img}\PY{p}{,} \PY{n}{n\PYZus{}segments}\PY{o}{=}\PY{n}{n\PYZus{}regions}\PY{p}{,} \PY{n}{compactness}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{sigma}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{start\PYZus{}label}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{max\PYZus{}num\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{SLIC nombre de segments: }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{len}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{n}{segments\PYZus{}slic\PYZus{}20}\PY{p}{)}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{out} \PY{o}{=} \PY{n}{color}\PY{o}{.}\PY{n}{label2rgb}\PY{p}{(}\PY{n}{segments\PYZus{}slic\PYZus{}20}\PY{p}{,} \PY{n}{img}\PY{p}{,} \PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{bg\PYZus{}label}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{out\PYZus{}20} \PY{o}{=} \PY{n}{segmentation}\PY{o}{.}\PY{n}{mark\PYZus{}boundaries}\PY{p}{(}\PY{n}{out}\PY{p}{,} \PY{n}{segments\PYZus{}slic\PYZus{}20}\PY{p}{,} \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{,} \PY{n}{sharex}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{sharey}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{out\PYZus{}40}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Initialisation avec 631 segments}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{out\PYZus{}20}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Initialisation avec 2526 segments}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{for} \PY{n}{a} \PY{o+ow}{in} \PY{n}{ax}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{a}\PY{o}{.}\PY{n}{set\PYZus{}axis\PYZus{}off}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Nb segments:  631
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+SLIC nombre de segments: 459
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Nb segments:  2526
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+SLIC nombre de segments: 2201
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{04-TransformationSpatiales_files/04-TransformationSpatiales_38_4.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{vectorisation-et-rasterisation}{%
+\subsection{Vectorisation et
+rasterisation}\label{vectorisation-et-rasterisation}}
+
+\hypertarget{analyse-de-terrain}{%
+\subsection{Analyse de terrain}\label{analyse-de-terrain}}
+
+\hypertarget{uxe9luxe9vation}{%
+\subsubsection{Élévation}\label{uxe9luxe9vation}}
+
+\hypertarget{pente}{%
+\subsubsection{Pente}\label{pente}}
+
+\hypertarget{ombrage}{%
+\subsubsection{Ombrage}\label{ombrage}}
+
+\hypertarget{visibilituxe9}{%
+\subsubsection{Visibilité}\label{visibilituxe9}}
+
+\hypertarget{exercices-de-ruxe9vision}{%
+\subsection{Exercices de révision}\label{exercices-de-ruxe9vision}}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

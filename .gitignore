@@ -1,0 +1,46 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.jupyter_cache/
+# Build-time NumPy artifacts written by ch01 (np.save/savez examples)
+*.npy
+*.npz
+tex-hacks/*
+tutorial-example/*
+lua/*
+/.quarto/
+*.tif
+*.tif.aux.xml
+*.tif:Zone.Identifier
+modis-aqua.PNG:Zone.Identifier
+modis-aqua.PNG
+berkeley.jpg
+berkeley.jpg:Zone.Identifier
+scratch-pad.qmd
+update-tlmgr-latest.sh
+pdf/*
+typst-out/
+/index.typ
+*.zip
+ASCIIdata_splib07b_rsSentinel2/*
+/.luarc.json
+index.log
+
+
+**/*.quarto_ipynb
+**/*.quarto_ipynb_*
+*.pyc
+__pycache__/
+*.bak
+# DOCX render is disabled in process.sh; these are stale orphan figures
+**/figure-docx/
+# Generated PDF-render intermediates (regenerated each build; final PDF lives in docs/)
+**/figure-pdf/
+# Typst-render figure intermediates (regenerated; typst PDF lives in typst-out/)
+**/figure-typst/
+/Traitement-d-images-satellites-avec-Python.tex
+# Build artifacts / bootstrap junk
+_quarto_internal_scss_error.scss
+get-pip.py
+scratchpad-*.log

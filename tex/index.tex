@@ -1,0 +1,530 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{french}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Traitement d'images satellites avec Python},
+  pdfauthor={Samuel Foucher; Philippe Apparicio; Yacine Bouroubi; Mickaël Germain},
+  pdflang={fr},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Traitement d'images satellites avec Python}
+\author{Samuel Foucher \and Philippe Apparicio \and Yacine
+Bouroubi \and Mickaël Germain}
+\date{}
+
+\begin{document}
+\maketitle
+
+\phantomsection\label{quarto-document-content}
+\phantomsection\label{title-block-header}
+\section{Traitement d'images satellites avec
+Python}\label{traitement-dimages-satellites-avec-python}
+
+Première édition
+
+Auteurs
+
+Affiliation
+
+\href{https://www.usherbrooke.ca/recherche/fr/specialistes/details/samuel.foucher}{Samuel
+Foucher}
+
+\href{https://www.usherbrooke.ca/geomatique/}{Département de géomatique
+appliquée\\
+Université de Sherbrooke}
+
+\href{https://www.usherbrooke.ca/recherche/fr/specialistes/details/philippe.apparicio}{Philippe
+Apparicio}
+
+\href{https://www.usherbrooke.ca/geomatique/}{Département de géomatique
+appliquée\\
+Université de Sherbrooke}
+
+\href{https://www.usherbrooke.ca/recherche/fr/specialistes/details/yacine-bouroubi}{Yacine
+Bouroubi}
+
+\href{https://www.usherbrooke.ca/geomatique/}{Département de géomatique
+appliquée\\
+Université de Sherbrooke}
+
+\href{https://www.usherbrooke.ca/recherche/fr/specialistes/details/mickael-germain}{Mickaël
+Germain}
+
+\href{https://www.usherbrooke.ca/geomatique/}{Département de géomatique
+appliquée\\
+Université de Sherbrooke}
+
+Date de publication
+
+2025-01-11
+
+\pandocbounded{\includegraphics[keepaspectratio]{images/gen-ai/Gemini_Generated_Image_3a8wwf3a8wwf3a8w.jpg}}
+
+\textbf{Résumé~:} Ce livre vise à décrire une panoplie de méthodes de
+traitement d'images satellites avec le langage Python. Celles et ceux
+souhaitant migrer progressivement d'un autre logiciel d'imagerie et de
+télédétection vers Python trouveront dans cet ouvrage les éléments pour
+une transition en douceur. La philosophie de ce livre est de donner
+toutes les clefs de compréhension et de mise en œuvre des méthodes
+abordées dans Python. La présentation des méthodes est basée sur une
+approche compréhensive et intuitive plutôt que mathématique, sans pour
+autant négliger la rigueur mathématique ou statistique. Des rappels sur
+les fondements en télédétection pourront apparaître au besoin afin
+d'éclairer les approches techniques.
+
+\emph{}
+
+Important
+
+\textbf{Ce projet est en cours d'écriture et le contenu n'est pas
+complet}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio]{images/logos/under-construction-2408062_640.png}}
+\caption{}
+\end{figure}
+
+\textbf{Remerciements~:} Ce manuel a été réalisé avec le soutien de la
+fabriqueREL. Fondée en 2019, la fabriqueREL est portée par divers
+établissements d'enseignement supérieur du Québec et agit en
+collaboration avec les services de soutien pédagogique et les
+bibliothèques. Son but est de faire des ressources éducatives libres
+(REL) le matériel privilégié en enseignement supérieur au Québec.
+
+\textbf{Maquette de la page couverture et identité graphique du livre~:}
+.
+
+\textbf{Mise en page~:} Samuel Foucher, Philippe Apparicio et
+Marie-Hélène Gadbois Del Carpio.
+
+\textbf{Révision linguistique~:} Denise Latreille.
+
+© Samuel Foucher, Philippe Apparicio, Yacine Bouroubi et Mickaël
+Germain.
+
+\textbf{Pour citer cet ouvrage~:} Foucher S., Apparicio P., Bouroubi, Y.
+et M. Germain (2024). \emph{Traitement d'images satellites avec Python}.
+Université de Sherbrooke, Département de géomatique appliquée.
+fabriqueREL. Licence CC~BY-SA.\\
+\strut \\
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio]{images/introduction/CouvertureP2.png}}
+\caption{}
+\end{figure}
+
+\section*{Préface}\label{pruxe9face}
+\addcontentsline{toc}{section}{Préface}
+
+\phantomsection\label{sect001}
+\subsection*{Un manuel sous la forme d'une ressource éducative
+libre}\label{un-manuel-sous-la-forme-dune-ressource-uxe9ducative-libre}
+\addcontentsline{toc}{subsection}{Un manuel sous la forme d'une
+ressource éducative libre}
+
+\textbf{Pourquoi un manuel sous licence libre?}
+
+Les logiciels libres sont aujourd'hui très répandus. Comparativement aux
+logiciels propriétaires, l'accès au code source permet à quiconque de
+l'utiliser, de le modifier, de le dupliquer et de le partager. Le
+logiciel Python, dans lequel sont mises en œuvre les méthodes de
+traitement d'images satellites décrites dans ce livre, est d'ailleurs à
+la fois un langage de programmation et un logiciel libre (sous la
+licence publique générale
+\href{https://fr.wikipedia.org/wiki/Licence_publique_g\%C3\%A9n\%C3\%A9rale_GNU}{GNU
+GPL2}). Par analogie aux logiciels libres, il existe aussi des
+\textbf{ressources éducatives libres (REL)} «~dont la licence accorde
+les permissions désignées par les 5R (\textbf{Retenir --- Réutiliser ---
+Réviser --- Remixer --- Redistribuer}) et donc permet nécessairement la
+modification~»
+(\href{https://fabriquerel.org/rel/}{\textbf{\emph{fabriqueREL}}}). La
+licence de ce livre, CC BY-SA (\hyperref[fig-Licence]{figure~{1}}),
+permet donc de~:
+
+\begin{itemize}
+\item
+  \textbf{Retenir}, c'est-à-dire télécharger et imprimer gratuitement le
+  livre. Notez qu'il aurait été plutôt surprenant d'écrire un livre
+  payant sur un logiciel libre et donc gratuit. Aussi, nous aurions été
+  très embarrassés que des personnes étudiantes avec des ressources
+  financières limitées doivent payer pour avoir accès au livre, sans
+  pour autant savoir préalablement si le contenu est réellement adapté à
+  leurs besoins.
+\item
+  \textbf{Réutiliser}, c'est-à-dire utiliser la totalité ou une section
+  du livre sans limitation et sans compensation financière. Cela permet
+  ainsi à d'autres personnes enseignantes de l'utiliser dans le cadre
+  d'activités pédagogiques.
+\item
+  \textbf{Réviser}, c'est-à-dire modifier, adapter et traduire le
+  contenu en fonction d'un besoin pédagogique précis puisqu'aucun manuel
+  n'est parfait, tant s'en faut! Le livre a d'ailleurs été écrit
+  intégralement dans R avec \href{https://quarto.org/}{Quatro}.
+  Quiconque peut ainsi télécharger gratuitement le code source du livre
+  sur
+  \href{https://github.com/SerieBoldR/MethodesAnalyseSpatiale}{github}
+  et le modifier à sa guise (voir l'encadré intitulé \emph{Suggestions
+  d'adaptation du manuel}).
+\item
+  \textbf{Remixer}, c'est-à-dire «~combiner la ressource avec d'autres
+  ressources dont la licence le permet aussi pour créer une nouvelle
+  ressource intégrée~»
+  (\href{https://fabriquerel.org/rel/}{\textbf{\emph{fabriqueREL}}}).
+\item
+  \textbf{Redistribuer}, c'est-à-dire distribuer, en totalité ou en
+  partie le manuel ou une version révisée sur d'autres canaux que le
+  site Web du livre (par exemple, sur le site Moodle de votre université
+  ou en faire une version imprimée).
+\end{itemize}
+
+La licence de ce livre, CC BY-SA (\hyperref[fig-Licence]{figure~{1}}),
+oblige donc à~:
+
+\begin{itemize}
+\tightlist
+\item
+  Attribuer la paternité de l'auteur dans vos versions dérivées, ainsi
+  qu'une mention concernant les grandes modifications apportées, en
+  utilisant la formulation suivante~:
+\end{itemize}
+
+Apparicio Philippe, Yacine Bouroubi, Samuel Foucher et Mickaël Germain
+(2024). \emph{Traitement d'images satellites :} . Université de
+Sherbrooke, Département de géomatique appliquée. fabriqueREL. Licence
+CC~BY-SA.
+
+\begin{itemize}
+\tightlist
+\item
+  Utiliser la même licence ou une licence similaire à toutes versions
+  dérivées.
+\end{itemize}
+
+\phantomsection\label{fig-Licence}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio]{images/introduction/Licence.JPG}}
+\caption{Figure~1: Licence Creative Commons du livre}
+\end{figure}
+
+\textbf{Suggestions d'adaptation du manuel}
+
+Pour chaque méthode de traitement d'image abordée dans le livre, une
+description détaillée et une mise en œuvre dans Python sont disponibles.
+Par conséquent, plusieurs adaptations du manuel sont possibles~:
+
+\begin{itemize}
+\item
+  Conserver uniquement les chapitres sur les méthodes ciblées dans votre
+  cours.
+\item
+  En faire une version imprimée et la distribuer aux personnes
+  étudiantes.
+\item
+  Modifier la description d'une ou de plusieurs méthodes en effectuant
+  les mises à jour directement dans les chapitres.
+\item
+  Insérer ses propres jeux de données dans les sections intitulées
+  \emph{Mise en œuvre dans Python}.
+\item
+  Modifier les tableaux et figures.
+\item
+  Ajouter une série d'exercices.
+\item
+  Modifier les quiz de révision.
+\item
+  Rédiger un nouveau chapitre.
+\item
+  Modifier des syntaxes en Python. Plusieurs \emph{librairies} Python
+  peuvent être utilisées pour mettre en œuvre telle ou telle méthode.
+  Ces derniers évoluent aussi très vite et de nouvelles
+  \emph{librairies} sont proposées fréquemment! Par conséquent, il peut
+  être judicieux de modifier une syntaxe Python du livre en fonction de
+  ses habitudes de programmation en Python (utilisation d'autres
+  \emph{librairies} que ceux utilisés dans le manuel par exemple) ou de
+  bien mettre à jour une syntaxe à la suite de la parution d'une
+  nouvelle \emph{librairie} plus performante ou intéressante.
+\item
+  Toute autre adaptation qui permet de répondre au mieux à un besoin
+  pédagogique.
+\end{itemize}
+
+\phantomsection\label{sect002}
+\subsection*{Comment lire ce manuel?}\label{comment-lire-ce-manuel}
+\addcontentsline{toc}{subsection}{Comment lire ce manuel?}
+
+Le livre comprend plusieurs types de blocs de texte qui en facilitent la
+lecture.
+
+\textbf{Bloc \emph{packages}}
+
+Habituellement localisé au début d'un chapitre, il comprend la liste des
+\emph{packages} Python utilisés pour un chapitre.
+
+\textbf{Bloc objectif}
+
+Il comprend une description des objectifs d'un chapitre ou d'une
+section.
+
+\textbf{Bloc notes}
+
+Il comprend une information secondaire sur une notion, une idée abordée
+dans une section.
+
+\textbf{Bloc pour aller plus loin}
+
+Il comprend des références ou des extensions d'une méthode abordée dans
+une section.
+
+\textbf{Bloc astuce}
+
+Il décrit un élément qui vous facilitera la vie~: une propriété
+statistique, un \emph{package}, une fonction, une syntaxe Python.
+
+\textbf{Bloc attention}
+
+Il comprend une notion ou un élément important à bien maîtriser.
+
+\textbf{Bloc exercice}
+
+Il comprend un court exercice de révision à la fin de chaque chapitre.
+
+\phantomsection\label{sect003}
+\subsection*{Comment utiliser les données du livre pour reproduire les
+exemples?}\label{comment-utiliser-les-donnuxe9es-du-livre-pour-reproduire-les-exemples}
+\addcontentsline{toc}{subsection}{Comment utiliser les données du livre
+pour reproduire les exemples?}
+
+Ce livre comprend des exemples détaillés et appliqués en Python pour
+chacune des méthodes abordées. Ces exemples se basent sur des jeux de
+données ouverts et mis à disposition avec le livre. Ils sont disponibles
+sur le \emph{repo github} dans le sous-dossier \texttt{data}, à
+l'adresse
+\url{https://github.com/serie-tele-pyton/TraitementImagesVol1/tree/main/data}.
+
+Une autre option est de télécharger le \emph{repo} complet du livre
+directement sur \emph{github}
+(\url{https://github.com/serie-tele-pyton/TraitementImagesVol1}) en
+cliquant sur le bouton \texttt{Code}, puis le bouton
+\texttt{Download\ ZIP} (\hyperref[fig-downloaffromgit]{figure~{2}}). Les
+données se trouvent alors dans le sous-dossier nommé \texttt{data}.
+
+\phantomsection\label{fig-downloaffromgit}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio]{images/introduction/download_github.png}}
+\caption{Figure~2: Téléchargement de l'intégralité du livre}
+\end{figure}
+
+\phantomsection\label{sect004}
+\subsection*{Structure du livre}\label{structure-du-livre}
+\addcontentsline{toc}{subsection}{Structure du livre}
+
+Le livre est organisé autour de quatre grandes parties.
+
+\textbf{Partie 1. Importation et manipulation de données spatiales.}
+Dans cette première partie, nous voyons comment importer, manipuler,
+visualiser et exporter des données spatiales de type image (ou de type
+matriciel) avec Python, principalement avec les \emph{packages}
+\texttt{rasterio}, \texttt{xarray} et \texttt{numpy}
+(\href{01-ImportationManipulationImages.html}{chapitre~{2~ Importation
+et manipulation de données spatiales}}). Ce chapitre vous permettra de
+maîtriser la manipulation à bas niveau de différents types d'imagerie.
+Différents exemples et exercises sont disponibles avec différents
+capteurs satellites (multi-spectral, RGB-NIR, SAR, etc.)
+
+\textbf{Partie 2. Transformations des données spatiales}. Cette deuxième
+partie comprend deux chapitres~: les transformations spectrales
+(\href{03-TransformationSpectrales.html}{chapitre~{4~ Transformations
+spectrales}}) et les transformations spatiales
+(\href{04-TransformationSpatiales.html}{chapitre~{5~ Transformations
+spatiales}}).
+
+\textbf{Partie 3. Classifications d'images} Cette troisième partie
+comprend deux chapitres~: les classifications supervisées
+({?sec-chap05}) et non supervisées ({?sec-chap06}).
+
+\textbf{Partie 4. Données massives}. Cette quatrième et dernière partie
+comprend un seul chapitre qui est dédié aux plateformes de mégadonnes
+{?sec-chap07}, notammment Google Earth Engine.
+
+\phantomsection\label{sect005}
+\subsection*{Remerciements}\label{remerciements}
+\addcontentsline{toc}{subsection}{Remerciements}
+
+De nombreuses personnes ont contribué à l'élaboration de ce manuel.
+
+Ce projet a bénéficié du soutien pédagogique et financier de la
+\href{https://fabriquerel.org/}{\textbf{\emph{fabriqueREL}}} (ressources
+éducatives libres). Les différentes rencontres avec le comité de suivi
+nous ont permis de comprendre l'univers des ressources éducatives libres
+(REL) et notamment leurs \href{https://fabriquerel.org/rel/}{fameux 5R}
+(Retenir --- Réutiliser --- Réviser --- Remixer --- Redistribuer), de
+mieux définir le besoin pédagogique visé par ce manuel, d'identifier des
+ressources pédagogiques et des outils pertinents pour son élaboration.
+Ainsi, nous remercions chaleureusement les membres de la
+\emph{fabriqueREL} pour leur soutien inconditionnel~:
+
+\begin{itemize}
+\item
+  Myriam Beaudet, bibliothécaire à l'Université de Sherbrooke.
+\item
+  Marianne Dubé, coordonnatrice de la fabriqueREL, Université de
+  Sherbrooke.
+\item
+  Serge Piché, conseiller pédagogique, Université de Sherbrooke.
+\item
+  Claude Potvin, conseiller en formation, Service de soutien à
+  l'enseignement, Université Laval.
+\end{itemize}
+
+Nous remercions chaleureusement les personnes étudiantes des cours
+\textbf{à modifier plus tard} du
+\href{https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/}{Baccalauréat
+en géomatique appliquée à l'environnement} et du
+\href{https://www.usherbrooke.ca/admission/programme/429/microprogramme-de-1er-cycleen-geomatique-appliquee/}{Microprogramme
+de 1er cycle en géomatique appliquée} du
+\href{https://www.usherbrooke.ca/geomatique/}{Département de géomatique
+appliquée} de l'\href{https://www.usherbrooke.ca/}{Université de
+Sherbrooke} de la session d'été 2023~: à modifier plus tard.
+
+Nous remercions aussi les membres du comité de révision pour leurs
+commentaires et suggestions très constructifs. Ce comité est composé de
+quatre personnes étudiantes du
+\href{https://www.usherbrooke.ca/geomatique/}{Département de géomatique
+appliquée} de l'\href{https://www.usherbrooke.ca/}{Université de
+Sherbrooke}~:
+
+\begin{itemize}
+\item
+  À compléter plus tard.
+\item
+  À compléter plus tard.
+\end{itemize}
+
+Finalement, nous remercions Denise Latreille, réviseure linguistique et
+chargée de cours à l'Université Sherbrooke, pour la révision du manuel.
+
+\phantomsection\label{sect006}
+\subsection*{Introduction aux images de
+télédétection}\label{introduction-aux-images-de-tuxe9luxe9duxe9tection}
+\addcontentsline{toc}{subsection}{Introduction aux images de
+télédétection}
+
+L'imagerie numérique a pris une place importante dans notre vie de tous
+les jours depuis une quinzaine d'année. Ces images sont prises
+généralement au niveau du sol (imagerie proximale) avec seulement trois
+couleurs dans le domaine de la vision humaine (rouge, vert et bleu).
+Dans la suite du manuel, on parlera d'images du domaine de la vision par
+ordinateur ou images en vision pour faire plus court.
+
+Les images de télédétection ont des particularités et des propriétés qui
+les différencient des images de tous les jours. On peut souligner au
+moins cinq caractéristiques principales:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Les images sont géoréférencées : Cela veut dire que pour chaque pixel
+  nous pouvons y associer une position géographique ou cartographique.
+\item
+  Le point de vue est très différent : Ces images sont prises avec une
+  vue d'en haut (Nadir) ou oblique avec une distance qui peut être très
+  grande (On parle d'images distales).
+\item
+  Elles possèdent plus que 3 bandes : Contrairement aux images en
+  vision, les images de télédétection possèdent bien souvent plus que 3
+  bandes. Il n'est pas rare de trouver 4 bandes (Pléiade), 13 bandes
+  (Sentinel-2, Landsat) et même 200 bandes pour des capteurs
+  hyperspectraux.
+\item
+  Elles peuvent être calibrées : Les valeurs numérique de l'image
+  peuvent être converties en quantités physiques (luminance,
+  réflectance, section efficace, etc.) via une fonction de calibration.
+\item
+  Elles sont de grande taille : Il n'est pas rare de manipuler des
+  images qui font plusieurs dizaines de milliers de pixels en dimension.
+\end{enumerate}
+
+\subsubsection{Ressources en ligne}\label{ressources-en-ligne}
+
+\phantomsection\label{sect0071}
+\subsubsection*{\texorpdfstring{Listes des \emph{librairies}
+utilisés}{Listes des librairies utilisés}}\label{listes-des-librairies-utilisuxe9s}
+\addcontentsline{toc}{subsubsection}{Listes des \emph{librairies}
+utilisés}
+
+Dans ce livre, nous utilisons de nombreux \emph{packages} Python que
+vous pouvez installer en une seule fois (voir
+\href{00-PriseEnMainPython.html\#sec-00-01}{section~{1.3.1 Création d'un
+environnement virtuel}}) ou chapitre par chapitre.
+
+\end{document}

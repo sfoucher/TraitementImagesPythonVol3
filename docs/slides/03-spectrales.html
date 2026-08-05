@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="03-spectrales_files/libs/clipboard/clipboard.min.js"></script>
+<script src="03-spectrales_files/libs/quarto-html/tabby.min.js"></script>
+<script src="03-spectrales_files/libs/quarto-html/popper.min.js"></script>
+<script src="03-spectrales_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="03-spectrales_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="03-spectrales_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="03-spectrales_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
+
+  <meta name="author" content="Foucher, Apparicio, Bouroubi, Germain, Clabaut">
+  <title>Transformations spectrales</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="03-spectrales_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="03-spectrales_files/libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="03-spectrales_files/libs/revealjs/dist/theme/quarto-e36761165e6039de18a88a48c429944a.css">
+  <link href="03-spectrales_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="03-spectrales_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="03-spectrales_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="03-spectrales_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="03-spectrales_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="03-spectrales_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Transformations spectrales</h1>
+  <p class="subtitle">Chapitre 3 — Traitement d’images satellites avec Python</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Foucher, Apparicio, Bouroubi, Germain, Clabaut 
+</div>
+</div>
+</div>
+
+</section>
+<section id="objectifs" class="slide level2 smaller">
+<h2>Objectifs</h2>
+<ul>
+<li class="fragment">Comprendre le principe des <strong>indices spectraux</strong></li>
+<li class="fragment">Calculer différents indices avec <strong><code>spyndex</code></strong></li>
+<li class="fragment">Analyser le <strong>gain en information</strong> (séparabilité) des indices</li>
+<li class="fragment">Réduire la <strong>dimension spectrale</strong> : produit matriciel, Tasseled Cap, ACP</li>
+</ul>
+</section>
+<section id="bibliothèques-et-données" class="slide level2 smaller">
+<h2>Bibliothèques et données</h2>
+<ul>
+<li class="fragment"><strong>NumPy</strong>, <strong>SciPy</strong>, <strong>Rasterio</strong>, <strong>xarray</strong> / <strong>rioxarray</strong></li>
+<li class="fragment"><strong><code>spyndex</code></strong> (Awesome Spectral Indices) : calcul d’indices spectraux</li>
+<li class="fragment">Images : <code>RGBNIR_of_S2A.tif</code>, <code>sentinel2.tif</code> (12 bandes), <code>carte.tif</code></li>
+<li class="fragment">Signatures de laboratoire USGS : <code>ASCIIdata_splib07b_rsSentinel2</code></li>
+</ul>
+<div id="de3d7854" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href=""></a><span class="im">import</span> rioxarray <span class="im">as</span> rxr</span>
+<span id="cb1-3"><a href=""></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href=""></a><span class="im">import</span> spyndex</span>
+<span id="cb1-5"><a href=""></a><span class="im">import</span> rasterio <span class="im">as</span> rio</span>
+<span id="cb1-6"><a href=""></a></span>
+<span id="cb1-7"><a href=""></a>img_s2 <span class="op">=</span> rxr.open_rasterio(<span class="st">'../sentinel2.tif'</span>, mask_and_scale<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-8"><a href=""></a>img_s2.dims</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>('band', 'y', 'x')</code></pre>
+</div>
+</div>
+</section>
+<section id="quest-ce-que-linformation-spectrale" class="slide level2 smaller">
+<h2>Qu’est-ce que l’information spectrale ?</h2>
+<ul>
+<li class="fragment">Dimension <strong>spectrale</strong> : le long des bandes de l’image</li>
+<li class="fragment">4–5 bandes (très haute résolution spectrale) → une quinzaine (multispectral) → <strong>centaines</strong> (hyperspectral)</li>
+<li class="fragment">La <strong>signature spectrale</strong> caractérise le <strong>type et l’état</strong> d’un matériau</li>
+<li class="fragment">Une généralisation de la <em>couleur</em> au-delà du visible</li>
+<li class="fragment">Base USGS de signatures de laboratoire <span class="citation" data-cites="Kokaly-2017">[@Kokaly-2017]</span></li>
+</ul>
+</section>
+<section id="signatures-spectrales" class="slide level2 smaller">
+<h2>Signatures spectrales</h2>
+<div id="6034180e" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a>base <span class="op">=</span> <span class="st">'../ASCIIdata_splib07b_rsSentinel2'</span></span>
+<span id="cb3-2"><a href=""></a><span class="kw">def</span> lire(f):</span>
+<span id="cb3-3"><a href=""></a>    <span class="cf">with</span> <span class="bu">open</span>(f) <span class="im">as</span> fh:</span>
+<span id="cb3-4"><a href=""></a>        <span class="cf">return</span> [<span class="bu">float</span>(s.replace(<span class="st">' '</span>, <span class="st">''</span>)) <span class="cf">for</span> s <span class="kw">in</span> fh.read().split(<span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)[<span class="dv">1</span>:] <span class="cf">if</span> s.strip()]</span>
+<span id="cb3-5"><a href=""></a>wl      <span class="op">=</span> [w<span class="op">*</span><span class="dv">1000</span> <span class="cf">for</span> w <span class="kw">in</span> lire(<span class="ss">f'</span><span class="sc">{</span>base<span class="sc">}</span><span class="ss">/S07SNTL2_Wavelengths_Sentinel2_(13_bands)_microns.txt'</span>)]</span>
+<span id="cb3-6"><a href=""></a>prairie <span class="op">=</span> lire(<span class="ss">f'</span><span class="sc">{</span>base<span class="sc">}</span><span class="ss">/ChapterV_Vegetation/S07SNTL2_Rangeland_C03-004_S08%_G27%_ASDFRa_AREF.txt'</span>)</span>
+<span id="cb3-7"><a href=""></a>eau     <span class="op">=</span> lire(<span class="ss">f'</span><span class="sc">{</span>base<span class="sc">}</span><span class="ss">/ChapterL_Liquids/S07SNTL2_Water+Montmor_SWy-2+0.50g-l_ASDFRa_AREF.txt'</span>)</span>
+<span id="cb3-8"><a href=""></a>beton   <span class="op">=</span> lire(<span class="ss">f'</span><span class="sc">{</span>base<span class="sc">}</span><span class="ss">/ChapterA_ArtificialMaterials/S07SNTL2_Concrete_GDS375_Lt_Gry_Road_ASDFRa_AREF.txt'</span>)</span>
+<span id="cb3-9"><a href=""></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.4</span>))</span>
+<span id="cb3-10"><a href=""></a>ax.plot(wl, prairie, <span class="st">'g.-'</span>, label<span class="op">=</span><span class="st">'Prairie'</span>)<span class="op">;</span> ax.plot(wl, eau, <span class="st">'b.-'</span>, label<span class="op">=</span><span class="st">'Eau'</span>)<span class="op">;</span> ax.plot(wl, beton, <span class="st">'y.-'</span>, label<span class="op">=</span><span class="st">'Béton'</span>)</span>
+<span id="cb3-11"><a href=""></a>ax.set_xlabel(<span class="st">"Longueur d'onde (nm)"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">'Réflectance'</span>)<span class="op">;</span> ax.legend()<span class="op">;</span> ax.grid(<span class="va">True</span>)</span>
+<span id="cb3-12"><a href=""></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="03-spectrales_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center" width="530" height="313"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="indices-spectraux" class="slide level2 smaller">
+<h2>Indices spectraux</h2>
+<ul>
+<li class="fragment">Mettent en valeur des <strong>caractéristiques du spectre</strong> (pentes, gradients)</li>
+<li class="fragment">Améliorent la <strong>séparabilité</strong> de certaines classes</li>
+<li class="fragment">Le choix dépend fortement de l’<strong>application</strong></li>
+<li class="fragment"><strong><code>spyndex</code></strong> (Awesome Spectral Indices) : <strong>200+</strong> indices (optiques et radar)</li>
+</ul>
+<div id="af463b5b" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a>spyndex.indices[<span class="st">"NDVI"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>SpectralIndex(NDVI: Normalized Difference Vegetation Index)
+        * Application Domain: vegetation
+        * Bands/Parameters: ['N', 'R']
+        * Formula: (N-R)/(N+R)
+        * Reference: https://ntrs.nasa.gov/citations/19740022614
+        </code></pre>
+</div>
+</div>
+</section>
+<section id="nomenclature-des-bandes-spyndex" class="slide level2 smaller">
+<h2>Nomenclature des bandes (<code>spyndex</code>)</h2>
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sentinel-2</th>
+<th>B02</th>
+<th>B03</th>
+<th>B04</th>
+<th>B08</th>
+<th>B11</th>
+<th>B12</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>spyndex</strong></td>
+<td>B (bleu)</td>
+<td>G (vert)</td>
+<td>R (rouge)</td>
+<td>N (PIR)</td>
+<td>S1 (SWIR1)</td>
+<td>S2 (SWIR2)</td>
+</tr>
+</tbody>
+</table>
+<p><code>spyndex</code> suppose ces noms de bandes ; on renomme les coordonnées <code>xarray</code> avant le calcul :</p>
+<div id="43906e37" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a>sentinel2_bands <span class="op">=</span> [<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"G"</span>, <span class="st">"R"</span>, <span class="st">"RE1"</span>, <span class="st">"RE2"</span>, <span class="st">"RE3"</span>, <span class="st">"N"</span>, <span class="st">"N2"</span>, <span class="st">"WV"</span>, <span class="st">"S1"</span>, <span class="st">"S2"</span>]</span>
+<span id="cb6-2"><a href=""></a>img_s2 <span class="op">=</span> img_s2.sel(band<span class="op">=</span><span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">13</span>))).assign_coords({<span class="st">'band'</span>: sentinel2_bands})</span>
+<span id="cb6-3"><a href=""></a>img_s2 <span class="op">=</span> img_s2 <span class="op">/</span> <span class="dv">10000</span>   <span class="co"># normalisation en réflectance</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="le-ndvi" class="slide level2 smaller">
+<h2>Le NDVI</h2>
+<p>L’indice le plus connu, à partir du <strong>rouge</strong> (<span class="math inline">\(R\)</span>) et du <strong>proche-infrarouge</strong> (<span class="math inline">\(N\)</span>) :</p>
+<p><span class="math display">\[ NDVI = \frac{N - R}{N + R} \]</span></p>
+<ul>
+<li class="fragment">Végétation dense → NDVI élevé (proche de 1)</li>
+<li class="fragment">Eau, sol nu, bâti → valeurs faibles voire négatives</li>
+</ul>
+</section>
+<section id="savi-et-evi" class="slide level2 smaller">
+<h2>SAVI et EVI</h2>
+<p><span class="math display">\[ EVI = G \times \frac{N - R}{N + C_1 \times R - C_2 \times B + L} \]</span></p>
+<ul>
+<li class="fragment"><code>SAVI</code> : facteur de correction du sol (<span class="math inline">\(L\)</span>) pour un couvert clairsemé</li>
+<li class="fragment"><code>EVI</code> : corrige en plus l’effet de l’<strong>atmosphère</strong> via la bande bleue (<span class="math inline">\(B\)</span>) <span class="citation" data-cites="Jensen2016">[@Jensen2016]</span></li>
+<li class="fragment">Limite la saturation du NDVI sur la végétation dense</li>
+<li class="fragment">Constantes usuelles : <span class="math inline">\(G=2{,}5\)</span>, <span class="math inline">\(C_1=6\)</span>, <span class="math inline">\(C_2=7{,}5\)</span>, <span class="math inline">\(L=1\)</span></li>
+</ul>
+</section>
+<section id="calcul-des-indices-computeindex" class="slide level2 smaller">
+<h2>Calcul des indices — <code>computeIndex</code></h2>
+<div id="9a3bf35c" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="im">from</span> rasterio <span class="im">import</span> plot</span>
+<span id="cb7-2"><a href=""></a>idx <span class="op">=</span> spyndex.computeIndex(</span>
+<span id="cb7-3"><a href=""></a>    index<span class="op">=</span>[<span class="st">"NDVI"</span>, <span class="st">"SAVI"</span>],</span>
+<span id="cb7-4"><a href=""></a>    params<span class="op">=</span>{<span class="st">"N"</span>: img_s2.sel(band<span class="op">=</span><span class="st">"N"</span>), <span class="st">"R"</span>: img_s2.sel(band<span class="op">=</span><span class="st">"R"</span>), <span class="st">"L"</span>: <span class="fl">0.5</span>}</span>
+<span id="cb7-5"><a href=""></a>)</span>
+<span id="cb7-6"><a href=""></a>evi <span class="op">=</span> spyndex.computeIndex(</span>
+<span id="cb7-7"><a href=""></a>    index<span class="op">=</span>[<span class="st">"EVI"</span>],</span>
+<span id="cb7-8"><a href=""></a>    params<span class="op">=</span>{<span class="st">"N"</span>: img_s2.sel(band<span class="op">=</span><span class="st">"N"</span>), <span class="st">"R"</span>: img_s2.sel(band<span class="op">=</span><span class="st">"R"</span>), <span class="st">"B"</span>: img_s2.sel(band<span class="op">=</span><span class="st">"B"</span>),</span>
+<span id="cb7-9"><a href=""></a>            <span class="st">"g"</span>: <span class="fl">2.5</span>, <span class="st">"C1"</span>: <span class="dv">6</span>, <span class="st">"C2"</span>: <span class="fl">7.5</span>, <span class="st">"L"</span>: <span class="dv">1</span>}</span>
+<span id="cb7-10"><a href=""></a>)</span>
+<span id="cb7-11"><a href=""></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">3.2</span>))</span>
+<span id="cb7-12"><a href=""></a>plot.show(idx.sel(index<span class="op">=</span><span class="st">"NDVI"</span>), ax<span class="op">=</span>ax[<span class="dv">0</span>], title<span class="op">=</span><span class="st">"NDVI"</span>)</span>
+<span id="cb7-13"><a href=""></a>plot.show(idx.sel(index<span class="op">=</span><span class="st">"SAVI"</span>), ax<span class="op">=</span>ax[<span class="dv">1</span>], title<span class="op">=</span><span class="st">"SAVI"</span>)</span>
+<span id="cb7-14"><a href=""></a>evi_lo, evi_hi <span class="op">=</span> np.nanpercentile(evi, [<span class="dv">2</span>, <span class="dv">98</span>])</span>
+<span id="cb7-15"><a href=""></a>plot.show(evi, vmin<span class="op">=</span>evi_lo, vmax<span class="op">=</span>evi_hi, ax<span class="op">=</span>ax[<span class="dv">2</span>], title<span class="op">=</span><span class="st">"EVI"</span>)</span>
+<span id="cb7-16"><a href=""></a>[a.axis(<span class="st">'off'</span>) <span class="cf">for</span> a <span class="kw">in</span> ax]<span class="op">;</span> plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="03-spectrales_files/figure-revealjs/cell-6-output-1.png" class="quarto-figure quarto-figure-center" width="854" height="289"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="vérifier-la-séparabilité" class="slide level2 smaller">
+<h2>Vérifier la séparabilité</h2>
+<ul>
+<li class="fragment">On échantillonne des <strong>points par classe</strong> (carte de référence <code>carte.tif</code>)</li>
+<li class="fragment">On calcule les indices aux points échantillonnés</li>
+<li class="fragment">Comparaison via un <strong>pairplot</strong> (nuages de points deux à deux)</li>
+<li class="fragment">Un bon indice <strong>sépare mieux</strong> les classes visées (ex. NDVI vs NDWI vs NDBI)</li>
+</ul>
+<div id="927d031c" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a><span class="co"># df : indices calculés aux points échantillonnés, une colonne "Land Cover"</span></span>
+<span id="cb8-2"><a href=""></a>idx <span class="op">=</span> spyndex.computeIndex(</span>
+<span id="cb8-3"><a href=""></a>    index<span class="op">=</span>[<span class="st">"NDVI"</span>, <span class="st">"NDWI"</span>, <span class="st">"NDBI"</span>],</span>
+<span id="cb8-4"><a href=""></a>    params<span class="op">=</span>{<span class="st">"N"</span>: df[<span class="st">"N"</span>], <span class="st">"R"</span>: df[<span class="st">"R"</span>], <span class="st">"G"</span>: df[<span class="st">"G"</span>], <span class="st">"S1"</span>: df[<span class="st">"S1"</span>]}</span>
+<span id="cb8-5"><a href=""></a>)</span>
+<span id="cb8-6"><a href=""></a>idx[<span class="st">"Land Cover"</span>] <span class="op">=</span> [nom_classes[l] <span class="cf">for</span> l <span class="kw">in</span> df[<span class="st">"class"</span>].tolist()]</span>
+<span id="cb8-7"><a href=""></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb8-8"><a href=""></a>g <span class="op">=</span> sns.PairGrid(idx, hue<span class="op">=</span><span class="st">"Land Cover"</span>)</span>
+<span id="cb8-9"><a href=""></a>g.map_lower(sns.scatterplot)<span class="op">;</span> g.map_upper(sns.kdeplot, fill<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">.5</span>)</span>
+<span id="cb8-10"><a href=""></a>g.map_diag(sns.kdeplot, fill<span class="op">=</span><span class="va">True</span>)<span class="op">;</span> g.add_legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="réduction-de-dimension" class="slide level2 smaller">
+<h2>Réduction de dimension</h2>
+<ul>
+<li class="fragment">Ne retenir que l’information <strong>principale</strong> d’un jeu de données</li>
+<li class="fragment">Objectifs : réduire le bruit, faciliter la visualisation (3 bandes)</li>
+<li class="fragment">Le degré d’information ≈ la <strong>variance</strong> (contraste) d’une bande</li>
+<li class="fragment">L’ACP range l’information en ordre de <strong>variance décroissante</strong></li>
+</ul>
+</section>
+<section id="produit-matriciel-transformation-linéaire" class="slide level2 smaller">
+<h2>Produit matriciel — transformation linéaire</h2>
+<ul>
+<li class="fragment">Nouvelle bande = somme pondérée des bandes d’origine</li>
+<li class="fragment">Mêmes poids pour tous les pixels → un <strong>produit matriciel</strong> (<code>@</code>)</li>
+<li class="fragment">L’ACP apprend ces poids automatiquement (plutôt que de les fixer)</li>
+</ul>
+<div id="2f53bd93" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a>pixels <span class="op">=</span> np.array([[<span class="fl">10.</span>, <span class="fl">40.</span>], [<span class="fl">20.</span>, <span class="fl">10.</span>], [<span class="fl">5.</span>, <span class="fl">25.</span>]])   <span class="co"># 3 pixels x 2 bandes</span></span>
+<span id="cb9-2"><a href=""></a>M <span class="op">=</span> np.array([[<span class="fl">0.5</span>, <span class="fl">0.5</span>],       <span class="co"># moyenne des deux bandes</span></span>
+<span id="cb9-3"><a href=""></a>              [<span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>]])      <span class="co"># différence des deux bandes</span></span>
+<span id="cb9-4"><a href=""></a><span class="bu">print</span>(pixels <span class="op">@</span> M.T)             <span class="co"># (3 pixels x 2 sorties)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 25. -30.]
+ [ 15.  10.]
+ [ 15. -20.]]</code></pre>
+</div>
+</div>
+</section>
+<section id="transformation-tasseled-cap-kauth-thomas" class="slide level2 smaller">
+<h2>Transformation Tasseled Cap (Kauth-Thomas)</h2>
+<ul>
+<li class="fragment">Transformation linéaire à coefficients <strong>fixes</strong> (Crist 1985, Landsat TM) <span class="citation" data-cites="Jensen2016 richards2022remote Schowengerdt2007">[@Jensen2016; @richards2022remote; @Schowengerdt2007]</span></li>
+<li class="fragment">Trois composantes interprétables : <strong>brillance</strong>, <strong>verdure</strong>, <strong>humidité</strong></li>
+<li class="fragment">Appliqués ici, à titre d’illustration, aux bandes Sentinel-2 analogues</li>
+<li class="fragment">Coefficients fixes → comparables entre scènes (contrairement à l’ACP)</li>
+</ul>
+<div id="e0e3773e" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href=""></a>tc_coeffs <span class="op">=</span> np.array([</span>
+<span id="cb11-2"><a href=""></a>    [ <span class="fl">0.3037</span>,  <span class="fl">0.2793</span>,  <span class="fl">0.4743</span>,  <span class="fl">0.5585</span>,  <span class="fl">0.5082</span>,  <span class="fl">0.1863</span>],   <span class="co"># Brightness</span></span>
+<span id="cb11-3"><a href=""></a>    [<span class="op">-</span><span class="fl">0.2848</span>, <span class="op">-</span><span class="fl">0.2435</span>, <span class="op">-</span><span class="fl">0.5436</span>,  <span class="fl">0.7243</span>,  <span class="fl">0.0840</span>, <span class="op">-</span><span class="fl">0.1800</span>],   <span class="co"># Greenness</span></span>
+<span id="cb11-4"><a href=""></a>    [ <span class="fl">0.1509</span>,  <span class="fl">0.1973</span>,  <span class="fl">0.3279</span>,  <span class="fl">0.3406</span>, <span class="op">-</span><span class="fl">0.7112</span>, <span class="op">-</span><span class="fl">0.4572</span>],   <span class="co"># Wetness</span></span>
+<span id="cb11-5"><a href=""></a>])</span>
+<span id="cb11-6"><a href=""></a>tc_bands <span class="op">=</span> [<span class="st">"B"</span>, <span class="st">"G"</span>, <span class="st">"R"</span>, <span class="st">"N"</span>, <span class="st">"S1"</span>, <span class="st">"S2"</span>]</span>
+<span id="cb11-7"><a href=""></a>X_tc <span class="op">=</span> img_s2.sel(band<span class="op">=</span>tc_bands).data.reshape(<span class="bu">len</span>(tc_bands), <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb11-8"><a href=""></a>brightness, greenness, wetness <span class="op">=</span> (tc_coeffs <span class="op">@</span> X_tc).reshape(<span class="dv">3</span>, <span class="op">*</span>img_s2.shape[<span class="dv">1</span>:])</span>
+<span id="cb11-9"><a href=""></a>fig, ax <span class="op">=</span> plt.subplots(ncols<span class="op">=</span><span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">3.5</span>))</span>
+<span id="cb11-10"><a href=""></a><span class="cf">for</span> a, im, t <span class="kw">in</span> <span class="bu">zip</span>(ax, (brightness, greenness, wetness), (<span class="st">"Brightness"</span>, <span class="st">"Greenness"</span>, <span class="st">"Wetness"</span>)):</span>
+<span id="cb11-11"><a href=""></a>    a.imshow(im)<span class="op">;</span> a.set_title(t)<span class="op">;</span> a.axis(<span class="st">'off'</span>)</span>
+<span id="cb11-12"><a href=""></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="03-spectrales_files/figure-revealjs/cell-9-output-1.png" class="quarto-figure quarto-figure-center" width="854" height="289"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="acp-variance-expliquée" class="slide level2 smaller">
+<h2>ACP — variance expliquée</h2>
+<ul>
+<li class="fragment">On aplatit le cube (bandes × pixels), puis on <strong>centre</strong> les données</li>
+<li class="fragment">On diagonalise la <strong>matrice de covariance</strong> (<code>np.linalg.eigh</code>)</li>
+<li class="fragment">Valeurs propres = variance portée par chaque composante</li>
+</ul>
+<div id="01bb6e25" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href=""></a>cube <span class="op">=</span> img_s2.to_numpy()</span>
+<span id="cb12-2"><a href=""></a>B, H, W <span class="op">=</span> cube.shape</span>
+<span id="cb12-3"><a href=""></a>X <span class="op">=</span> cube.reshape(B, H <span class="op">*</span> W).T</span>
+<span id="cb12-4"><a href=""></a>X_c <span class="op">=</span> X <span class="op">-</span> X.mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb12-5"><a href=""></a>valeurs, vecteurs <span class="op">=</span> np.linalg.eigh(np.cov(X_c, rowvar<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb12-6"><a href=""></a>ordre <span class="op">=</span> np.argsort(valeurs)[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb12-7"><a href=""></a>valeurs, vecteurs <span class="op">=</span> valeurs[ordre], vecteurs[:, ordre]</span>
+<span id="cb12-8"><a href=""></a>ratio <span class="op">=</span> valeurs <span class="op">/</span> valeurs.<span class="bu">sum</span>()</span>
+<span id="cb12-9"><a href=""></a><span class="bu">print</span>(<span class="st">"Variance expliquée (5 premières) :"</span>, ratio[:<span class="dv">5</span>].<span class="bu">round</span>(<span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Variance expliquée (5 premières) : [0.829 0.121 0.032 0.01  0.002]</code></pre>
+</div>
+</div>
+</section>
+<section id="acp-composantes-principales" class="slide level2 smaller">
+<h2>ACP — composantes principales</h2>
+<ul>
+<li class="fragment">Projection des pixels sur les vecteurs propres = un <strong>produit matriciel</strong></li>
+<li class="fragment">Composantes rangées par <strong>variance décroissante</strong></li>
+<li class="fragment">3 premières composantes ≈ l’essentiel de l’information</li>
+</ul>
+<div id="fc719d1d" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href=""></a>composantes <span class="op">=</span> (X_c <span class="op">@</span> vecteurs).T.reshape(B, H, W)</span>
+<span id="cb14-2"><a href=""></a>etirer <span class="op">=</span> <span class="kw">lambda</span> x: (x <span class="op">-</span> x.<span class="bu">min</span>()) <span class="op">/</span> (x.<span class="bu">max</span>() <span class="op">-</span> x.<span class="bu">min</span>())</span>
+<span id="cb14-3"><a href=""></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">4.5</span>, <span class="dv">4</span>))</span>
+<span id="cb14-4"><a href=""></a>ax.imshow(np.dstack([etirer(composantes[i]) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>)]))</span>
+<span id="cb14-5"><a href=""></a>ax.set_title(<span class="st">"Composantes 1-2-3 (RVB)"</span>)<span class="op">;</span> ax.axis(<span class="st">'off'</span>)<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="03-spectrales_files/figure-revealjs/cell-11-output-1.png" class="quarto-figure quarto-figure-center" width="338" height="335"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="reconstruction-et-erreur-de-compression" class="slide level2 smaller">
+<h2>Reconstruction et erreur de compression</h2>
+<ul>
+<li class="fragment">Garder les <span class="math inline">\(k\)</span> premières composantes = <strong>compresser</strong> l’image</li>
+<li class="fragment">Reconstruction = projection inverse + ajout de la moyenne</li>
+<li class="fragment">Erreur mesurée par le <strong>RMSE</strong> en fonction de <span class="math inline">\(k\)</span> <span class="citation" data-cites="richards2022remote">[@richards2022remote]</span></li>
+</ul>
+<div id="629c9b9b" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href=""></a><span class="kw">def</span> erreur_reconstruction(k):</span>
+<span id="cb15-2"><a href=""></a>    proj_k <span class="op">=</span> composantes[:k].reshape(k, <span class="op">-</span><span class="dv">1</span>).T</span>
+<span id="cb15-3"><a href=""></a>    X_approx <span class="op">=</span> proj_k <span class="op">@</span> vecteurs[:, :k].T <span class="op">+</span> X.mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb15-4"><a href=""></a>    <span class="cf">return</span> np.sqrt(np.mean((X <span class="op">-</span> X_approx) <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb15-5"><a href=""></a>erreurs <span class="op">=</span> [erreur_reconstruction(k) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, B <span class="op">+</span> <span class="dv">1</span>)]</span>
+<span id="cb15-6"><a href=""></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="fl">3.5</span>))</span>
+<span id="cb15-7"><a href=""></a>ax.plot(<span class="bu">range</span>(<span class="dv">1</span>, B <span class="op">+</span> <span class="dv">1</span>), erreurs, <span class="st">'o-'</span>)</span>
+<span id="cb15-8"><a href=""></a>ax.set_xlabel(<span class="st">"Composantes conservées (k)"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"RMSE"</span>)<span class="op">;</span> ax.grid(<span class="va">True</span>)</span>
+<span id="cb15-9"><a href=""></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="03-spectrales_files/figure-revealjs/cell-12-output-1.png" class="quarto-figure quarto-figure-center" width="457" height="320"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="au-delà-de-lacp-mnf-et-ica" class="slide level2 smaller">
+<h2>Au-delà de l’ACP : MNF et ICA</h2>
+<ul>
+<li class="fragment">L’ACP suppose des données <strong>gaussiennes</strong> et classe par variance décroissante</li>
+<li class="fragment"><strong>MNF</strong> (<em>Minimum/Maximum Noise Fraction</em>) : classe par rapport signal/bruit décroissant — utile en hyperspectral bruité <span class="citation" data-cites="richards2022remote">[@richards2022remote]</span></li>
+<li class="fragment"><strong>ICA</strong> (composantes indépendantes) : relâche l’hypothèse gaussienne, cherche des composantes statistiquement <strong>indépendantes</strong></li>
+</ul>
+</section>
+<section id="points-clés" class="slide level2 smaller">
+<h2>Points clés</h2>
+<ul>
+<li class="fragment">La <strong>signature spectrale</strong> caractérise le type/état d’un matériau</li>
+<li class="fragment">Un <strong>indice</strong> met en valeur le spectre et améliore la <strong>séparabilité</strong></li>
+<li class="fragment"><strong><code>spyndex</code></strong> : 200+ indices, nomenclature de bandes (<code>N</code>, <code>R</code>, <code>G</code>…)</li>
+<li class="fragment"><strong>NDVI</strong> <span class="math inline">\(=(N-R)/(N+R)\)</span> ; <strong>SAVI</strong>/<strong>EVI</strong> corrigent respectivement le sol et l’atmosphère</li>
+<li class="fragment">Une transformation linéaire de bandes = un <strong>produit matriciel</strong> ; <strong>Tasseled Cap</strong> (coefficients fixes) et <strong>ACP</strong> (coefficients appris) en sont deux exemples</li>
+<li class="fragment">La <strong>reconstruction tronquée</strong> quantifie la perte d’information selon le nombre de composantes conservées</li>
+</ul>
+</section>
+<section id="à-vous-de-jouer" class="slide level2 smaller">
+<h2>À vous de jouer</h2>
+<ul>
+<li>Calculez le <strong>NDWI</strong> (eau) et le <strong>NDBI</strong> (bâti) et affichez-les à côté du NDVI</li>
+<li>Comparez les signatures de deux surfaces supplémentaires de la base USGS</li>
+<li><em>(ACP)</em> Déterminez le nombre minimal de composantes pour une erreur de reconstruction (RMSE) &lt; 0.01</li>
+</ul>
+</section>
+<section id="section" class="slide level2" data-background-color="#357cc0">
+<h2></h2>
+<section id="des-questions" style="text-align:center; color:white;">
+<h3>Des questions ?</h3>
+<p>Chapitre suivant : <strong>Transformations spatiales</strong></p>
+</section>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Traitement d’images satellites avec Python</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="03-spectrales_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="03-spectrales_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="03-spectrales_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="03-spectrales_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="03-spectrales_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="03-spectrales_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="03-spectrales_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="03-spectrales_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="03-spectrales_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="03-spectrales_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="03-spectrales_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

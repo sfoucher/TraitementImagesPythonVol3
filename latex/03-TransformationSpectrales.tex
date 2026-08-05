@@ -1,0 +1,610 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Keep aspect ratio if custom image width or height is specified
+    \setkeys{Gin}{keepaspectratio}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{03-TransformationSpectrales}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{sec-chap03}{%
+\section{Transformations spectrales}\label{sec-chap03}}
+
+\hypertarget{rocket-pruxe9ambule}{%
+\subsection{:rocket: Préambule}\label{rocket-pruxe9ambule}}
+
+Assurez-vous de lire ce préambule avant d'exécutez le reste du notebook.
+\#\#\# :dart: Objectifs Dans ce chapitre, nous abordons quelques
+techniques de réhaussement et de visualisation d'images. Ce chapitre est
+aussi disponible sous la forme d'un notebook Python:
+\href{https://colab.research.google.com/github/sfoucher/TraitementImagesPythonVol1/blob/main/notebooks/03-TransformationSpectrales.ipynb}{\includegraphics{images/colab-badge.svg}}
+
+\hypertarget{librairies}{%
+\subsubsection{Librairies}\label{librairies}}
+
+Les librairies qui vont être explorées dans ce chapitre sont les
+suivantes:
+
+\begin{itemize}
+\item
+  \href{https://scipy.org/}{SciPy -}
+\item
+  \href{https://numpy.org/}{NumPy -}
+\item
+  \href{https://pypi.org/project/opencv-python/}{opencv-python · PyPI}
+\item
+  \href{https://scikit-image.org/}{scikit-image}
+\item
+  \href{https://rasterio.readthedocs.io/en/stable/}{Rasterio}
+\item
+  \href{https://docs.xarray.dev/en/stable/}{Xarray}
+\item
+  \href{https://corteva.github.io/rioxarray/stable/index.html}{rioxarray}
+\end{itemize}
+
+Dans l'environnement Google Colab, seul \texttt{rioxarray} et GDAL
+doivent être installés:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}\PYZpc{}capture}
+\PY{err}{!}\PY{n}{apt}\PY{o}{\PYZhy{}}\PY{n}{get} \PY{n}{update}
+\PY{err}{!}\PY{n}{apt}\PY{o}{\PYZhy{}}\PY{n}{get} \PY{n}{install} \PY{n}{gdal}\PY{o}{\PYZhy{}}\PY{n+nb}{bin} \PY{n}{libgdal}\PY{o}{\PYZhy{}}\PY{n}{dev}
+\PY{err}{!}\PY{n}{pip} \PY{n}{install} \PY{o}{\PYZhy{}}\PY{n}{q} \PY{n}{rioxarray}
+\PY{err}{!}\PY{n}{pip} \PY{n}{install} \PY{o}{\PYZhy{}}\PY{n}{qU} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{geemap[workshop]}\PY{l+s+s2}{\PYZdq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Vérifier les importations:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{rioxarray} \PY{k}{as} \PY{n+nn}{rxr}
+\PY{k+kn}{from} \PY{n+nn}{scipy} \PY{k+kn}{import} \PY{n}{signal}
+\PY{k+kn}{import} \PY{n+nn}{xarray} \PY{k}{as} \PY{n+nn}{xr}
+\PY{k+kn}{import} \PY{n+nn}{xrscipy}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{images-utilisuxe9es}{%
+\subsubsection{Images utilisées}\label{images-utilisuxe9es}}
+
+Nous allons utilisez les images suivantes dans ce chapitre:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}\PYZpc{}capture}
+\PY{err}{!}\PY{n}{wget} \PY{n}{https}\PY{p}{:}\PY{o}{/}\PY{o}{/}\PY{n}{github}\PY{o}{.}\PY{n}{com}\PY{o}{/}\PY{n}{sfoucher}\PY{o}{/}\PY{n}{TraitementImagesPythonVol1}\PY{o}{/}\PY{n}{raw}\PY{o}{/}\PY{n}{refs}\PY{o}{/}\PY{n}{heads}\PY{o}{/}\PY{n}{main}\PY{o}{/}\PY{n}{data}\PY{o}{/}\PY{n}{chapitre01}\PY{o}{/}\PY{n}{subset\PYZus{}RGBNIR\PYZus{}of\PYZus{}S2A\PYZus{}MSIL2A\PYZus{}20240625T153941\PYZus{}N0510\PYZus{}R011\PYZus{}T18TYR\PYZus{}20240625T221903}\PY{o}{.}\PY{n}{tif} \PY{o}{\PYZhy{}}\PY{n}{O} \PY{n}{RGBNIR\PYZus{}of\PYZus{}S2A}\PY{o}{.}\PY{n}{tif}
+\PY{err}{!}\PY{n}{wget} \PY{n}{https}\PY{p}{:}\PY{o}{/}\PY{o}{/}\PY{n}{github}\PY{o}{.}\PY{n}{com}\PY{o}{/}\PY{n}{sfoucher}\PY{o}{/}\PY{n}{opengeos}\PY{o}{\PYZhy{}}\PY{n}{data}\PY{o}{/}\PY{n}{raw}\PY{o}{/}\PY{n}{refs}\PY{o}{/}\PY{n}{heads}\PY{o}{/}\PY{n}{main}\PY{o}{/}\PY{n}{raster}\PY{o}{/}\PY{n}{landsat7}\PY{o}{.}\PY{n}{tif} \PY{o}{\PYZhy{}}\PY{n}{O} \PY{n}{landsat7}\PY{o}{.}\PY{n}{tif}
+\PY{err}{!}\PY{n}{wget} \PY{n}{https}\PY{p}{:}\PY{o}{/}\PY{o}{/}\PY{n}{github}\PY{o}{.}\PY{n}{com}\PY{o}{/}\PY{n}{sfoucher}\PY{o}{/}\PY{n}{opengeos}\PY{o}{\PYZhy{}}\PY{n}{data}\PY{o}{/}\PY{n}{raw}\PY{o}{/}\PY{n}{refs}\PY{o}{/}\PY{n}{heads}\PY{o}{/}\PY{n}{main}\PY{o}{/}\PY{n}{images}\PY{o}{/}\PY{n}{berkeley}\PY{o}{.}\PY{n}{jpg} \PY{o}{\PYZhy{}}\PY{n}{O} \PY{n}{berkeley}\PY{o}{.}\PY{n}{jpg}
+\PY{err}{!}\PY{n}{wget} \PY{n}{https}\PY{p}{:}\PY{o}{/}\PY{o}{/}\PY{n}{github}\PY{o}{.}\PY{n}{com}\PY{o}{/}\PY{n}{sfoucher}\PY{o}{/}\PY{n}{TraitementImagesPythonVol1}\PY{o}{/}\PY{n}{raw}\PY{o}{/}\PY{n}{refs}\PY{o}{/}\PY{n}{heads}\PY{o}{/}\PY{n}{main}\PY{o}{/}\PY{n}{data}\PY{o}{/}\PY{n}{chapitre01}\PY{o}{/}\PY{n}{subset\PYZus{}1\PYZus{}of\PYZus{}S2A\PYZus{}MSIL2A\PYZus{}20240625T153941\PYZus{}N0510\PYZus{}R011\PYZus{}T18TYR\PYZus{}20240625T221903\PYZus{}resampled}\PY{o}{.}\PY{n}{tif} \PY{o}{\PYZhy{}}\PY{n}{O} \PY{n}{sentinel2}\PY{o}{.}\PY{n}{tif}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Vérifiez que vous êtes capable de les lire :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}| eval: true}
+\PY{c+c1}{\PYZsh{}| output: false}
+
+\PY{k}{with} \PY{n}{rxr}\PY{o}{.}\PY{n}{open\PYZus{}rasterio}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{berkeley.jpg}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{mask\PYZus{}and\PYZus{}scale}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)} \PY{k}{as} \PY{n}{img\PYZus{}rgb}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{img\PYZus{}rgb}\PY{p}{)}
+\PY{k}{with} \PY{n}{rxr}\PY{o}{.}\PY{n}{open\PYZus{}rasterio}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RGBNIR\PYZus{}of\PYZus{}S2A.tif}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{mask\PYZus{}and\PYZus{}scale}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)} \PY{k}{as} \PY{n}{img\PYZus{}rgbnir}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{img\PYZus{}rgbnir}\PY{p}{)}
+\PY{k}{with} \PY{n}{rxr}\PY{o}{.}\PY{n}{open\PYZus{}rasterio}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sentinel2.tif}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{mask\PYZus{}and\PYZus{}scale}\PY{o}{=} \PY{k+kc}{True}\PY{p}{)} \PY{k}{as} \PY{n}{img\PYZus{}s2}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{img\PYZus{}s2}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+<xarray.DataArray (band: 3, y: 771, x: 1311)> Size: 12MB
+[3032343 values with dtype=float32]
+Coordinates:
+  * band         (band) int64 24B 1 2 3
+  * x            (x) float64 10kB 0.5 1.5 2.5 {\ldots} 1.308e+03 1.31e+03 1.31e+03
+  * y            (y) float64 6kB 0.5 1.5 2.5 3.5 4.5 {\ldots} 767.5 768.5 769.5 770.5
+    spatial\_ref  int64 8B 0
+<xarray.DataArray (band: 4, y: 1926, x: 2074)> Size: 64MB
+[15978096 values with dtype=float32]
+Coordinates:
+  * band         (band) int64 32B 1 2 3 4
+  * x            (x) float64 17kB 7.318e+05 7.318e+05 {\ldots} 7.525e+05 7.525e+05
+  * y            (y) float64 15kB 5.041e+06 5.041e+06 {\ldots} 5.022e+06 5.022e+06
+    spatial\_ref  int64 8B 0
+Attributes:
+    TIFFTAG\_IMAGEDESCRIPTION:  subset\_RGBNIR\_of\_S2A\_MSIL2A\_20240625T153941\_N0{\ldots}
+    TIFFTAG\_XRESOLUTION:       1
+    TIFFTAG\_YRESOLUTION:       1
+    TIFFTAG\_RESOLUTIONUNIT:    1 (unitless)
+    AREA\_OR\_POINT:             Area
+    STATISTICS\_MAXIMUM:        15104
+    STATISTICS\_MEAN:           1426.6252674912
+    STATISTICS\_MINIMUM:        86
+    STATISTICS\_STDDEV:         306.56427126942
+    STATISTICS\_VALID\_PERCENT:  100
+<xarray.DataArray (band: 158, y: 963, x: 1037)> Size: 631MB
+[157783698 values with dtype=float32]
+Coordinates:
+  * band         (band) int64 1kB 1 2 3 4 5 6 7 {\ldots} 152 153 154 155 156 157 158
+  * x            (x) float64 8kB 7.318e+05 7.318e+05 {\ldots} 7.525e+05 7.525e+05
+  * y            (y) float64 8kB 5.041e+06 5.041e+06 {\ldots} 5.022e+06 5.022e+06
+    spatial\_ref  int64 8B 0
+Attributes:
+    TIFFTAG\_XRESOLUTION:     1
+    TIFFTAG\_YRESOLUTION:     1
+    TIFFTAG\_RESOLUTIONUNIT:  1 (unitless)
+    AREA\_OR\_POINT:           Area
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/sfoucher/miniconda3/lib/python3.10/site-packages/rioxarray/\_io.py:1143:
+NotGeoreferencedWarning: Dataset has no geotransform, gcps, or rpcs. The
+identity matrix will be returned.
+  warnings.warn(str(rio\_warning.message), type(rio\_warning.message))  \# type:
+ignore
+Warning 1: TIFFReadDirectory:Sum of Photometric type-related color channels and
+ExtraSamples doesn't match SamplesPerPixel. Defining non-color channels as
+ExtraSamples.
+Warning 1: TIFFReadDirectory:Sum of Photometric type-related color channels and
+ExtraSamples doesn't match SamplesPerPixel. Defining non-color channels as
+ExtraSamples.
+    \end{Verbatim}
+
+    \hypertarget{quest-ce-que-linformation-spectrale}{%
+\subsection{Qu'est ce que l'information
+spectrale?}\label{quest-ce-que-linformation-spectrale}}
+
+L'information spectrale touche à l'exploitation de la dimension
+spectrale des images (c.à.d le long des bandes spectrales de l'image).
+La taille de cette dimension spectrale dépend du type de capteurs
+considéré. Un capteur à très haute résolution spatiale par exemple aura
+très peu de bandes (4 ou 5). Un capteur multispectral pourra contenir
+une quinzaine de bande. À l'autre extrême, on trouvera les capteurs
+hyperspectraux qui peuvent contenir des centaines de bandes spectrales.
+
+Pour une surface donnée, la forme des valeurs le long de l'axe spectrale
+caractérise le type de matériau observé ainsi que son état. On parle
+souvent alors de signature spectrale. On peut voir celle-ci comme une
+généralisation de la couleur d'un matériau au delà des bandes visibles
+du spectre. L'exploitation de ces signatures spectrales est probablement
+un des principes les plus importants en télédétection qui le distingue
+de la vison par ordinateur.
+
+\hypertarget{indices-spectraux}{%
+\subsection{Indices spectraux}\label{indices-spectraux}}
+
+Il existe une vaste littérature sur les indices spectraux, le choix d'un
+indice plutôt qu'un autre dépend fortement de l'application visée, nous
+allons simplement couvrir les principes de base ici.
+
+Le principe d'un indice spectral consiste à mettre en valeur certaines
+caractéristiques du spectre comme des pentes, des gradients, etc.
+
+\hypertarget{ruxe9duction-de-dimension}{%
+\subsection{Réduction de dimension}\label{ruxe9duction-de-dimension}}
+
+La réduction de dimension vise à ne retenir que l'information principale
+d'un jeu de données. L'objectif est parfois d'éliminer le bruit d'un
+capteur ou de faciliter la visualisation en ne retenant que 3 bandes
+principales. Le degré d'information est souvent mesuré par la variance
+d'une bande, c'est à dire son contraste. L'analyse en composante
+principale vise alors à ranger l'information contenue dans une image en
+ordre de variance décroissante.
+
+\hypertarget{analyses-en-composantes-principales}{%
+\subsubsection{Analyses en composantes
+principales}\label{analyses-en-composantes-principales}}
+
+L'analyse en composantes principales (ACP) est probablement la plus
+employée. En théorie, l'ACP n'est valide seulement que sur des données
+Gaussiennes c'est à dire que le nuage de points des données a la forme
+d'une ellipse à N dimensions. Cette ellipse est caractérisée par des
+directions principales (grand axe versus petit axe). La première
+composante est celle du grand axe de l'ellipse pour laquelle la donnée
+présente le maximum de variation. L'ACP est une décomposition linéaire,
+c'est à dire que les composantes principales sont des sommes pondérées
+des valeurs originales.
+
+\hypertarget{exercices-de-ruxe9vision}{%
+\subsection{Exercices de révision}\label{exercices-de-ruxe9vision}}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

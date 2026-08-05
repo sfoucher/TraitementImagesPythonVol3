@@ -1,0 +1,4 @@
+./data/chapitre01 filter=lfs diff=lfs merge=lfs -text
+./data/chapitre01/subset_RGBNIR_of_S2A_MSIL2A_20240625T153941_N0510_R011_T18TYR_20240625T221903.tif filter=lfs diff=lfs merge=lfs -text
+./data/chapitre01/subset_1_of_S2A_MSIL2A_20240625T153941_N0510_R011_T18TYR_20240625T221903_resampled.tif filter=lfs diff=lfs merge=lfs -text
+*.tif filter=lfs diff=lfs merge=lfs -text

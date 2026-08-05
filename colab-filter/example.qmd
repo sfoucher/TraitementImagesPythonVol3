@@ -1,0 +1,11 @@
+---
+title: "Colab-filter Example"
+filters:
+  - colab-filter
+---
+
+## Heading
+
+This filter adds formatting to heading text.
+
+

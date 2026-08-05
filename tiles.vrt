@@ -1,0 +1,8 @@
+<OGRVRTDataSource>
+    <OGRVRTLayer name="RGBNIR_of_S2A">
+        <SrcDataSource>RGBNIR_of_S2A.shp</SrcDataSource>
+    </OGRVRTLayer>
+    <OGRVRTLayer name="carte_shape">
+        <SrcDataSource>carte_shape.shp</SrcDataSource>
+    </OGRVRTLayer>
+</OGRVRTDataSource>

@@ -1,0 +1,129 @@
+- label: "En quoi consiste une classification supervisée ?"
+  type: uc
+  response: 2
+  answers:
+     - "Regrouper les pixels sans aucune étiquette de référence"
+     - "Attribuer une classe à chaque point à partir d'un jeu d'entraînement étiqueté"
+     - "Réduire le nombre de bandes d'une image"
+     - "Corriger la géométrie d'une image"
+  help: "Relisez au besoin la section « Principes généraux »."
+
+- label: "Qu'est-ce que le sur-apprentissage (overfitting) ?"
+  type: uc
+  response: 1
+  answers:
+     - "Le modèle apprend le bruit des données d'entraînement et généralise mal"
+     - "Le modèle est trop simple pour s'ajuster aux données"
+     - "Le modèle n'a pas assez de dimensions"
+     - "Le modèle ignore l'ensemble d'entraînement"
+  help: "Relisez au besoin la section « Comportement d'un modèle »."
+
+- label: "Pourquoi a-t-on besoin d'un ensemble de validation/test distinct de l'entraînement ?"
+  type: uc
+  response: 3
+  answers:
+     - "Pour accélérer l'entraînement"
+     - "Pour augmenter le nombre de classes"
+     - "Parce que l'erreur sur l'entraînement seul ne révèle pas le sur-apprentissage"
+     - "Pour normaliser les données"
+  help: "Relisez au besoin les sections « Comportement d'un modèle » et « Pipeline »."
+
+- label: "Un ensemble d'entraînement où les classes ont des fréquences très différentes est dit :"
+  type: uc
+  response: 2
+  answers:
+     - "normalisé"
+     - "déséquilibré"
+     - "orthogonal"
+     - "supervisé"
+  help: "Relisez au besoin la section « Construction d'un ensemble d'entraînement »."
+
+- label: "Que mesure la distance de Jeffries-Matusita (JM) entre deux classes ?"
+  type: uc
+  response: 2
+  answers:
+     - "Le nombre d'échantillons par classe"
+     - "La séparabilité des classes sous l'hypothèse de modèles gaussiens"
+     - "La résolution spatiale de l'image"
+     - "Le temps de calcul du modèle"
+  help: "Relisez au besoin la section « Analyse préliminaire des données »."
+
+- label: "Dans la matrice de confusion, le rappel (recall) d'une classe correspond à :"
+  type: uc
+  response: 1
+  answers:
+     - "une normalisation par rapport aux lignes (sensible aux erreurs d'omission)"
+     - "une normalisation par rapport aux colonnes (sensible aux fausses alarmes)"
+     - "la somme totale de la matrice"
+     - "la diagonale divisée par le nombre de classes"
+  help: "Relisez au besoin la section « Mesures de performance »."
+
+- label: "Le f1-score est :"
+  type: uc
+  response: 3
+  answers:
+     - "la précision seule"
+     - "le rappel seul"
+     - "une moyenne (harmonique) de la précision et du rappel"
+     - "le nombre de points bien classés"
+  help: "Relisez au besoin la section « Mesures de performance »."
+
+- label: "Quel est le principe de la méthode des parallélépipèdes ?"
+  type: uc
+  response: 2
+  answers:
+     - "Un vote parmi les K voisins les plus proches"
+     - "Délimiter le domaine de chaque classe par une boîte min/max par bande"
+     - "Ajuster une gaussienne multivariée par classe"
+     - "Construire une cascade de règles de seuil"
+  help: "Relisez au besoin la section « Méthode des parallélépipèdes »."
+
+- label: "Qu'est-ce que la malédiction de la dimensionnalité ?"
+  type: uc
+  response: 1
+  answers:
+     - "Le nombre de points nécessaires croît exponentiellement avec le nombre de dimensions"
+     - "Les images deviennent trop grandes à afficher"
+     - "Le nombre de classes augmente avec les bandes"
+     - "Les couleurs se mélangent au-delà de trois bandes"
+  help: "Relisez au besoin la section « La malédiction de la haute dimension »."
+
+- label: "Pourquoi centre-t-on et réduit-on (StandardScaler) les données avant un K-NN ?"
+  type: uc
+  response: 1
+  answers:
+     - "Pour que chaque dimension ait le même poids dans le calcul des distances"
+     - "Pour réduire le nombre de classes"
+     - "Pour accélérer l'affichage"
+     - "Pour supprimer les points aberrants"
+  help: "Relisez au besoin la section « Plus proches voisins »."
+
+- label: "Dans un K-NN, augmenter la valeur de K :"
+  type: uc
+  response: 2
+  answers:
+     - "n'a aucun effet sur les frontières de décision"
+     - "rend les frontières de décision plus lisses (et le calcul plus long)"
+     - "garantit toujours une meilleure précision"
+     - "réduit le nombre de dimensions"
+  help: "Relisez au besoin la section « Plus proches voisins »."
+
+- label: "Quelle hypothèse simplificatrice fait la méthode Bayésienne naïve ?"
+  type: uc
+  response: 3
+  answers:
+     - "Les classes ont toutes la même fréquence"
+     - "Les frontières de décision sont linéaires"
+     - "Les dimensions (bandes) sont indépendantes"
+     - "Toutes les classes ont la même covariance"
+  help: "Relisez au besoin la section « Méthode Bayésienne naïve »."
+
+- label: "La différence entre une méthode paramétrique et non paramétrique est :"
+  type: uc
+  response: 1
+  answers:
+     - "le nombre de paramètres d'une méthode paramétrique est fixe et ne dépend pas de la taille des données"
+     - "une méthode paramétrique n'a pas besoin d'entraînement"
+     - "une méthode non paramétrique ne fait que du seuillage"
+     - "il n'y a aucune différence"
+  help: "Relisez au besoin les sections « Méthodes non paramétriques » et « Méthodes paramétriques »."

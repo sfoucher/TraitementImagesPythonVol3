@@ -1,0 +1,11 @@
+{
+    "cSpell.language": "en,fr",
+    "cSpell.enableFiletypes": [
+        "quarto"
+    ],
+    "editor.minimap.enabled": false,
+    "cSpell.words": [
+        "jupyter",
+        "opencv"
+    ]
+}

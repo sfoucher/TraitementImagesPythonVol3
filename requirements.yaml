@@ -1,0 +1,18 @@
+name: atelier
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - jupyter
+  - scipy
+  - rasterio
+  - rioxarray
+  - scikit-image
+  - gdal
+  - pip
+  - pip:
+    - requests
+    - spyder-kernels==3.1.*
+    - opencv-python
+    - PyQt5

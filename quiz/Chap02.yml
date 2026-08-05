@@ -1,0 +1,96 @@
+- label: "Quelle est la principale bibliothèque de visualisation d'images en Python ?"
+  type: uc
+  response: 1
+  answers:
+     - "matplotlib"
+     - "rasterio"
+     - "GDAL"
+     - "NumPy"
+  help: "Relisez au besoin la section « Visualisation en Python »."
+
+- label: "Dans quel ordre `imshow` attend-il les dimensions d'une image à plusieurs bandes ?"
+  type: uc
+  response: 2
+  answers:
+     - "bande, hauteur, largeur"
+     - "hauteur, largeur, bande"
+     - "largeur, hauteur, bande"
+     - "L'ordre n'a pas d'importance"
+  help: "Relisez au besoin la section « Visualisation en Python »."
+
+- label: "Pour afficher une image à trois bandes avec `imshow`, les valeurs doivent être :"
+  type: uc
+  response: 1
+  answers:
+     - "Ramenées entre 0 et 1 (ou entre 0 et 255)"
+     - "Laissées telles quelles"
+     - "Converties en entiers 64 bits"
+     - "Transformées en décibels"
+  help: "Relisez au besoin la section « Visualisation en Python »."
+
+- label: "Le réhaussement visuel modifie de façon permanente les valeurs de la donnée d'origine."
+  type: uc
+  response: 2
+  answers:
+     - "Vrai"
+     - "Faux"
+  help: "Le réhaussement est appliqué dynamiquement à l'affichage; relisez la section « Réhaussements visuels »."
+
+- label: "Quelles statistiques univariées sont utiles au réhaussement d'une image ?"
+  type: mc
+  response: [1, 2, 3, 4]
+  answers:
+     - "Valeurs minimale et maximale"
+     - "Moyenne"
+     - "Quantiles et percentiles"
+     - "Écart-type"
+     - "Le système de projection cartographique"
+  help: "Relisez au besoin la section « Statistiques d'une image »."
+
+- label: "Pour une distribution très asymétrique (p. ex. une image SAR), quel outil permet de fixer des bornes d'affichage robustes ?"
+  type: uc
+  response: 2
+  answers:
+     - "La valeur moyenne seule"
+     - "Les percentiles (p. ex. 2 % et 98 %)"
+     - "La valeur maximale seule"
+     - "Le nombre de bandes"
+  help: "Relisez au besoin la section « Cas des histogrammes asymétriques »."
+
+- label: "Pour une image radar, quelle transformation non linéaire est populaire pour afficher la rétrodiffusion ?"
+  type: uc
+  response: 1
+  answers:
+     - "Le passage en décibels (10·log10)"
+     - "La mise au carré"
+     - "L'inverse (1/x)"
+     - "La racine cubique"
+  help: "Relisez au besoin la section « Réhaussement par fonctions »."
+
+- label: "Quel est le but de l'égalisation d'histogramme ?"
+  type: uc
+  response: 1
+  answers:
+     - "Rendre les valeurs de pixels équiprobables (histogramme aplati)"
+     - "Réduire la résolution spatiale de l'image"
+     - "Supprimer le bruit thermique du capteur"
+     - "Géoréférencer l'image"
+  help: "Relisez au besoin la section « Égalisation d'histogramme »."
+
+- label: "Les paramètres `vmin` et `vmax` de `imshow` contrôlent la dynamique affichée sans modifier la donnée."
+  type: uc
+  response: 1
+  answers:
+     - "Vrai"
+     - "Faux"
+  help: "Relisez au besoin la section « Cas des histogrammes asymétriques »."
+
+- label: "Dans l'exemple du chapitre, quel triplet de bandes Sentinel-2 produit un composé vraies couleurs (RVB) ?"
+  type: uc
+  response: 2
+  answers:
+     - "8, 3, 2"
+     - "4, 3, 2"
+     - "12, 8, 4"
+     - "12, 11, 4"
+  help: "Relisez au besoin la section « Composés colorés »."

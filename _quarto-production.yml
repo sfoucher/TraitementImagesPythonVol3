@@ -1,0 +1,62 @@
+format:
+  pdf:
+    filters:
+      - lua/callout_custom_pdf.lua
+    pdf-engine: pdflatex
+    keep-tex: true
+    fig-dpi: 100
+    documentclass: scrbook
+    papersize: letter
+    classoption:
+      # Remove odd-even page breaks (for printing PDF)
+      - open=any
+      - twoside=false # don't use even/odd pages, no blank pages
+      # pass french to book class (babel will see it automatically)
+      - french
+    output: "traitement_images_python.pdf"
+    hyperrefoptions:
+#      - pdfstartview={XYZ null null 0.75}
+      - pdfpagemode=UseOutlines
+      - pdfdisplaydoctitle=true
+      - pdfpagelayout=SinglePage
+      - pdfstartpage=1
+    geometry:
+      - top=20mm
+      - left=15mm
+      - right=15mm
+      - heightrounded
+#    fontfamily: libertinus
+    fontfamilyoptions:
+      - p
+    lof: true
+    lot: true
+    toc: true
+    toc-depth: 3
+    code-block-border-left: false
+    fontsize: 11pt
+    urlcolor: Green4
+    citecolor: violet
+    linkcolor: violet
+    colorlinks: true
+#    include-before-body:
+#      - text: |
+#          \usepackage{xparse}
+#      - file: packages.tex
+    header-includes:
+      - \usepackage{xparse}
+      - \renewcommand{\thepart}{} % Enlever numérotation des parties
+      - \setcounter{secnumdepth}{3} % Activer la numérotation des sections jusqu'au niveau des sous-sections
+    include-in-header:
+      - tex-hacks/color-tables.tex
+      - tex-hacks/code-font.tex
+      - tex-hacks/fix-unicode-chars.tex
+      - tex-hacks/image-on-title-page.tex
+      - tex-hacks/callout.tex
+
+
+
+
+
+
+
+
