@@ -51,7 +51,10 @@ book:
       Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.
   cover-image: images/couverture-full.png
   favicon: images/favicon.ico
-  site-url: https://serie-python-tele.github.io/TraitementImagesPythonVol3/index.html
+  # GitHub Pages sert ce livre depuis la branche main, dossier /docs.
+  # Ancienne valeur (organisation serie-python-tele, utilisée par le volume 1) :
+  # site-url: https://serie-python-tele.github.io/TraitementImagesPythonVol3/index.html
+  site-url: https://sfoucher.github.io/TraitementImagesPythonVol3/
   repo-url: https://github.com/sfoucher/TraitementImagesPythonVol3/issues
   repo-branch: main
   issue-url: https://github.com/sfoucher/TraitementImagesPythonVol3/issues
