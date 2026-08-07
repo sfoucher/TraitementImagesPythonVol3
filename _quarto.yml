@@ -24,45 +24,37 @@ crossref:
   eq-title: Équation
   lst-title: Bloc de code
 book:
-  title: "Traitement d'images satellites avec Python"
+  title: "Traitement de la donnée géospatiale avec Python - applications thématiques"
   # process.sh (-M subtitle) overrides this: PDF -> "Version 1.<count>", HTML -> "Première édition · Version 1.<count>".
   subtitle: "Première édition"
   search: true
-  author: 
+  author:
     - name: Samuel Foucher
       url: https://www.usherbrooke.ca/recherche/fr/specialistes/details/samuel.foucher
       affiliation: Département de géomatique appliquée<br>Université de Sherbrooke
       affiliation-url: https://www.usherbrooke.ca/geomatique/
-    - name: Philippe Apparicio
-      url: https://www.usherbrooke.ca/recherche/fr/specialistes/details/philippe.apparicio
-      affiliation: Département de géomatique appliquée<br>Université de Sherbrooke
-      affiliation-url: https://www.usherbrooke.ca/geomatique/
-    - name: Yacine Bouroubi
-      url: https://www.usherbrooke.ca/recherche/fr/specialistes/details/yacine-bouroubi
-      affiliation: Département de géomatique appliquée<br>Université de Sherbrooke
-      affiliation-url: https://www.usherbrooke.ca/geomatique/
-    - name: Mickaël Germain
-      url: https://www.usherbrooke.ca/recherche/fr/specialistes/details/mickael-germain
-      affiliation: Département de géomatique appliquée<br>Université de Sherbrooke
-      affiliation-url: https://www.usherbrooke.ca/geomatique/
-    - name: Étienne Clabaut
-      url: 
-      affiliation: Département de géomatique appliquée<br>Université de Sherbrooke
-      affiliation-url: https://www.usherbrooke.ca/geomatique/      
+    - name: Mélanie Trudel
+      url: https://www.usherbrooke.ca/recherche/fr/specialistes/details/melanie.trudel
+      affiliation: Département de génie civil et de génie du bâtiment<br>Université de Sherbrooke
+      affiliation-url: https://www.usherbrooke.ca/genie/civil/
+    - name: Victoria Litalien
+      url:
+      affiliation: Département de génie civil et de génie du bâtiment<br>Université de Sherbrooke
+      affiliation-url: https://www.usherbrooke.ca/genie/civil/
   date: today
   date-format: YYYY-MM-DD
   reader-mode: false
   page-footer:
     left: |
-      Traitement d'images satellites avec Python.
+      Traitement de la donnée géospatiale avec Python.
     right: |
       Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.
   cover-image: images/couverture-full.png
   favicon: images/favicon.ico
-  site-url: https://serie-python-tele.github.io/TraitementImagesPythonVol1/index.html
-  repo-url: https://github.com/sfoucher/TraitementImagesPythonVol1/issues
+  site-url: https://serie-python-tele.github.io/TraitementImagesPythonVol3/index.html
+  repo-url: https://github.com/sfoucher/TraitementImagesPythonVol3/issues
   repo-branch: main
-  issue-url: https://github.com/sfoucher/TraitementImagesPythonVol1/issues
+  issue-url: https://github.com/sfoucher/TraitementImagesPythonVol3/issues
   repo-actions:
   - issue
   downloads:
@@ -71,20 +63,8 @@ book:
   chapters:
   - index.qmd
   - 00-auteurs.qmd
-  - part: Partie 1. Importation, manipulation et visualisation de données satellitaires
-  - 00-PriseEnMainPython.qmd
-  - 01-ImportationManipulationImages.qmd
-  - 02-RehaussementVisualisationImages.qmd
-  - part: Partie 2. Transformations des données satellitaires
-  - 03-TransformationSpectrales.qmd
-  - 04-TransformationSpatiales.qmd
-  - part: Partie 3. Classifications d'images
-  - 05-ClassificationsSupervisees.qmd
-#  - 06-ClassificationsNonSupervisees.qmd
-#  - part: Partie 4. Données massives
-#  - 07-PlateformesMegadonnees.qmd
-#  - part: Partie 5. Exercices et bibliographie
-#  - 08-Exercices.qmd   # généré par make_exercices.py (voir process.sh) — désactivé pour l'instant
+  - part: Partie 1. Hydrologie spatiale
+  - 00-SWOT.qmd
   - references.qmd
       
 bibliography: references.bib

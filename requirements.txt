@@ -1,6 +1,17 @@
-ipywidget
+ipywidgets
 scipy
-geemap
 rasterio
 rioxarray
 scikit-image
+geopandas
+matplotlib
+# --- SWOT chapter (00-SWOT.qmd) ---
+earthaccess
+h5netcdf
+contextily
+folium
+tqdm
+holoviews
+hvplot
+bokeh
+geoviews

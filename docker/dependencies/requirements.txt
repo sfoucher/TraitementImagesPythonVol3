@@ -41,6 +41,17 @@ black>=23.0.0
 jupyter-cache
 marimo
 matplotlib
+# --- SWOT chapter (00-SWOT.qmd) ---
+earthaccess
+h5netcdf
+contextily
+folium
+tqdm
+holoviews
+hvplot
+bokeh
+geoviews
+# ---
 rasterio
 scipy
 rioxarray

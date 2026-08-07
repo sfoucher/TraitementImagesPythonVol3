@@ -6,7 +6,8 @@ set -euo pipefail
 # (or set IMAGE directly). Build it: docker build --build-arg QUARTO_VERSION=$QUARTO_VERSION -t $IMAGE -f docker/linux/Dockerfile .
 QUARTO_VERSION="${QUARTO_VERSION:-1.9.38}"
 IMAGE="${IMAGE:-mlsysbook-linux:quarto-${QUARTO_VERSION}}"
-PDF_NAME="Traitement-d-images-satellites-avec-Python.pdf"
+# Quarto derives the PDF filename from the book title, so glob it after render
+# instead of hard-coding (see step 2).
 
 # Auto version stamped on the PDF title page (subtitle). Major fixed at 1,
 # minor = git commit count (monotonic, no upkeep). Overridable: BOOK_VERSION=1.2 ./process.sh
@@ -14,12 +15,7 @@ BOOK_VERSION="${BOOK_VERSION:-1.$(git rev-list --count HEAD 2>/dev/null || echo 
 
 # Chapters exported to ipynb (+marimo) and stashed under notebooks/
 CHAPTERS=(
-  00-PriseEnMainPython
-  01-ImportationManipulationImages
-  02-RehaussementVisualisationImages
-  03-TransformationSpectrales
-  04-TransformationSpatiales
-  05-ClassificationsSupervisees
+  00-SWOT
 )
 # Aux pages: export and stash under notebooks/ (not marimo-converted)
 AUX=(index 00-auteurs references)
@@ -44,7 +40,8 @@ q quarto render --cache --to html \
 # 2. PDF -> publish into docs for the download link
 q quarto render --profile production --cache --no-clean --to pdf \
   -M subtitle="Version ${BOOK_VERSION}" --output-dir ./pdf
-cp -f "./pdf/$PDF_NAME" ./docs/
+PDF_PATH=$(ls -t ./pdf/*.pdf | head -1)
+cp -f "$PDF_PATH" ./docs/
 
 # 2b. Typst PDF (experimental, orange-book layout) -> typst-out/.
 # Not published to docs (LaTeX PDF stays canonical); non-fatal so an
@@ -53,17 +50,8 @@ q quarto render --profile typst --to orange-book-typst --cache --no-clean \
   -M subtitle="Version ${BOOK_VERSION}" --output-dir ./typst-out \
   || echo "WARN: typst render failed (experimental format); continuing"
 
-# 2c. Teaching slides (revealjs) -> docs/slides/ (own project: slides/_quarto.yml).
-# Non-fatal: a slide-deck error must not abort the book build.
-q quarto render slides --to revealjs --cache \
-  || echo "WARN: slides render failed; continuing"
-
-# The landing page must be a normal HTML page, not a deck. The `--to revealjs`
-# above force-overrides index.qmd's own `format: html`, so re-render it to HTML
-# afterwards (this pass wins). Clear its _files first to drop orphan revealjs libs.
-rm -rf docs/slides/index_files
-q quarto render slides/index.qmd --to html --cache \
-  || echo "WARN: slides index (html) render failed; continuing"
+# 2c. Teaching slides (revealjs): removed with the volume 1 chapters. Restore the
+# `slides/` sub-project from git history when volume 3 decks are written.
 
 # 3. DOCX (optional)
 # mkdir -p docx

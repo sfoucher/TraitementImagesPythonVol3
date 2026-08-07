@@ -7,13 +7,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Samuel Foucher">
-<meta name="author" content="Philippe Apparicio">
-<meta name="author" content="Yacine Bouroubi">
-<meta name="author" content="Mickaël Germain">
-<meta name="author" content="Étienne Clabaut">
-<meta name="dcterms.date" content="2026-08-05">
+<meta name="author" content="Mélanie Trudel">
+<meta name="author" content="Victoria Litalien">
+<meta name="dcterms.date" content="2026-08-07">
 
-<title>Traitement d’images satellites avec Python</title>
+<title>Traitement de la donnée géospatiale avec Python - applications thématiques</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -107,10 +105,10 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Traitement d’images satellites avec Python</a> 
+      <a href="./">Traitement de la donnée géospatiale avec Python - applications thématiques</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/sfoucher/TraitementImagesPythonVol1/issues" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
-    <a href="./Traitement-d-images-satellites-avec-Python.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <a href="https://github.com/sfoucher/TraitementImagesPythonVol3/issues" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+    <a href="./Traitement-de-la-donnée-géospatiale-avec-Python---applications-thématiques.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
 </div>
     </div>
       </div>
@@ -135,50 +133,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 1. Importation, manipulation et visualisation de données satellitaires</span></span>
+ <span class="menu-text">Partie 1. Hydrologie spatiale</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00-PriseEnMainPython.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction au langage Python</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./01-ImportationManipulationImages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importation et manipulation de données spatiales</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./02-RehaussementVisualisationImages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Réhaussement et visualisation d’images</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 2. Transformations des données satellitaires</span></span>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./03-TransformationSpectrales.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Transformations spectrales</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./04-TransformationSpatiales.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Transformations spatiales</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 3. Classifications d'images</span></span>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./05-ClassificationsSupervisees.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Classifications d’images supervisées</span></span></a>
+  <a href="./00-SWOT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Hydrologie spatiale avec la mission SWOT</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -211,21 +171,21 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/sfoucher/TraitementImagesPythonVol1/issues" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/sfoucher/TraitementImagesPythonVol3/issues" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Traitement d’images satellites avec Python</h1>
-<p class="subtitle lead">Première édition · Version 1.391</p>
+<h1 class="title">Traitement de la donnée géospatiale avec Python - applications thématiques</h1>
+<p class="subtitle lead">Première édition</p>
 </div>
 
 
 <div class="quarto-title-meta-author">
   <div class="quarto-title-meta-heading">Auteurs</div>
-  <div class="quarto-title-meta-heading">Affiliation</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
   
     <div class="quarto-title-meta-contents">
     <p class="author"><a href="https://www.usherbrooke.ca/recherche/fr/specialistes/details/samuel.foucher">Samuel Foucher</a> </p>
@@ -238,42 +198,22 @@ ul.task-list li input[type="checkbox"] {
           </p>
       </div>
     <div class="quarto-title-meta-contents">
-    <p class="author"><a href="https://www.usherbrooke.ca/recherche/fr/specialistes/details/philippe.apparicio">Philippe Apparicio</a> </p>
+    <p class="author"><a href="https://www.usherbrooke.ca/recherche/fr/specialistes/details/melanie.trudel">Mélanie Trudel</a> </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
-            <a href="https://www.usherbrooke.ca/geomatique/">
-            Département de géomatique appliquée<br>Université de Sherbrooke
+            <a href="https://www.usherbrooke.ca/genie/civil/">
+            Département de génie civil et de génie du bâtiment<br>Université de Sherbrooke
             </a>
           </p>
       </div>
     <div class="quarto-title-meta-contents">
-    <p class="author"><a href="https://www.usherbrooke.ca/recherche/fr/specialistes/details/yacine-bouroubi">Yacine Bouroubi</a> </p>
+    <p class="author">Victoria Litalien </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
-            <a href="https://www.usherbrooke.ca/geomatique/">
-            Département de géomatique appliquée<br>Université de Sherbrooke
-            </a>
-          </p>
-      </div>
-    <div class="quarto-title-meta-contents">
-    <p class="author"><a href="https://www.usherbrooke.ca/recherche/fr/specialistes/details/mickael-germain">Mickaël Germain</a> </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            <a href="https://www.usherbrooke.ca/geomatique/">
-            Département de géomatique appliquée<br>Université de Sherbrooke
-            </a>
-          </p>
-      </div>
-    <div class="quarto-title-meta-contents">
-    <p class="author">Étienne Clabaut </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            <a href="https://www.usherbrooke.ca/geomatique/">
-            Département de géomatique appliquée<br>Université de Sherbrooke
+            <a href="https://www.usherbrooke.ca/genie/civil/">
+            Département de génie civil et de génie du bâtiment<br>Université de Sherbrooke
             </a>
           </p>
       </div>
@@ -285,7 +225,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Date de publication</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2026-08-05</p>
+      <p class="date">2026-08-07</p>
     </div>
   </div>
   
@@ -297,8 +237,8 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><img src="images/couverture-full.png" title="Traitement d'images satellites avec Python" class="quarto-cover-image nolightbox img-fluid"></p>
-<p><strong>Résumé&nbsp;:</strong> Ce livre vise à décrire une panoplie de méthodes de traitement d’images satellites avec le langage Python. Celles et ceux souhaitant migrer progressivement d’un autre logiciel d’imagerie et de télédétection vers Python trouveront dans cet ouvrage les éléments pour une transition en douceur. La philosophie de ce livre est de donner toutes les clefs de compréhension et de mise en œuvre des méthodes abordées dans Python. La présentation des méthodes est basée sur une approche compréhensive et intuitive plutôt que mathématique, sans pour autant négliger la rigueur mathématique ou statistique. Des rappels sur les fondements en télédétection pourront apparaître au besoin afin d’éclairer les approches techniques. Plusieurs éditions régulières sont prévues sachant que ce domaine évolue constamment.</p>
+<p><img src="images/couverture-full.png" title="Traitement de la donnée géospatiale avec Python - applications thématiques" class="quarto-cover-image nolightbox img-fluid"></p>
+<p><strong>Résumé&nbsp;:</strong> Ce troisième volume de la série aborde le traitement de la donnée géospatiale avec Python par des <strong>applications thématiques</strong> : chaque chapitre part d’un besoin concret (hydrologie, cryosphère, agriculture, environnement urbain, etc.) et déroule la chaîne complète, de l’accès aux données jusqu’à l’interprétation des résultats. Il suppose acquises les bases présentées dans les volumes précédents de la série. La philosophie reste la même : donner toutes les clefs de compréhension et de mise en œuvre dans Python, avec une approche compréhensive et intuitive plutôt que mathématique, sans pour autant négliger la rigueur. Plusieurs éditions régulières sont prévues sachant que ce domaine évolue constamment.</p>
 <p><strong>Ce projet est en cours d’écriture et le contenu n’est pas complet</strong></p>
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure">
@@ -306,10 +246,10 @@ ul.task-list li input[type="checkbox"] {
 </figure>
 </div>
 <p><strong>Remerciements&nbsp;:</strong> Ce manuel a été réalisé avec le soutien de la fabriqueREL. Fondée en 2019, la fabriqueREL est portée par divers établissements d’enseignement supérieur du Québec et agit en collaboration avec les services de soutien pédagogique et les bibliothèques. Son but est de faire des ressources éducatives libres (REL) le matériel privilégié en enseignement supérieur au Québec.</p>
-<p><strong>Mise en page&nbsp;:</strong> Samuel Foucher, Philippe Apparicio et Marie-Hélène Gadbois Del Carpio.</p>
-<p>© Samuel Foucher, Philippe Apparicio, Yacine Bouroubi, Mickaël Germain et Étienne Clabaut.</p>
+<p><strong>Mise en page&nbsp;:</strong> Samuel Foucher.</p>
+<p>© Samuel Foucher, Mélanie Trudel et Victoria Litalien.</p>
 <p><strong>Utilisation de l’IA&nbsp;:</strong> Claude Code a été utilisé pour aider sur certains aspects techniques et de production: gestion de GitHub et des profils quarto, nettoyage des notebook python, vérification du contenu et des fichiers produits, détection des erreurs.</p>
-<p><strong>Pour citer cet ouvrage&nbsp;:</strong> Foucher S., Apparicio P., Bouroubi Y., Germain M. et Clabaut, E. (2025). <em>Traitement d’images satellites avec Python</em>. Université de Sherbrooke, Département de géomatique appliquée. fabriqueREL. Licence CC&nbsp;BY-SA. <br> <br></p>
+<p><strong>Pour citer cet ouvrage&nbsp;:</strong> Foucher S., Trudel M. et Litalien V. (2026). <em>Traitement de la donnée géospatiale avec Python&nbsp;: applications thématiques</em>. Université de Sherbrooke, Département de géomatique appliquée. fabriqueREL. Licence CC BY-SA. <br> <br></p>
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure">
 <p><img src="images/introduction/CouvertureP2.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:80.0%"></p>
@@ -324,7 +264,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><p><strong>Retenir</strong>, c’est-à-dire télécharger et imprimer gratuitement le livre. Notez qu’il aurait été plutôt surprenant d’écrire un livre payant sur un logiciel libre et donc gratuit. Aussi, nous aurions été très embarrassés que des personnes étudiantes avec des ressources financières limitées doivent payer pour avoir accès au livre, sans pour autant savoir préalablement si le contenu est réellement adapté à leurs besoins.</p></li>
 <li><p><strong>Réutiliser</strong>, c’est-à-dire utiliser la totalité ou une section du livre sans limitation et sans compensation financière. Cela permet ainsi à d’autres personnes enseignantes de l’utiliser dans le cadre d’activités pédagogiques.</p></li>
-<li><p><strong>Réviser</strong>, c’est-à-dire modifier, adapter et traduire le contenu en fonction d’un besoin pédagogique précis puisqu’aucun manuel n’est parfait, tant s’en faut! Le livre a d’ailleurs été écrit intégralement dans Python avec <a href="https://quarto.org/">Quatro</a>. Quiconque peut ainsi télécharger gratuitement le code source du livre sur <a href="https://github.com/serie-python-tele/TraitementImagesPythonVol1">GitHub</a> et le modifier à sa guise (voir l’encadré intitulé <em>Suggestions d’adaptation du manuel</em>).</p></li>
+<li><p><strong>Réviser</strong>, c’est-à-dire modifier, adapter et traduire le contenu en fonction d’un besoin pédagogique précis puisqu’aucun manuel n’est parfait, tant s’en faut! Le livre a d’ailleurs été écrit intégralement dans Python avec <a href="https://quarto.org/">Quatro</a>. Quiconque peut ainsi télécharger gratuitement le code source du livre sur <a href="https://github.com/serie-python-tele/TraitementImagesPythonVol3">GitHub</a> et le modifier à sa guise (voir l’encadré intitulé <em>Suggestions d’adaptation du manuel</em>).</p></li>
 <li><p><strong>Remixer</strong>, c’est-à-dire «&nbsp;combiner la ressource avec d’autres ressources dont la licence le permet aussi pour créer une nouvelle ressource intégrée&nbsp;» (<a href="https://fabriquerel.org/rel/"><strong><em>fabriqueREL</em></strong></a>).</p></li>
 <li><p><strong>Redistribuer</strong>, c’est-à-dire distribuer, en totalité ou en partie le manuel ou une version révisée sur d’autres canaux que le site Web du livre (par exemple, sur le site Moodle de votre université ou en faire une version imprimée).</p></li>
 </ul>
@@ -332,7 +272,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Attribuer la paternité de l’auteur dans vos versions dérivées, ainsi qu’une mention concernant les grandes modifications apportées, en utilisant la formulation suivante&nbsp;:</li>
 </ul>
-<p>Samuel Foucher, Apparicio Philippe, Mickaël Germain, Yacine Bouroubi et Étienne Clabaut (2025). <em>Traitement d’images satellites avec Python</em>. Université de Sherbrooke, Département de géomatique appliquée. fabriqueREL. Licence CC&nbsp;BY-SA.</p>
+<p>Samuel Foucher, Mélanie Trudel et Victoria Litalien (2026). <em>Traitement de la donnée géospatiale avec Python&nbsp;: applications thématiques</em>. Université de Sherbrooke, Département de géomatique appliquée. fabriqueREL. Licence CC BY-SA.</p>
 <ul>
 <li>Utiliser la même licence ou une licence similaire à toutes versions dérivées.</li>
 </ul>
@@ -453,8 +393,8 @@ Figure&nbsp;1: Licence Creative Commons du livre
 </section>
 <section id="sect003" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="sect003">Comment utiliser les données du livre pour reproduire les exemples?</h2>
-<p>Ce livre comprend des exemples détaillés et appliqués en Python pour chacune des méthodes abordées. Ces exemples se basent sur des jeux de données ouverts et mis à disposition avec le livre. Ils sont disponibles sur le <em>repo GitHub</em> dans le sous-dossier <code>data</code>, à l’adresse <a href="https://github.com/serie-tele-pyton/TraitementImagesVol1/tree/main/data" class="uri">https://github.com/serie-tele-pyton/TraitementImagesVol1/tree/main/data</a>.</p>
-<p>Une autre option est de télécharger le <em>repo</em> complet du livre directement sur <em>GitHub</em> (<a href="https://github.com/serie-tele-pyton/TraitementImagesVol1" class="uri">https://github.com/serie-tele-pyton/TraitementImagesVol1</a>) en cliquant sur le bouton <code>Code</code>, puis le bouton <code>Download ZIP</code> (<a href="#fig-downloaffromgit" class="quarto-xref">figure&nbsp;<span>2</span></a>). Les données se trouvent alors dans le sous-dossier nommé <code>data</code>.</p>
+<p>Ce livre comprend des exemples détaillés et appliqués en Python pour chacune des méthodes abordées. Ces exemples se basent sur des jeux de données ouverts et mis à disposition avec le livre. Ils sont disponibles sur le <em>repo GitHub</em> dans le sous-dossier <code>data</code>, à l’adresse <a href="https://github.com/serie-tele-pyton/TraitementImagesPythonVol3/tree/main/data" class="uri">https://github.com/serie-tele-pyton/TraitementImagesPythonVol3/tree/main/data</a>.</p>
+<p>Une autre option est de télécharger le <em>repo</em> complet du livre directement sur <em>GitHub</em> (<a href="https://github.com/serie-tele-pyton/TraitementImagesPythonVol3" class="uri">https://github.com/serie-tele-pyton/TraitementImagesPythonVol3</a>) en cliquant sur le bouton <code>Code</code>, puis le bouton <code>Download ZIP</code> (<a href="#fig-downloaffromgit" class="quarto-xref">figure&nbsp;<span>2</span></a>). Les données se trouvent alors dans le sous-dossier nommé <code>data</code>.</p>
 <div id="fig-downloaffromgit" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-downloaffromgit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -468,11 +408,8 @@ Figure&nbsp;2: Téléchargement de l’intégralité du livre
 </section>
 <section id="sect004" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="sect004">Structure du livre</h2>
-<p>Le livre est organisé autour de quatre grandes parties.</p>
-<p><strong>Partie 1. Importation et manipulation de données spatiales.</strong> Dans cette première partie, nous voyons comment importer, manipuler, visualiser et exporter des données spatiales de type image (ou de type matriciel) avec Python, principalement avec les <em>packages</em> <code>rasterio</code>, <code>xarray</code> et <code>numpy</code> (<a href="01-ImportationManipulationImages.html" class="quarto-xref">chapitre&nbsp;<span>2&nbsp; Importation et manipulation de données spatiales</span></a>). Ce chapitre vous permettra de maîtriser la manipulation à bas niveau de différents types d’imagerie. Différents exemples et exercises sont disponibles avec différents capteurs satellites (multi-spectral, RGB-NIR, SAR, etc.)</p>
-<p><strong>Partie 2. Transformations des données spatiales</strong>. Cette deuxième partie comprend deux chapitres&nbsp;: les transformations spectrales (<a href="03-TransformationSpectrales.html" class="quarto-xref">chapitre&nbsp;<span>4&nbsp; Transformations spectrales</span></a>) et les transformations spatiales (<a href="04-TransformationSpatiales.html" class="quarto-xref">chapitre&nbsp;<span>5&nbsp; Transformations spatiales</span></a>).</p>
-<p><strong>Partie 3. Classifications d’images.</strong> Cette troisième partie comprend deux chapitres&nbsp;: les classifications supervisées (<a href="05-ClassificationsSupervisees.html" class="quarto-xref">chapitre&nbsp;<span>6&nbsp; Classifications d’images supervisées</span></a>) et non supervisées (à venir dans une prochaine édition).</p>
-<p><strong>Partie 4. Données massives.</strong> (à venir dans une édition future). Cette quatrième et dernière partie comprend un seul chapitre qui est dédié aux plateformes de mégadonnées, notamment Google Earth Engine.</p>
+<p>Le livre est organisé par grandes thématiques d’application, chacune regroupant un ou plusieurs chapitres. D’autres parties viendront s’ajouter au fil des éditions.</p>
+<p><strong>Partie 1. Hydrologie spatiale.</strong> Cette première partie est consacrée au suivi des eaux de surface depuis l’espace. Le chapitre sur la mission <strong>SWOT</strong> (<a href="00-SWOT.html" class="quarto-xref">chapitre&nbsp;<span>1&nbsp; Hydrologie spatiale avec la mission SWOT</span></a>) couvre l’ensemble de la chaîne : la mission et son instrument <code>KaRIn</code>, les six produits hydrologiques haute résolution, l’accès aux données avec <code>earthaccess</code>, la lecture des produits vectoriels et matriciels, le filtrage par les indicateurs de qualité, l’extraction de séries temporelles avec <code>Hydrocron</code>, le tracé de profils en long et la conversion vers les référentiels verticaux canadiens.</p>
 </section>
 <section id="sect005" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="sect005">Remerciements</h2>
@@ -537,7 +474,7 @@ Finalement, nous remercions Denise Latreille, réviseure linguistique et chargé
 </section>
 <section id="sect0071" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="sect0071">Listes des <em>librairies</em> utilisés</h3>
-<p>Dans ce livre, nous utilisons de nombreux <em>packages</em> Python que vous pouvez installer en une seule fois (voir <a href="00-PriseEnMainPython.html#sec-00-01" class="quarto-xref">section&nbsp;<span>Création d’un environnement virtuel</span></a>) ou chapitre par chapitre.</p>
+<p>Dans ce livre, nous utilisons de nombreux <em>packages</em> Python. La liste des bibliothèques nécessaires est donnée au début de chaque chapitre, dans le bloc <em>packages</em>.</p>
 
 
 </section>
@@ -618,7 +555,7 @@ Finalement, nous remercions Denise Latreille, réviseure linguistique et chargé
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/serie-python-tele\.github\.io\/TraitementImagesPythonVol1\/index\.html");
+        var filterRegex = new RegExp("https:\/\/serie-python-tele\.github\.io\/TraitementImagesPythonVol3\/index\.html");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -958,11 +895,11 @@ Finalement, nous remercions Denise Latreille, réviseure linguistique et chargé
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Traitement d’images satellites avec Python.</p>
+<p>Traitement de la donnée géospatiale avec Python.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/sfoucher/TraitementImagesPythonVol1/issues" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/sfoucher/TraitementImagesPythonVol3/issues" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

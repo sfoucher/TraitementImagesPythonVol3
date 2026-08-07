@@ -6,9 +6,7 @@
 # Build-time NumPy artifacts written by ch01 (np.save/savez examples)
 *.npy
 *.npz
-tex-hacks/*
 tutorial-example/*
-lua/*
 /.quarto/
 *.tif
 *.tif.aux.xml
@@ -39,7 +37,8 @@ __pycache__/
 **/figure-pdf/
 # Typst-render figure intermediates (regenerated; typst PDF lives in typst-out/)
 **/figure-typst/
-/Traitement-d-images-satellites-avec-Python.tex
+# keep-tex output at repo root (title-derived name); tex-hacks/*.tex stay tracked
+/*.tex
 # Build artifacts / bootstrap junk
 _quarto_internal_scss_error.scss
 get-pip.py
