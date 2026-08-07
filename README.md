@@ -1,10 +1,19 @@
-# Traitement d'images satellites avec Python
+# Traitement de la donnée géospatiale avec Python — applications thématiques
 
-* Édition 1 (mars 2025)
-* Édition prévue en août 2025
+Volume 3 de la série. Livre [Quarto](https://quarto.org) (français) : les chapitres sont les fichiers `NN-*.qmd`, le site généré est écrit dans `docs/`.
 
-Livre [Quarto](https://quarto.org) (français). Les chapitres sont les fichiers
-`NN-*.qmd`; le site généré est écrit dans `docs/`.
+* Site publié : <https://sfoucher.github.io/TraitementImagesPythonVol3/>
+* En cours d'écriture — le contenu n'est pas complet.
+
+Le livre est organisé par **thématiques d'application** : chaque chapitre part d'un besoin concret et déroule la chaîne complète, de l'accès aux données jusqu'à l'interprétation.
+
+## Contribuer au contenu
+
+**Pour écrire ou corriger un chapitre, lisez [INSTRUCTIONS.md](INSTRUCTIONS.md).**
+
+Ce guide couvre l'édition des fichiers `.qmd` : installation de VS Code, WSL, git et de l'extension Quarto, puis le déroulé branche → commit → *pull request*, ainsi que les conventions de rédaction du livre.
+
+**Aucun des outils décrits ci-dessous n'est nécessaire pour contribuer au contenu** : ni Docker, ni LaTeX, ni environnement Python. La suite de ce README ne concerne que la personne responsable de la production.
 
 ## Générer le livre avec Docker
 
@@ -15,24 +24,33 @@ Livre [Quarto](https://quarto.org) (français). Les chapitres sont les fichiers
 ### Prérequis
 
 * [Docker](https://docs.docker.com/get-docker/) installé et démarré.
-* L'image de construction `mlsysbook-linux:v2` (voir ci-dessous pour la bâtir).
+* L'image de construction `mlsysbook-linux:quarto-1.9.38` (voir ci-dessous pour la bâtir).
 
 ### 1. Construire l'image Docker
 
 Nécessaire au premier usage, ou après modification des dépendances
-(`docker/dependencies/requirements.txt`, `install_packages.R`, `tl_packages`) :
+(`docker/dependencies/requirements.txt`, `docker/dependencies/install_packages.R`,
+`docker/dependencies/tl_packages`) :
 
 ```bash
-docker build -t mlsysbook-linux:v2 -f docker/linux/Dockerfile .
+docker build --build-arg QUARTO_VERSION=1.9.38 \
+  -t mlsysbook-linux:quarto-1.9.38 -f docker/linux/Dockerfile .
 ```
 
-L'image contient Quarto, Python (dont `torch` CPU, `opencv`, `rasterio`…), R et
-TeX Live. La construction est longue (~20 min, image ~11 Go).
+L'étiquette de l'image encode la version de Quarto. L'image contient Quarto,
+Python (dont `rasterio`, `geopandas`, `earthaccess`…), R et TeX Live. La
+construction est longue (~20 min, image ~11 Go).
+
+> **L'étiquette est partagée avec le volume 1.** Les deux dépôts ont leur propre
+> `docker/dependencies/requirements.txt` mais aboutissent à la même étiquette.
+> Reconstruire depuis le volume 3 après avoir élagué les dépendances du volume 1
+> casse silencieusement les constructions du volume 1 sur la même machine.
+> Utilisez alors une étiquette distincte : `IMAGE=vol3-book:quarto-1.9.38 ./process.sh`.
 
 ### 2. Générer tout le livre (recommandé)
 
-Le script `process.sh` construit tout : site HTML + PDF, et exporte chaque
-chapitre en `.ipynb` (et en script marimo `.py`).
+Le script `process.sh` construit tout : site HTML, PDF LaTeX, PDF Typst
+(expérimental), et exporte chaque chapitre en `.ipynb` (et en script marimo `.py`).
 
 ```bash
 ./process.sh
@@ -43,49 +61,70 @@ Sorties :
 | Dossier      | Contenu                                             |
 |--------------|-----------------------------------------------------|
 | `docs/`      | Site HTML + le PDF téléchargeable                   |
-| `pdf/`       | `Traitement-d-images-satellites-avec-Python.pdf`    |
+| `pdf/`       | Le PDF LaTeX (nom dérivé du titre du livre)         |
+| `typst-out/` | Le PDF Typst, expérimental (non versionné)          |
 | `notebooks/` | Chapitres et annexes exportés en `.ipynb`           |
 | `marimo/`    | Chapitres convertis en scripts marimo `.py`         |
 
 ### 3. Commandes manuelles
 
 Toutes les commandes montent le dépôt sur `/workspace` dans le conteneur.
+Les options `--user` et `-e HOME=/tmp` font que les fichiers produits
+appartiennent à votre compte et non à `root`.
 
 **Site HTML :**
 
 ```bash
-docker run --rm -v "$PWD":/workspace mlsysbook-linux:v2 \
-  quarto render --to html --output-dir ./docs
+docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD":/workspace \
+  mlsysbook-linux:quarto-1.9.38 quarto render --to html --output-dir ./docs
 ```
 
 **PDF** (nécessite le profil `production`, où le format `pdf` est défini) :
 
 ```bash
-docker run --rm -v "$PWD":/workspace mlsysbook-linux:v2 \
-  quarto render --profile production --to pdf --output-dir ./pdf
+docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD":/workspace \
+  mlsysbook-linux:quarto-1.9.38 quarto render --profile production --to pdf --output-dir ./pdf
 ```
 
 **Aperçu interactif** (rechargement automatique, sur <http://localhost:3508>) :
 
 ```bash
-docker run --rm --network=host -p 3508:3508 -v "$PWD":/workspace \
-  mlsysbook-linux:v2 quarto preview --port 3508 --host 0.0.0.0
+docker run --rm --network=host -p 3508:3508 --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp -v "$PWD":/workspace \
+  mlsysbook-linux:quarto-1.9.38 quarto preview --port 3508 --host 0.0.0.0
 ```
+
+## Publication
+
+GitHub Pages sert le livre depuis la branche **`main`, dossier `/docs`**. Le
+dossier `docs/` étant versionné, publier revient à : générer → committer → pousser.
+Il n'y a ni branche `gh-pages`, ni workflow de publication.
 
 ## Notes et pièges
 
-* **Fichiers appartenant à `root`.** Le conteneur s'exécute en tant que `root`,
-  donc les fichiers générés (`docs/`, `pdf/`, notebooks…) appartiennent à `root`
-  sur l'hôte. Toute opération de fichier côté hôte sur ces fichiers échoue en
-  `EACCES` — c'est pourquoi `process.sh` copie le PDF dans `docs/` **dans** le
-  conteneur.
+* **Un rendu HTML seul supprime `docs/*.pdf`.** Quarto élague du dossier de
+  sortie tout ce que le rendu HTML n'a pas produit, et le PDF vient d'un rendu
+  *séparé*. La construction réussit et le PDF disparaît en silence ; un
+  `git add -A` qui suit committe sa suppression. `process.sh` est sûr (l'étape
+  PDF suit le HTML et recopie), mais pas un rendu HTML lancé à la main.
+  Restaurez avec `cp -f pdf/*.pdf docs/` et vérifiez `ls docs/*.pdf` avant de
+  committer.
+* **Nom du PDF.** Dérivé du **titre du livre**, donc il change avec lui (accents
+  et ponctuation compris). Ne le codez pas en dur : `process.sh` le retrouve par
+  `ls -t ./pdf/*.pdf | head -1`. Le champ `output:` de `_quarto-production.yml`
+  est inactif pour les projets `book`.
+* **`lua/` et `tex-hacks/` sont des sources**, pas des artefacts : le profil
+  `production` en dépend. Ne les remettez pas dans `.gitignore`, sinon la
+  construction du PDF échoue sur tout clone neuf.
 * **Cache d'exécution.** L'exécution des cellules est mise en cache
   (`.jupyter_cache/`, `execute: cache: true`) : les re-rendus réutilisent la
   sortie mise en cache. Supprimez le cache pour forcer une ré-exécution.
-* **Nom du PDF.** Basé sur le titre du livre
-  (`Traitement-d-images-satellites-avec-Python.pdf`), pas sur le champ `output:`
-  de `_quarto-production.yml` (inactif pour les projets `book`).
 * **Ajouter une dépendance Python** sans reconstruire toute l'image (~20 min) :
   patch en couche —
-  `docker build -t mlsysbook-linux:v2 - <<< $'FROM mlsysbook-linux:v2\nRUN pip install <paquet>'`.
+  `docker build -t mlsysbook-linux:quarto-1.9.38 - <<< $'FROM mlsysbook-linux:quarto-1.9.38\nRUN pip install <paquet>'`.
   L'image diverge alors du Dockerfile jusqu'à une reconstruction propre.
+* **Tests.** Les outils en Python pur se testent sur l'hôte, sans dépendances :
+  `python3 -m unittest tests.test_clean_notebooks tests.test_make_exercices`.
+
+Les détails d'ingénierie (conventions, pièges de rendu, dépendances) sont
+consignés dans [CLAUDE.md](CLAUDE.md).
