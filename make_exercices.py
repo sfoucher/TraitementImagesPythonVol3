@@ -13,12 +13,7 @@ import pathlib
 
 # Chapters in reading order; each contributes one « Exercices » section.
 CHAPTERS = [
-    "00-PriseEnMainPython.qmd",
-    "01-ImportationManipulationImages.qmd",
-    "02-RehaussementVisualisationImages.qmd",
-    "03-TransformationSpectrales.qmd",
-    "04-TransformationSpatiales.qmd",
-    "05-ClassificationsSupervisees.qmd",
+    "00-SWOT.qmd",
 ]
 OUT = "08-Exercices.qmd"
 

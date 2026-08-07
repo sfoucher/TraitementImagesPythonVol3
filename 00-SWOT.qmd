@@ -20,7 +20,7 @@ Ce chapitre présente la mission satellitaire **SWOT** (*Surface Water and Ocean
 
 [![](images/colab.png)](https://colab.research.google.com/github/sfoucher/TraitementImagesPythonVol3/blob/main/notebooks/00-SWOT.ipynb)
 
-::::: bloc_objectif
+:::::: bloc_objectif
 :::: bloc_objectif-header
 ::: bloc_objectif-icon
 :::
@@ -41,7 +41,7 @@ Ce chapitre présente la mission satellitaire **SWOT** (*Surface Water and Ocean
 -   tracer un **profil en long** de la surface d'eau entre deux nœuds d'un cours d'eau;
 -   comprendre la différence entre hauteur **ellipsoïdale** et hauteur **orthométrique** et convertir les élévations SWOT vers un référentiel vertical canadien;
 -   identifier les principales sources d'erreur (*dark water*, *layover*, géolocalisation, bases a priori, glace).
-:::::
+::::::
 
 ### Bibliothèques
 
@@ -57,7 +57,7 @@ Les bibliothèques utilisées dans ce chapitre sont les suivantes:
 -   [Matplotlib](https://matplotlib.org/) — figures statiques;
 -   [csrspy](https://github.com/HakaiInstitute/csrspy) — transformations de référentiels géodésiques canadiens.
 
-::::: bloc_package
+:::::: bloc_package
 :::: bloc_package-header
 ::: bloc_package-icon
 :::
@@ -72,7 +72,7 @@ Dans l'environnement Google Colab, les bibliothèques suivantes doivent être in
 !pip install -q earthaccess geopandas rioxarray rasterio contextily shapely pyproj
 !pip install -q h5netcdf holoviews hvplot bokeh geoviews folium tqdm
 ```
-:::::
+::::::
 
 Vérifier les importations:
 
@@ -129,7 +129,7 @@ Les exigences sont exprimées à $1\sigma$, c'est-à-dire l'intervalle qui conti
 
 : Exigences de performance des produits SWOT HR {#tbl-swot-exigences}
 
-::::: bloc_notes
+:::::: bloc_notes
 :::: bloc_notes-header
 ::: bloc_notes-icon
 :::
@@ -142,7 +142,7 @@ Les produits SWOT évoluent au fil des retraitements. La chaîne de production d
 
 Le nom abrégé (*short name*) de la collection change avec la version : `SWOT_L2_HR_RiverSP_2.0` pour la version C, `SWOT_L2_HR_RiverSP_D` pour la version D. **Les identifiants de nœuds et de tronçons ne sont pas identiques d'une version à l'autre.** Consultez toujours les [notes de version](https://podaac.jpl.nasa.gov/SWOT?tab=datasets-information&sections=about) avant d'exploiter un jeu de données.
 :::
-:::::
+::::::
 
 ### Organisation spatiale des fichiers
 
@@ -208,7 +208,7 @@ Les suffixes et préfixes des attributs suivent une convention systématique :
 
 Comme SWOT mesure simultanément la largeur, l'élévation et la pente d'une rivière, il devient possible d'en **estimer le débit** à l'aide de relations hydrauliques. Plusieurs algorithmes coexistent (MetroMan, BAM, HiVDI, MOMMA, SADS, SIC4DVar); voir Durand *et al.* (2023), <https://doi.org/10.1029/2021WR031614>.
 
-::::: bloc_attention
+:::::: bloc_attention
 :::: bloc_attention-header
 ::: bloc_attention-icon
 :::
@@ -219,7 +219,7 @@ Comme SWOT mesure simultanément la largeur, l'élévation et la pente d'une riv
 ::: bloc_attention-body
 Les estimations de débit ne sont **pas fournies** dans les produits `PID0` et `PGD0`; elles le seront après le retraitement complet de la version D. Un produit de niveau 4 dédié au débit est toutefois disponible depuis le 1^er^ décembre 2025 : [`SWOT_L4_HR_DAWG_SOS_DISCHARGE_V3`](https://podaac.jpl.nasa.gov/dataset/SWOT_L4_HR_DAWG_SOS_DISCHARGE_V3).
 :::
-:::::
+::::::
 
 ### `L2_HR_LakeSP`
 
@@ -238,7 +238,7 @@ Lorsqu'on parle d'élévation, deux surfaces de référence coexistent :
 -   l'**ellipsoïde** est une approximation mathématique de la forme de la Terre. Les élévations mesurées par rapport à l'ellipsoïde sont des **hauteurs ellipsoïdales** ($h$);
 -   le **géoïde** est un modèle du champ de pesanteur terrestre, approximativement le niveau moyen des mers. Les élévations mesurées par rapport au géoïde sont des **hauteurs orthométriques** ($H$).
 
-::::: bloc_astuce
+:::::: bloc_astuce
 :::: bloc_astuce-header
 ::: bloc_astuce-icon
 :::
@@ -249,7 +249,7 @@ Lorsqu'on parle d'élévation, deux surfaces de référence coexistent :
 ::: bloc_astuce-body
 Dans les produits SWOT, l'attribut `height` désigne une hauteur **ellipsoïdale** et l'attribut `wse` une hauteur **orthométrique** (géoïde). Quand vous lisez « height », pensez ellipsoïde; quand vous lisez « WSE », pensez géoïde.
 :::
-:::::
+::::::
 
 La relation générale est $H = h - N$, où $N$ est l'ondulation du géoïde. Le champ `geoid_hght` des produits SWOT contient l'ondulation du géoïde `EGM2008` en convention *mean-tide* (marée permanente incluse). On revient donc à la hauteur ellipsoïdale par :
 
@@ -268,7 +268,7 @@ Comparer une mesure SWOT à une station hydrométrique canadienne exige de réco
 
 La chaîne de conversion est donc : (1) passer de la WSE SWOT à la hauteur ellipsoïdale, (2) transformer $h_{\text{ITRF2014, époque d'acquisition}}$ vers $h_{\text{NAD83(SCRS), époque de la station}}$, (3) retrancher le géoïde de la station. La [section @sec-swot-csrspy] automatise ces étapes avec `csrspy`.
 
-::::: bloc_attention
+:::::: bloc_attention
 :::: bloc_attention-header
 ::: bloc_attention-icon
 :::
@@ -279,7 +279,7 @@ La chaîne de conversion est donc : (1) passer de la WSE SWOT à la hauteur elli
 ::: bloc_attention-body
 Chaque agence géodésique provinciale canadienne peut adopter un système de référence vertical et une époque différents. Découpez toujours vos données par zone d'intérêt **avant** la transformation, et vérifiez le référentiel en vigueur dans la province concernée.
 :::
-:::::
+::::::
 
 ## Accès aux données
 
@@ -497,7 +497,7 @@ cx.add_basemap(ax, crs='EPSG:4326', source=cx.providers.Esri.WorldStreetMap)
 plt.show()
 ```
 
-::::: bloc_astuce
+:::::: bloc_astuce
 :::: bloc_astuce-header
 ::: bloc_astuce-icon
 :::
@@ -508,7 +508,7 @@ plt.show()
 ::: bloc_astuce-body
 Un produit `PIXC` contient des millions de points. Sans `rasterized=True`, chaque point devient un objet vectoriel dans le PDF exporté, qui peut alors atteindre plusieurs dizaines de mégaoctets. L'option convertit le tracé en image tout en gardant les axes et les étiquettes en vecteur.
 :::
-:::::
+::::::
 
 ### Découpage et export vers QGIS
 
@@ -634,7 +634,7 @@ os.makedirs('./clip_data', exist_ok=True)
 clipped.to_netcdf('./clip_data/clipped_raster.nc')
 ```
 
-::::: bloc_attention
+:::::: bloc_attention
 :::: bloc_attention-header
 ::: bloc_attention-icon
 :::
@@ -645,7 +645,7 @@ clipped.to_netcdf('./clip_data/clipped_raster.nc')
 ::: bloc_attention-body
 Le code EPSG de la grille UTM dépend de la scène : `EPSG:32619` correspond à la zone 19 Nord, `EPSG:32618` à la zone 18 Nord. Lisez la zone dans les attributs du fichier (`ds_raster.attrs`) plutôt que de la coder en dur, sinon le découpage produira un résultat vide ou décalé de centaines de kilomètres.
 :::
-:::::
+::::::
 
 ## Séries temporelles avec Hydrocron
 
@@ -653,7 +653,7 @@ Le code EPSG de la grille UTM dépend de la scène : `EPSG:32619` correspond à 
 
 Les identifiants (`reach_id`, `node_id`, `lake_id`) se lisent dans les produits `RiverSP`/`LakeSP` de la [section @sec-swot-riversp], ou se cherchent dans [SWORD Explorer](https://www.swordexplorer.com/).
 
-::::: bloc_attention
+:::::: bloc_attention
 :::: bloc_attention-header
 ::: bloc_attention-icon
 :::
@@ -664,7 +664,7 @@ Les identifiants (`reach_id`, `node_id`, `lake_id`) se lisent dans les produits 
 ::: bloc_attention-body
 Les identifiants de nœuds et de tronçons **diffèrent entre les versions C et D**. Un identifiant issu d'un produit version C interrogé sur la collection version D renverra une série vide ou, pire, la série d'un autre objet.
 :::
-:::::
+::::::
 
 ### Localiser un tronçon de rivière
 
@@ -763,7 +763,7 @@ plt.title(f"WSE Hydrocron pour le lac {df['lake_id'].iloc[0]}")
 plt.show()
 ```
 
-::::: bloc_notes
+:::::: bloc_notes
 :::: bloc_notes-header
 ::: bloc_notes-icon
 :::
@@ -774,7 +774,7 @@ plt.show()
 ::: bloc_notes-body
 En raison de la taille des polygones du produit `L2_HR_LakeSP`, Hydrocron ne renvoie que le **point central** du lac, pour respecter les spécifications GeoJSON. Ces centroïdes ne doivent pas être considérés comme des positions exactes.
 :::
-:::::
+::::::
 
 ## Profil en long de la surface d'eau
 
@@ -939,7 +939,7 @@ Le budget d'erreur de SWOT combine des effets de propagation (ionosphère, tropo
 
 **La glace.** La glace de rivière et de lac modifie profondément la réponse radar. C'est à la fois une limite (les mesures hivernales sont à interpréter avec prudence, filtrer avec `ice_clim_f`) et une **occasion** : SWOT permet de suivre l'évolution du couvert de glace à une fréquence inaccessible aux capteurs optiques, souvent bloqués par les nuages.
 
-::::: bloc_aller_loin
+:::::: bloc_aller_loin
 :::: bloc_aller_loin-header
 ::: bloc_aller_loin-icon
 :::
@@ -952,9 +952,9 @@ Une évaluation menée à l'Université de Sherbrooke sur 110 stations limnimét
 
 Autrement dit : la version D apporte un gain de quelques centimètres, et **le filtrage par les indicateurs de qualité apporte davantage que le changement de version**. C'est le message pratique le plus important de ce chapitre.
 :::
-:::::
+::::::
 
-::::: bloc_exercice
+:::::: bloc_exercice
 :::: bloc_exercice-header
 ::: bloc_exercice-icon
 :::
@@ -1003,7 +1003,7 @@ Non. 85 % de la superficie du lac est classée comme eau sombre : la surface ét
 
 </details>
 :::
-:::::
+::::::
 
 ## Ressources
 
