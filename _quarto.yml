@@ -49,7 +49,7 @@ book:
       Traitement de la donnée géospatiale avec Python.
     right: |
       Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.
-  cover-image: images/couverture-full.png
+  cover-image: images/couverture-full.jpg
   favicon: images/favicon.ico
   # GitHub Pages sert ce livre depuis la branche main, dossier /docs.
   # Ancienne valeur (organisation serie-python-tele, utilisée par le volume 1) :
