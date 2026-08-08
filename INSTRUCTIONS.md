@@ -154,6 +154,31 @@ Le contenu du bloc.
 
 Un nombre de `:` erroné (5 au lieu de 6, par exemple) **s'affiche correctement** dans le navigateur : rien ne signale l'erreur. En revanche l'outil qui rassemble les exercices, `make_exercices.py`, cherche la chaîne exacte `:::::: bloc_exercice` et n'extraira rien. Comptez les `:`.
 
+### Ne jamais mettre une cellule de code dans un bloc
+
+Un bloc encadré ne doit contenir que du texte. **Placez la cellule `{python}` après la fermeture du bloc, jamais à l'intérieur :**
+
+````markdown
+:::::: bloc_package
+:::: bloc_package-header
+::: bloc_package-icon
+:::
+
+**Installation**
+::::
+
+::: bloc_package-body
+Les bibliothèques suivantes doivent être installées.
+:::
+::::::
+
+```{python}
+!pip install ...
+```
+````
+
+Là encore, rien ne se voit dans le HTML ni dans le PDF : les deux formats s'affichent normalement. Le dégât n'apparaît que dans le **notebook exporté**. Les chapitres sont convertis en `.ipynb`, ce qui découpe le texte en cellules : l'ouverture et la fermeture du bloc se retrouvent alors dans deux cellules différentes, que l'outil de nettoyage ne peut plus apparier. Il reste un `::::::` orphelin en tête de cellule, visible par les personnes qui téléchargent le notebook.
+
 ### Titres et renvois
 
 Un chapitre commence par un titre de niveau 1 muni d'une ancre :
