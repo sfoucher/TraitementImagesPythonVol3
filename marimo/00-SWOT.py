@@ -1,0 +1,1077 @@
+# /// script
+# dependencies = ["bokeh", "contextily", "earthaccess", "folium", "geopandas", "geoviews", "h5netcdf", "holoviews", "hvplot", "pyproj", "rasterio", "rioxarray", "shapely", "tqdm"]
+# ///
+
+import marimo
+
+__generated_with = "0.23.15"
+app = marimo.App()
+
+
+@app.cell
+def _():
+    import marimo as mo
+
+    return (mo,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Hydrologie spatiale avec la mission SWOT
+
+    ## Préambule
+
+    Assurez-vous de lire ce préambule avant d'exécuter le reste du notebook.
+
+    ### Objectifs
+
+    Ce chapitre présente la mission satellitaire **SWOT** (*Surface Water and Ocean Topography*) et montre comment accéder, filtrer et visualiser ses produits hydrologiques haute résolution (HR) avec Python. Ce chapitre est aussi disponible sous la forme d'un notebook Python:
+
+    [![](images/colab.png)](https://colab.research.google.com/github/sfoucher/TraitementImagesPythonVol3/blob/main/notebooks/00-SWOT.ipynb)
+
+    ### Bibliothèques
+
+    Les bibliothèques utilisées dans ce chapitre sont les suivantes:
+
+    -   [earthaccess](https://earthaccess.readthedocs.io/) — recherche et téléchargement des données NASA Earthdata;
+    -   [GeoPandas](https://geopandas.org/) — lecture et manipulation des `shapefile`;
+    -   [Xarray](https://docs.xarray.dev/) et [rioxarray](https://corteva.github.io/rioxarray/stable/) — lecture des `NetCDF` et découpage géospatial;
+    -   [Shapely](https://shapely.readthedocs.io/) — géométries et emprises;
+    -   [contextily](https://contextily.readthedocs.io/) — fonds de carte;
+    -   [hvPlot](https://hvplot.holoviz.org/) / [HoloViews](https://holoviews.org/) — visualisation interactive;
+    -   [Folium](https://python-visualization.github.io/folium/) — cartes interactives;
+    -   [Matplotlib](https://matplotlib.org/) — figures statiques;
+    -   [csrspy](https://github.com/HakaiInstitute/csrspy) — transformations de référentiels géodésiques canadiens.
+    """)
+    return
+
+
+@app.cell
+def _():
+    # packages added via marimo's package management: earthaccess geopandas rioxarray rasterio contextily shapely pyproj !pip install -q earthaccess geopandas rioxarray rasterio contextily shapely pyproj
+    # packages added via marimo's package management: h5netcdf holoviews hvplot bokeh geoviews folium tqdm !pip install -q h5netcdf holoviews hvplot bokeh geoviews folium tqdm
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Vérifier les importations:
+    """)
+    return
+
+
+@app.cell
+def _():
+    import os
+    import glob
+    import zipfile
+    import logging
+    from datetime import datetime
+    from io import StringIO
+
+    import numpy as np
+    import pandas as pd
+    import geopandas as gpd
+    import xarray as xr
+    import rioxarray
+    import matplotlib.pyplot as plt
+    import matplotlib.colors as mcolors
+    import contextily as cx
+    import requests
+    import folium
+    import earthaccess
+    import holoviews as hv
+    import hvplot.xarray
+    from shapely.geometry import box, mapping, Point
+    from tqdm import tqdm
+
+    return (
+        Point,
+        StringIO,
+        box,
+        cx,
+        datetime,
+        earthaccess,
+        folium,
+        gpd,
+        hv,
+        logging,
+        mapping,
+        mcolors,
+        np,
+        os,
+        pd,
+        plt,
+        requests,
+        tqdm,
+        xr,
+        zipfile,
+    )
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## La mission SWOT
+
+    **SWOT** (*Surface Water and Ocean Topography*) est une mission d'altimétrie satellitaire issue d'un partenariat entre la **NASA** et le **CNES**, avec des contributions de l'**Agence spatiale canadienne** (ASC) et de l'agence britannique (UKSA). Lancée en **décembre 2022**, elle est prévue pour une durée de vie de trois à cinq ans.
+
+    Son instrument principal est le **KaRIn** (*Ka-band Radar Interferometer*), un interféromètre radar en bande Ka qui observe la surface à des angles d'incidence proches du nadir. Contrairement à un altimètre nadir classique qui ne mesure qu'une trace au sol, `KaRIn` produit une **fauchée** de part et d'autre de la trace, ce qui permet une cartographie bidimensionnelle des hauteurs d'eau.
+
+    Le satellite repasse au-dessus d'un même point tous les **21 jours** (orbite dite *Science*), avec la possibilité de plusieurs passes sur un même plan d'eau à l'intérieur d'un cycle selon la latitude.
+
+    ### Objectifs de la mission
+
+    -   dresser un inventaire global de **tous les plans d'eau continentaux** d'une superficie supérieure à $(250\,\text{m})^2$ (objectif : $(100\,\text{m})^2$, seuil minimal : $1\,\text{km}^2$) — lacs, réservoirs et milieux humides;
+    -   dresser un inventaire global des **rivières de plus de 100 m de largeur** (objectif : 50 m, seuil : 170 m);
+    -   mesurer les changements de **stockage d'eau** dans les plans d'eau continentaux aux échelles infra-mensuelle, saisonnière et annuelle;
+    -   estimer les changements de **débit** des rivières aux mêmes échelles temporelles.
+
+    ### Exigences de performance
+
+    Les exigences sont exprimées à $1\sigma$, c'est-à-dire l'intervalle qui contient 68 % des valeurs pour une distribution gaussienne. Attention à ne pas confondre **justesse** (absence de biais) et **précision** (faible dispersion) : un capteur peut être précis sans être juste.
+
+    | Grandeur | Exigence ($1\sigma$) |
+    |:---|:---|
+    | Élévation de la surface d'eau (WSE), plans d'eau de plus de $1\,\text{km}^2$ | 10 cm ou mieux |
+    | WSE, plans d'eau entre $(250\,\text{m})^2$ et $1\,\text{km}^2$ | 25 cm ou mieux |
+    | Superficie (erreur relative), plans d'eau de plus de $(250\,\text{m})^2$ | moins de 15 % |
+    | Pente des rivières de plus de 100 m de largeur | $17\,\mu\text{rad}$ (1,7 cm/km), moyennée sur au plus 10 km |
+
+    : Exigences de performance des produits SWOT HR {#tbl-swot-exigences}
+
+    ### Organisation spatiale des fichiers
+
+    Le découpage des produits SWOT HR repose sur quatre notions :
+
+    -   la **passe** (*pass*, numérotée de 1 à 584) : SWOT suit exactement la même trace au sol tous les 21 jours, sur 292 orbites. Chaque orbite comporte une passe ascendante (vers le nord) et une passe descendante (vers le sud);
+    -   la **fauchée** (*swath*) : la surface couverte par `KaRIn`. Aucune donnée exploitable n'est disponible à moins de 20 km du nadir ni au-delà de 64 km;
+    -   la **tuile** (*tile*) : chaque passe est découpée en tuiles de $64 \times 64$ km, une à gauche (`L`) et une à droite (`R`) du nadir;
+    -   la **scène** (*scene*) : un regroupement de 4 tuiles (2 `L` et 2 `R`), soit $128 \times 128$ km.
+
+    Les produits vectoriels rivières et lacs sont quant à eux découpés par **continent** (`NA` pour l'Amérique du Nord). Le dépôt [SWOT-Canada](https://github.com/sfoucher/SWOT-Canada/tree/main/Data) fournit les couches permettant de retrouver la passe, la tuile ou la scène correspondant à une zone d'intérêt.
+
+    ## Les produits SWOT HR
+
+    Les produits SWOT HR se répartissent sur un continuum allant des produits **experts** (proches de la mesure radar brute) aux produits **conviviaux** (agrégés sur des objets hydrographiques).
+
+    | Produit | Type | Format | Découpage | Public |
+    |:---|:---|:---|:---|:---|
+    | `L1B_HR_SLC` | Image complexe en géométrie radar | NetCDF4 | Tuile | Expert |
+    | `L2_HR_PIXC` | Nuage de points géolocalisés | NetCDF4 | Tuile | Expert |
+    | `L2_HR_PIXCVec` | Nuage de points amélioré | NetCDF4 | Tuile | Expert |
+    | `L2_HR_Raster` | Grille régulière (WSE, étendue, rétrodiffusion) | NetCDF4 | Scène | Convivial |
+    | `L2_HR_RiverSP` | Tronçons (lignes) et nœuds (points) de rivières | Shapefile | Continent | Convivial |
+    | `L2_HR_LakeSP` | Polygones de lacs | Shapefile | Continent | Convivial |
+
+    : Les produits SWOT HR {#tbl-swot-produits}
+
+    Deux **bases de données a priori** sous-tendent les produits vectoriels :
+
+    -   **SWORD** (*SWOT River Database*, ou PRD) : le réseau hydrographique mondial découpé en tronçons (lignes) et en nœuds (points) espacés d'environ 200 m. Voir [SWORD](http://gaia.geosci.unc.edu/SWORD/) et Altenau *et al.* (2021), <https://doi.org/10.1029/2021WR030054>;
+    -   **PLD** (*Prior Lake Database*) : le masque mondial des lacs sous forme de polygones. Voir [Hydroweb.next](https://hydroweb.next.theia-land.fr/) et Wang *et al.* (2025), <https://doi.org/10.1029/2023WR036896>.
+
+    ### `L1B_HR_SLC`
+
+    Le produit `SLC` (*Single Look Complex*) est l'image dans le plan oblique du radar (*slant range*). Elle représente les données telles que mesurées, selon l'angle de visée du satellite : elle suit la trajectoire du satellite et **n'est donc pas géolocalisée**. Ce produit s'adresse aux personnes qui souhaitent appliquer leurs propres algorithmes de traitement interférométrique. Un fichier NetCDF comporte cinq groupes (`slc`, `xfactor`, `noise`, `tvp`, `grdem`) et contient notamment la longueur d'onde, la polarisation, les canaux `slc_plus_y` / `slc_minus_y`, l'attitude du satellite (`roll`, `pitch`, `yaw`) et des indicateurs de qualité.
+
+    ### `L2_HR_PIXC` et `L2_HR_PIXCVec`
+
+    Le produit `PIXC` (*Water Mask Pixel Cloud*) contient les **mesures de hauteur géolocalisées** dérivées du `SLC`, sous forme d'un nuage de points, avec une **classification** pour chaque pixel. Il est organisé en trois groupes : `pixel_cloud`, `tvp` et `noise`. Le groupe `pixel_cloud` fournit entre autres la classification, la hauteur (**ellipsoïdale**, WGS84), `water_area`, `water_frac`, la rétrodiffusion `sig0`, la distance signée au nadir `cross_track` et l'angle d'incidence.
+
+    Le produit `PIXCVec` est dérivé du `PIXC`. Il sert d'étape intermédiaire dans la construction des produits rivières et lacs et fournit une **meilleure localisation des pixels** ainsi que l'information sur la glace.
+
+    ### `L2_HR_Raster`
+
+    Le produit `Raster` fournit la WSE (référencée sur le géoïde `EGM2008`), l'étendue inondée et la rétrodiffusion sur une **grille régulière** en 2D, découpée en scènes. Deux résolutions sont disponibles : 100 m et 250 m. Un fichier NetCDF contient à la fois une grille UTM et une grille géodésique latitude/longitude. C'est le produit le plus simple à ouvrir directement dans QGIS.
+
+    ### `L2_HR_RiverSP`
+
+    Un algorithme rattache les pixels pertinents à chaque **tronçon** (*reach*) et **nœud** (*node*) de la base SWORD, puis agrège les mesures. Le produit est diffusé sous forme de deux `shapefile` (`Reach` et `Node`) par continent, contenant les identifiants, la WSE (orthométrique, `EGM2008`), la superficie, la largeur, la pente, la distance au nadir `xtrk_dist`, l'ondulation du géoïde `geoid_hght` et de nombreux indicateurs de qualité.
+
+    Les suffixes et préfixes des attributs suivent une convention systématique :
+
+    | Marqueur | Signification |
+    |:---|:---|
+    | `p_` | information issue de la base a priori (PLD/SWORD) |
+    | `_c` | correction |
+    | `_f` | indicateur (*flag*) |
+    | `_q` | indicateur de qualité |
+    | `_u` | incertitude ($1\sigma$, ou 68^e^ percentile) |
+    | `_std` | écart-type à l'intérieur du lac |
+
+    : Convention de nommage des attributs SWOT {#tbl-swot-suffixes}
+
+    Comme SWOT mesure simultanément la largeur, l'élévation et la pente d'une rivière, il devient possible d'en **estimer le débit** à l'aide de relations hydrauliques. Plusieurs algorithmes coexistent (MetroMan, BAM, HiVDI, MOMMA, SADS, SIC4DVar); voir Durand *et al.* (2023), <https://doi.org/10.1029/2021WR031614>.
+
+    ### `L2_HR_LakeSP`
+
+    Pour les lacs, l'algorithme sélectionne les pixels `PIXC` correspondant à chaque lac de la base PLD et moyenne les mesures. Trois types de fichiers sont produits :
+
+    -   **`Obs`** : les entités effectivement observées (polygones tels que vus par SWOT);
+    -   **`Prior`** : les entités de la base PLD, renseignées avec les observations (une entité non observée reste vide);
+    -   **`Unassigned`** : les entités observées qui n'ont pu être rattachées à aucun lac de la base.
+
+    Autrement dit : `Obs` est **ce que l'on voit**, `Prior` est **ce que l'on attendait**, et `Unassigned` est **ce qui ne correspond pas à la base**. Pour un suivi temporel d'un lac donné, c'est le fichier `Prior` qu'il faut privilégier, puisque l'identifiant `lake_id` y est stable dans le temps.
+
+    ## Systèmes de référence verticaux
+
+    Lorsqu'on parle d'élévation, deux surfaces de référence coexistent :
+
+    -   l'**ellipsoïde** est une approximation mathématique de la forme de la Terre. Les élévations mesurées par rapport à l'ellipsoïde sont des **hauteurs ellipsoïdales** ($h$);
+    -   le **géoïde** est un modèle du champ de pesanteur terrestre, approximativement le niveau moyen des mers. Les élévations mesurées par rapport au géoïde sont des **hauteurs orthométriques** ($H$).
+
+    La relation générale est $H = h - N$, où $N$ est l'ondulation du géoïde. Le champ `geoid_hght` des produits SWOT contient l'ondulation du géoïde `EGM2008` en convention *mean-tide* (marée permanente incluse). On revient donc à la hauteur ellipsoïdale par :
+
+    $$h_\text{SWOT} = \text{WSE}_\text{SWOT} + \text{geoid\_hght}$$
+
+    Comparer une mesure SWOT à une station hydrométrique canadienne exige de réconcilier trois différences : le **datum**, l'**époque** et le **géoïde**.
+
+    | | Station (Québec) | Station (Canada : NB, NS, NL) | WSE SWOT |
+    |:---|:---|:---|:---|
+    | Datum | NAD83 (SCRS) | NAD83 (SCRS) | ITRF2014 |
+    | Époque | 1997 | 2010 | date d'acquisition |
+    | Géoïde | CGVD1928 (HT2) | CGVD2013 | EGM2008 |
+    | Marée | *tide-free* | *tide-free* | *mean-tide* |
+
+    : Différences de référentiel entre SWOT et les stations au sol {#tbl-swot-referentiels}
+
+    La chaîne de conversion est donc : (1) passer de la WSE SWOT à la hauteur ellipsoïdale, (2) transformer $h_{\text{ITRF2014, époque d'acquisition}}$ vers $h_{\text{NAD83(SCRS), époque de la station}}$, (3) retrancher le géoïde de la station. La [section @sec-swot-csrspy] automatise ces étapes avec `csrspy`.
+
+    ## Accès aux données
+
+    Plusieurs portails permettent d'explorer les données SWOT sans écrire de code :
+
+    -   [Earthdata Search](https://search.earthdata.nasa.gov/search?q=SWOT_L2_HR) — le portail de référence de la NASA (recherche par emprise, par période et par filtre sur le nom du granule);
+    -   [Hydroweb.next](https://hydroweb.next.theia-land.fr/) — le portail du pôle Theia (CNES);
+    -   [SWOTvis](https://swotvis.cuahsi.io/) — visualisation de séries temporelles (CUAHSI);
+    -   [WISP](https://apps.usgs.gov/wisp) — l'explorateur de l'USGS;
+    -   [Swath visualizer](https://swot.jpl.nasa.gov/mission/swath-visualizer/) — pour repérer la passe et la date de survol d'une zone.
+
+    Dans la suite, nous privilégions l'accès programmatique avec `earthaccess`, qui permet de combiner plusieurs produits dans un même script.
+
+    ### Authentification Earthdata
+
+    Un compte **Earthdata Login** est nécessaire pour accéder aux données de la NASA. La création du compte est gratuite : <https://urs.earthdata.nasa.gov>. La bibliothèque `earthaccess` gère l'authentification et le renouvellement des jetons.
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess):
+    auth = earthaccess.login()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Produit rivières `L2_HR_RiverSP`
+
+    ### Recherche des granules
+
+    La fonction `earthaccess.search_data` interroge le catalogue à partir du nom abrégé de la collection. Comme cette collection contient à la fois les fichiers `Reach` et `Node`, on filtre sur le nom du granule. Le motif `*Node*_214_NA*` sélectionne les fichiers de nœuds, de la passe 214, pour l'Amérique du Nord.
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess):
+    river_results = earthaccess.search_data(
+        short_name='SWOT_L2_HR_RiverSP_D',   # 'SWOT_L2_HR_RiverSP_2.0' pour la version C
+        # temporal=('2025-01-01 00:00:00', '2026-01-31 23:59:59'),
+        granule_name='*Node*_214_NA*')        # 'Node' ou 'Reach', numéro de passe, continent
+
+    print(river_results)
+    return (river_results,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Téléchargement et lecture
+
+    `earthaccess.download` attend une **liste** de granules; on encadre donc de crochets le granule choisi. Ici, on prend le plus récent de la collection.
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess, river_results):
+    earthaccess.download([river_results[-1]], "./data_downloads")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Le format natif est une archive `.zip` qu'il faut décompresser pour accéder au `.shp`. On récupère d'abord le nom de fichier depuis le lien du granule.
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess, river_results, zipfile):
+    filename = earthaccess.results.DataGranule.data_links(river_results[-1], access='external')
+    filename = filename[0].split('/')[-1]
+    with zipfile.ZipFile(f'data_downloads/{filename}', 'r') as _zip_ref:
+        _zip_ref.extractall('data_downloads')
+    return (filename,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    La table attributaire se lit ensuite avec `geopandas`.
+    """)
+    return
+
+
+@app.cell
+def _(filename, gpd):
+    filename_shp = filename.replace('.zip', '.shp')
+    SWOT_HR_shp1 = gpd.read_file(f'data_downloads/{filename_shp}')
+    SWOT_HR_shp1
+    return (SWOT_HR_shp1,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Cartographie de l'élévation de la surface d'eau
+
+    Deux précautions avant de cartographier : **filtrer la valeur de remplissage** `-999999999999` (utilisée pour les nœuds non mesurés) et **découper** sur une emprise d'intérêt, sans quoi la figure couvre tout le continent.
+    """)
+    return
+
+
+@app.cell
+def _(SWOT_HR_shp1, box, cx, gpd, plt):
+    # Emprise d'intérêt (xmin, ymin, xmax, ymax) : région de Fredericton (N.-B.)
+    _bounding_box = box(-67.01, 45.82, -66.42, 46.4)
+    SWOT_HR_shp1_filtered = SWOT_HR_shp1[SWOT_HR_shp1['wse'] != -999999999999]
+    # Écarter les valeurs de remplissage de la colonne 'wse'
+    SWOT_HR_shp1_clipped = gpd.clip(SWOT_HR_shp1_filtered, _bounding_box)
+    (_fig, _ax) = plt.subplots(figsize=(10, 10))
+    SWOT_HR_shp1_clipped.plot(ax=_ax, column='wse', cmap='cool', legend=True, legend_kwds={'label': "Élévation de la surface d'eau (m)", 'orientation': 'vertical'})
+    cx.add_basemap(_ax, crs=SWOT_HR_shp1_clipped.crs, source=cx.providers.Esri.WorldStreetMap)
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Indicateur de qualité des nœuds
+
+    L'attribut `node_q` résume la qualité d'un nœud sur quatre niveaux :
+
+    | Valeur | Signification |
+    |:---|:---|
+    | 0 | bonne (*good*) |
+    | 1 | suspecte (*suspect*) — peut comporter des erreurs importantes |
+    | 2 | dégradée (*degraded*) — comporte très probablement des erreurs importantes |
+    | 3 | mauvaise (*bad*) — potentiellement aberrante, à ignorer |
+
+    : Interprétation de l'indicateur `node_q` {#tbl-swot-nodeq}
+
+    Comme il s'agit d'une variable **discrète**, on construit une palette et une normalisation par classes plutôt qu'un dégradé continu.
+    """)
+    return
+
+
+@app.cell
+def _(SWOT_HR_shp1, cx, mcolors, np, plt):
+    unique_values = np.sort(SWOT_HR_shp1['node_q'].unique())
+    cmap = plt.get_cmap('RdYlGn_r', len(unique_values))
+    # Palette discrète : une couleur par classe de qualité
+    norm = mcolors.BoundaryNorm(boundaries=np.arange(len(unique_values) + 1) - 0.5, ncolors=len(unique_values))
+    (_fig, _ax) = plt.subplots(figsize=(10, 10))
+    SWOT_HR_shp1.plot(ax=_ax, column='node_q', cmap=cmap, norm=norm, legend=False)
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+    sm.set_array([])
+    _cbar = plt.colorbar(sm, ax=_ax, ticks=range(len(unique_values)))
+    _cbar.ax.set_yticklabels(unique_values)
+    _cbar.set_label('Qualité des nœuds (node_q)')
+    _ax.set_xlim(-67.01, -66.42)
+    _ax.set_ylim(45.82, 46.4)
+    cx.add_basemap(_ax, crs=SWOT_HR_shp1.crs, source=cx.providers.Esri.WorldStreetMap)
+    # Restreindre l'affichage à la zone d'intérêt
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Produit lacs `L2_HR_LakeSP`
+
+    Le produit lacs s'obtient exactement de la même manière. Le motif `*Prior*_214_NA*` sélectionne ici le fichier `Prior`, celui qu'il faut privilégier pour un suivi temporel.
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess, gpd, zipfile):
+    lake_results = earthaccess.search_data(short_name='SWOT_L2_HR_LakeSP_D', granule_name='*Prior*_214_NA*')
+    earthaccess.download([lake_results[-1]], './data_downloads')
+    filename2 = earthaccess.results.DataGranule.data_links(lake_results[-1], access='external')  # 'Obs', 'Prior' ou 'Unassigned'
+    filename2 = filename2[0].split('/')[-1]
+    with zipfile.ZipFile(f'data_downloads/{filename2}', 'r') as _zip_ref:
+        _zip_ref.extractall('data_downloads')
+    SWOT_HR_shp2 = gpd.read_file(f"data_downloads/{filename2.replace('.zip', '.shp')}")
+    SWOT_HR_shp2
+    return (SWOT_HR_shp2,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Élévation des lacs
+
+    Les polygones étant peu nombreux sur une petite emprise, on peut annoter chaque lac avec sa valeur de WSE en plaçant l'étiquette sur le centroïde.
+    """)
+    return
+
+
+@app.cell
+def _(SWOT_HR_shp2, box, cx, gpd, plt):
+    # Lac Oromocto (N.-B.)
+    SWOT_HR_shp2_clipped = gpd.clip(SWOT_HR_shp2.query('wse != -999999999999'), box(-67.1, 45.47, -66.82, 45.65))
+    (_fig, _ax) = plt.subplots(figsize=(7, 7))
+    SWOT_HR_shp2_clipped.plot(ax=_ax, column='wse', cmap='cool', legend=True, legend_kwds={'label': "Élévation de la surface d'eau (m)", 'orientation': 'vertical'})
+    _centroids = SWOT_HR_shp2_clipped.geometry.centroid
+    for (_x, _y, _label) in zip(_centroids.x, _centroids.y, SWOT_HR_shp2_clipped['wse']):
+        _ax.text(_x, _y, f'{_label:.2f}', fontsize=8, ha='center', va='center', color='black')
+    cx.add_basemap(_ax, crs=SWOT_HR_shp2_clipped.crs, source=cx.providers.Esri.WorldStreetMap)
+    plt.show()
+    return (SWOT_HR_shp2_clipped,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Fraction d'eau sombre (*dark water*)
+
+    L'attribut `dark_frac` donne la fraction de la superficie totale du lac (`area_total`) classée comme **eau sombre**, entre 0 (aucune) et 1 (100 %). L'eau sombre correspond à une surface trop lisse, qui réfléchit le signal radar loin de l'antenne : peu d'énergie revient et la surface risque de ne pas être détectée comme de l'eau. C'est un indicateur clé de fiabilité.
+    """)
+    return
+
+
+@app.cell
+def _(SWOT_HR_shp2_clipped, cx, plt):
+    (_fig, _ax) = plt.subplots(figsize=(7, 7))
+    SWOT_HR_shp2_clipped.plot(ax=_ax, column='dark_frac', cmap='RdYlGn_r', legend=True, legend_kwds={'label': "Fraction d'eau sombre", 'orientation': 'vertical'})
+    _centroids = SWOT_HR_shp2_clipped.geometry.centroid
+    for (_x, _y, _label) in zip(_centroids.x, _centroids.y, SWOT_HR_shp2_clipped['dark_frac']):
+        _ax.text(_x, _y, f'{_label:.2f}', fontsize=8, ha='center', va='center', color='black')
+    cx.add_basemap(_ax, crs=SWOT_HR_shp2_clipped.crs, source=cx.providers.Esri.WorldStreetMap)
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Produit nuage de points `L2_HR_PIXC`
+
+    Les produits qui suivent sont stockés en **NetCDF** et non en `shapefile` : on les ouvre avec `xarray` plutôt qu'avec `geopandas`, et aucune décompression n'est nécessaire.
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess):
+    pixc_results = earthaccess.search_data(
+        short_name='SWOT_L2_HR_PIXC_D',   # 'SWOT_L2_HR_PIXC_2.0' pour la version C
+        granule_name='*_214_074L*')       # passe, tuile et côté de fauchée (L ou R)
+        # bounding_box=(-72.73, 46.58, -72.60, 46.62)  # filtrage par emprise
+
+    earthaccess.download([pixc_results[-1]], "./data_downloads")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Le fichier comporte trois groupes (`pixel_cloud`, `tvp`, `noise`); il faut donc préciser le **groupe** à l'ouverture, sans quoi `xarray` ne voit ni les coordonnées ni les variables.
+    """)
+    return
+
+
+@app.cell
+def _(xr):
+    ds_PIXC = xr.open_mfdataset(
+        "data_downloads/SWOT_L2_HR_PIXC_*.nc", group='pixel_cloud', engine='h5netcdf')
+    ds_PIXC
+    return (ds_PIXC,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Le nuage de points n'étant pas sur une grille, il s'affiche avec un nuage de dispersion. On borne l'échelle de couleur sur les 2^e^ et 98^e^ percentiles pour éviter que quelques valeurs extrêmes n'écrasent le contraste.
+    """)
+    return
+
+
+@app.cell
+def _(cx, ds_PIXC, np, plt):
+    (_vmin, _vmax) = np.nanpercentile(ds_PIXC.height, [2, 98])
+    (_fig, _ax) = plt.subplots(figsize=(10, 10))
+    _cax = _ax.scatter(ds_PIXC.longitude, ds_PIXC.latitude, c=ds_PIXC.height, s=1, vmin=_vmin, vmax=_vmax, cmap='viridis', rasterized=True)
+    _cbar = _fig.colorbar(_cax, ax=_ax, shrink=0.5)
+    _cbar.set_label('Hauteur ellipsoïdale (m)')
+    cx.add_basemap(_ax, crs='EPSG:4326', source=cx.providers.Esri.WorldStreetMap)
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Découpage et export vers QGIS
+
+    QGIS ne sait pas ouvrir directement un `PIXC`. On filtre donc les points sur une emprise **et** sur la classification (les classes 3 et 4 correspondent à l'eau), puis on exporte en `shapefile`.
+    """)
+    return
+
+
+@app.cell
+def _(Point, ds_PIXC, gpd, logging, np, pd):
+    logging.getLogger('fiona').setLevel(logging.ERROR)
+    (lat_min, lat_max) = (45.88, 45.98)
+    (lon_min, lon_max) = (-66.77, -66.49)
+    lat = np.asarray(ds_PIXC.latitude[:])
+    lon = np.asarray(ds_PIXC.longitude[:])
+    classif = np.asarray(ds_PIXC.classification[:])
+    mask = (lat > lat_min) & (lat < lat_max) & (lon > lon_min) & (lon < lon_max) & (classif > 2) & (classif < 5)
+    _df = pd.DataFrame({'height': np.asarray(ds_PIXC.height[:])[mask], 'classif': classif[mask], 'latitude': lat[mask], 'longitude': lon[mask]})
+    points = [Point(_x, _y) for (_x, _y) in zip(_df.longitude, _df.latitude)]
+    # Masque combiné : emprise géographique et pixels classés « eau »
+    gdf_out = gpd.GeoDataFrame(_df, geometry=points, crs='EPSG:4326')
+    gdf_out.to_file('./data_downloads/PIXC_clipped.shp')
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Produit `L2_HR_PIXCVec`
+
+    Le `PIXCVec` accompagne le `PIXC` : mêmes pixels, mais avec une géolocalisation améliorée. Ses variables portent le suffixe `_vectorproc`.
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess, xr):
+    pixcvec_results = earthaccess.search_data(
+        short_name='SWOT_L2_HR_PIXCVEC_D',
+        granule_name='*_214_074L*')
+
+    earthaccess.download([pixcvec_results[-1]], "./data_downloads")
+
+    ds_PIXCVEC = xr.open_mfdataset(
+        "data_downloads/SWOT_L2_HR_PIXCVec_*.nc", decode_cf=False, engine='h5netcdf')
+    ds_PIXCVEC
+    return (ds_PIXCVEC,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Avec `decode_cf=False`, les **valeurs de remplissage ne sont pas converties** en `NaN` automatiquement : il faut les masquer à la main avant de tracer.
+    """)
+    return
+
+
+@app.cell
+def _(cx, ds_PIXCVEC, np, plt):
+    pixcvec_htvals = ds_PIXCVEC.height_vectorproc.compute()
+    pixcvec_latvals = ds_PIXCVEC.latitude_vectorproc.compute()
+    pixcvec_lonvals = ds_PIXCVEC.longitude_vectorproc.compute()
+    pixcvec_htvals[pixcvec_htvals > 15000] = np.nan
+    # Remplacer les valeurs de remplissage par des NaN
+    pixcvec_latvals[pixcvec_latvals < 1] = np.nan
+    pixcvec_lonvals[pixcvec_lonvals > -1] = np.nan
+    (_vmin, _vmax) = np.nanpercentile(pixcvec_htvals, [2, 98])
+    (_fig, _ax) = plt.subplots(figsize=(10, 10))
+    _cax = _ax.scatter(pixcvec_lonvals, pixcvec_latvals, c=pixcvec_htvals, s=1, vmin=_vmin, vmax=_vmax, cmap='viridis', rasterized=True)
+    _cbar = _fig.colorbar(_cax, ax=_ax, shrink=0.5)
+    _cbar.set_label('Hauteur ellipsoïdale (m)')
+    cx.add_basemap(_ax, crs='EPSG:4326', source=cx.providers.Esri.WorldStreetMap)
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Produit matriciel `L2_HR_Raster`
+
+    Le produit `Raster` est découpé en scènes et décliné en deux résolutions. Le motif `*100m*_214_037F*` sélectionne la résolution de 100 m, la passe 214 et la scène 037.
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess, xr):
+    raster_results = earthaccess.search_data(
+        short_name='SWOT_L2_HR_Raster_D',
+        granule_name='*100m*_214_037F*')   # résolution (100m ou 250m), passe, scène
+
+    earthaccess.download([raster_results[-1]], "./data_downloads")
+
+    ds_raster = xr.open_mfdataset('data_downloads/SWOT_L2_HR_Raster*', engine='h5netcdf')
+    ds_raster
+    return (ds_raster,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Le produit étant déjà sur une grille régulière, `hvplot` permet un affichage interactif (zoom, survol) en une ligne.
+    """)
+    return
+
+
+@app.cell
+def _(ds_raster, hv):
+    hv.extension('bokeh', 'matplotlib')
+    hv.output(ds_raster['wse'].hvplot.image(y='y', x='x'))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Masquage par l'indicateur de qualité
+
+    L'indicateur `wse_qual` suit la même échelle que `node_q` (0 bon, 1 suspect, 2 dégradé, 3 mauvais). La méthode `where` de `xarray` remplace par `NaN` les pixels qui ne satisfont pas la condition, sans modifier la grille.
+    """)
+    return
+
+
+@app.cell
+def _(ds_raster):
+    masked_variable = ds_raster['wse'].where(ds_raster['wse_qual'] < 3)
+    masked_variable
+    return (masked_variable,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Découpage sur une région d'intérêt
+
+    `rioxarray` ajoute à `xarray` les opérations géospatiales. Il faut d'abord **déclarer** les dimensions spatiales et le système de coordonnées, puis reprojeter l'emprise dans ce même système avant de découper.
+    """)
+    return
+
+
+@app.cell
+def _(box, gpd, mapping, masked_variable, os):
+    ROI = box(-67.28, 45.72, -66.22, 46.20)
+    bbox_gdf = gpd.GeoDataFrame({'geometry': [ROI]}, crs='EPSG:4326')
+
+    masked_variable.rio.set_spatial_dims(x_dim="x", y_dim="y", inplace=True)
+    masked_variable.rio.write_crs("epsg:32619", inplace=True)
+
+    # L'emprise doit être dans le même système que la grille avant le découpage
+    bbox_gdf = bbox_gdf.to_crs("epsg:32619")
+    clipped = masked_variable.rio.clip(bbox_gdf.geometry.apply(mapping), drop=True)
+
+    # L'attribut 'grid_mapping' empêche l'écriture NetCDF : on le retire
+    clipped.attrs.pop('grid_mapping', None)
+
+    os.makedirs('./clip_data', exist_ok=True)
+    clipped.to_netcdf('./clip_data/clipped_raster.nc')
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Séries temporelles avec Hydrocron
+
+    **Hydrocron** est une API du PO.DAAC qui agrège les observations SWOT successives d'un même tronçon, nœud ou lac, et renvoie une série temporelle en CSV ou GeoJSON. C'est de loin le moyen le plus simple d'obtenir un historique sans télécharger un granule par date.
+
+    Les identifiants (`reach_id`, `node_id`, `lake_id`) se lisent dans les produits `RiverSP`/`LakeSP` de la [section @sec-swot-riversp], ou se cherchent dans [SWORD Explorer](https://www.swordexplorer.com/).
+
+    ### Localiser un tronçon de rivière
+    """)
+    return
+
+
+@app.cell
+def _(folium, requests):
+    _feature = 'Reach'
+    _feature_id = '72608300043'
+    start_time = '2023-08-01T00:00:00Z'
+    end_time = '2026-01-21T00:00:00Z'
+    _collection_name = 'SWOT_L2_HR_RiverSP_D'
+    _parameters = 'https://soto.podaac.earthdatacloud.nasa.gov/hydrocron/v1/timeseries?' + 'feature=' + _feature + '&feature_id=' + _feature_id + '&start_time=' + start_time + '&end_time=' + end_time + '&collection_name=' + _collection_name + '&output=geojson' + '&fields=reach_id,time_str,wse,width,cycle_id'
+    _hydrocron_response = requests.get(_parameters).json()
+    geojson_data = _hydrocron_response['results']['geojson']
+    carte = folium.Map(tiles='cartodbpositron', width=700, height=700)
+    folium.GeoJson(geojson_data, name='Tronçon SWOT').add_to(carte)
+    folium.LayerControl().add_to(carte)
+    carte.fit_bounds(carte.get_bounds(), padding=(5, 5))
+    carte
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Série temporelle de niveau d'eau à un nœud
+
+    La sortie `csv` se charge directement dans un `DataFrame`. Deux filtres sont indispensables : écarter les enregistrements `no_data` et retenir les nœuds de qualité acceptable (`node_q < 3`).
+    """)
+    return
+
+
+@app.cell
+def _(StringIO, pd, plt, requests):
+    _feature = 'Node'
+    _feature_id = '72608300050213'  # rivière Saint-Jean, près de Fredericton
+    _collection_name = 'SWOT_L2_HR_RiverSP_D'
+    _parameters = 'https://soto.podaac.earthdatacloud.nasa.gov/hydrocron/v1/timeseries?' + 'feature=' + _feature + '&feature_id=' + _feature_id + '&start_time=2023-08-01T00:00:00Z' + '&end_time=2026-01-21T00:00:00Z' + '&collection_name=' + _collection_name + '&output=csv' + '&fields=reach_id,node_id,time_str,node_q,wse,width,cycle_id'
+    _hydrocron_response = requests.get(_parameters).json()
+    _df = pd.read_csv(StringIO(_hydrocron_response['results']['csv']))
+    _df = _df[_df['time_str'] != 'no_data']
+    _df['time_str'] = pd.to_datetime(_df['time_str'], format='%Y-%m-%dT%H:%M:%SZ')
+    _df = _df[_df['node_q'] < 3]
+    _fig = plt.figure(figsize=(15, 5))
+    plt.plot(_df['time_str'], _df['wse'], marker='o', linestyle='None')
+    plt.ylabel("Élévation de la surface d'eau (m)")
+    plt.xlabel("Date d'observation SWOT")
+    plt.title(f"WSE Hydrocron pour le nœud {_df['node_id'].iloc[0]}")
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Série temporelle pour un lac
+
+    Pour les lacs, on filtre en plus sur `quality_f` (0 = bon) et sur `dark_frac` (moins de 50 % d'eau sombre).
+    """)
+    return
+
+
+@app.cell
+def _(StringIO, pd, plt, requests):
+    _parameters = 'https://soto.podaac.earthdatacloud.nasa.gov/hydrocron/v1/timeseries?' + 'feature=PriorLake' + '&feature_id=7260055912' + '&start_time=2023-08-31T00:00:00Z' + '&end_time=2026-01-21T00:00:00Z' + '&collection_name=SWOT_L2_HR_LakeSP_D' + '&output=csv' + '&fields=lake_id,time_str,wse,area_total,quality_f,dark_frac'
+    _hydrocron_response = requests.get(_parameters).json()
+    _df = pd.read_csv(StringIO(_hydrocron_response['results']['csv']))
+    _df = _df[_df['time_str'] != 'no_data']  # lac Oromocto
+    _df = _df[_df['quality_f'] == 0]
+    _df = _df[_df['dark_frac'] < 0.5]
+    _df['time_str'] = pd.to_datetime(_df['time_str'], format='%Y-%m-%dT%H:%M:%SZ')
+    _fig = plt.figure(figsize=(15, 5))
+    plt.plot(_df['time_str'], _df['wse'], marker='o', linestyle='None')
+    plt.ylabel("Élévation de la surface d'eau (m)")
+    plt.xlabel("Date d'observation SWOT")
+    plt.title(f"WSE Hydrocron pour le lac {_df['lake_id'].iloc[0]}")
+    plt.show()  # ne garder que les observations de bonne qualité  # écarter les scènes majoritairement en eau sombre
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Profil en long de la surface d'eau
+
+    Un **profil en long** trace l'élévation de la surface d'eau en fonction de la distance parcourue le long du cours d'eau. Il se construit en ordonnant les nœuds d'un tronçon par `node_id` et en cumulant l'attribut `p_length` (la longueur associée à chaque nœud dans SWORD).
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess, gpd, pd, zipfile):
+    def download_data(pass_numbers, continent_code, path, temporal_range):
+        """Recherche et télécharge les fichiers Node RiverSP pour une liste de passes."""
+        links_list = []
+        for pass_num in pass_numbers:
+            river_results = earthaccess.search_data(short_name='SWOT_L2_HR_RIVERSP_D', temporal=temporal_range, granule_name=f'*Node*_{pass_num}_{continent_code}*')
+            links_list.extend((earthaccess.results.DataGranule.data_links(r, access='external')[0] for r in river_results))
+        earthaccess.download(links_list, path)
+        return links_list
+
+    def extract_files(links_list, path):
+        """Décompresse les archives téléchargées et renvoie leurs noms."""
+        filenames = [link.split('/')[-1] for link in links_list]
+        for filename in filenames:
+            with zipfile.ZipFile(f'{path}/{filename}', 'r') as _zip_ref:
+                _zip_ref.extractall(path)
+        return filenames
+
+    def load_shapefiles(filenames, path):
+        """Concatène tous les shapefiles en un seul GeoDataFrame."""
+        shps = [filename.replace('zip', 'shp') for filename in filenames]
+        return gpd.GeoDataFrame(pd.concat([gpd.read_file(f'{path}/{shp}') for shp in shps], ignore_index=True))
+
+    return download_data, extract_files, load_shapefiles
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Le filtrage retient les nœuds compris entre le nœud aval et le nœud amont, écarte les valeurs de remplissage et, au besoin, restreint à une date d'acquisition.
+    """)
+    return
+
+
+@app.cell
+def _(np, plt):
+    def filter_data_by_nodes(SWOT_HR_df, up_node, dn_node, date=None):
+        filtered = SWOT_HR_df[(SWOT_HR_df['node_id'] >= dn_node) & (SWOT_HR_df['node_id'] < up_node) & (SWOT_HR_df['wse'] != -999999999999)]
+        if date:
+            filtered = filtered[filtered['time_str'].str.contains(date)]
+        return filtered.sort_values(['node_id'])
+
+    def calculate_distances(profil):
+        """Distance cumulée le long du profil, à partir de la longueur de chaque nœud."""
+        return np.concatenate([[0.0], np.cumsum(profil['p_length'].values[:-1])])
+
+    def plot_profile(profil, dist, label):
+        (_fig, _ax) = plt.subplots(figsize=(15, 5))
+        _ax.plot(dist, profil['wse'], marker='o', linestyle='None', label=_label)
+        _ax.set_xlabel('Distance cumulée (m)')
+        _ax.set_ylabel("Élévation de la surface d'eau (m)")
+        _ax.legend()
+        plt.show()
+
+    return calculate_distances, filter_data_by_nodes, plot_profile
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Il ne reste qu'à renseigner la zone et la période d'intérêt, puis à enchaîner les étapes.
+    """)
+    return
+
+
+@app.cell
+def _(
+    calculate_distances,
+    download_data,
+    extract_files,
+    filter_data_by_nodes,
+    load_shapefiles,
+    os,
+    plot_profile,
+):
+    path = './profil_node'
+    pass_number = ["214"]
+    continent_code = "NA"                # NA pour l'Amérique du Nord
+    temporal_range = ('2025-05-24 00:00:00', '2025-05-27 23:59:59')
+    dn_node = 72608300270021             # nœud aval (rivière Nashwaak)
+    up_node = 72608300280071             # nœud amont
+
+    os.makedirs(path, exist_ok=True)
+    links_list = download_data(pass_number, continent_code, path, temporal_range)
+    filenames = extract_files(links_list, path)
+
+    SWOT_HR_df = load_shapefiles(filenames, path)
+    SWOT_HR_df['node_id'] = SWOT_HR_df['node_id'].astype(float)
+
+    profile_1 = filter_data_by_nodes(SWOT_HR_df, up_node, dn_node, date='2025-05-26')
+    dist_1 = calculate_distances(profile_1)
+    plot_profile(profile_1, dist_1, '26 mai 2025')
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Changement de référentiel vertical avec `csrspy`
+
+    Le référentiel de SWOT n'est pas celui du Canada : comparer une WSE SWOT à un relevé de station exige la chaîne de conversion décrite plus haut. La bibliothèque [`csrspy`](https://github.com/HakaiInstitute/csrspy) encapsule les grilles de transformation de Ressources naturelles Canada. L'exemple ci-dessous convertit vers le référentiel vertical du Nouveau-Brunswick (`NAD83(SCRS)`, époque 2010, géoïde `CGG2013`).
+    """)
+    return
+
+
+@app.cell
+def _():
+    from csrspy.main import CSRSTransformer
+    from csrspy.enums import CoordType, Reference, VerticalDatum
+    from csrspy.utils import sync_missing_grid_files
+
+    return (
+        CSRSTransformer,
+        CoordType,
+        Reference,
+        VerticalDatum,
+        sync_missing_grid_files,
+    )
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    On commence par découper la zone d'intérêt : chaque province pouvant adopter une époque et un référentiel différents, la transformation doit être appliquée province par province.
+    """)
+    return
+
+
+@app.cell
+def _(box, gpd):
+    shapefile_path = 'data_downloads/SWOT_L2_HR_RiverSP_Node_044_214_NA_20260111T003728_20260111T004317_PID0_01.zip'
+    points_gdf = gpd.read_file(shapefile_path)
+    _bounding_box = box(-67.28, 45.72, -66.22, 46.2)
+    gdf_nodes = points_gdf[points_gdf.geometry.within(_bounding_box)].copy()
+    return (gdf_nodes,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    L'époque source est la **date d'acquisition** du granule, exprimée en année décimale.
+    """)
+    return
+
+
+@app.cell
+def _(datetime):
+    def decimal_year(dt):
+        """Convertit une date en année décimale (ex. 2026-01-11 -> 2026.028)."""
+        year_start = datetime(dt.year, 1, 1)
+        year_end = datetime(dt.year + 1, 1, 1)
+        return dt.year + (dt - year_start).total_seconds() / (year_end - year_start).total_seconds()
+
+    acquisition_date = "2026-01-11"   # date d'acquisition du granule à convertir
+    s_epoch = decimal_year(datetime.strptime(acquisition_date, "%Y-%m-%d"))
+    return (s_epoch,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    On repasse ensuite de la WSE à la hauteur ellipsoïdale (`h = wse + geoid_hght`), avant de transformer chaque point.
+    """)
+    return
+
+
+@app.cell
+def _(
+    CSRSTransformer,
+    CoordType,
+    Reference,
+    VerticalDatum,
+    gdf_nodes,
+    os,
+    s_epoch,
+    sync_missing_grid_files,
+    tqdm,
+):
+    sync_missing_grid_files()   # télécharge les grilles de transformation manquantes
+
+    gdf_nodes['h'] = gdf_nodes['wse'] + gdf_nodes['geoid_hght']
+
+    transformer = CSRSTransformer(
+        s_ref_frame=Reference.ITRF14,       # référentiel source : celui de SWOT
+        t_ref_frame=Reference.NAD83CSRS,    # référentiel cible : canadien
+        s_coords=CoordType.GEOG,
+        t_coords=CoordType.GEOG,
+        s_epoch=s_epoch,                    # époque source : date d'acquisition
+        t_epoch=2010,                       # époque cible : Nouveau-Brunswick
+        epoch_shift_grid='ca_nrc_NAD83v70VG.tif',
+        s_vd=VerticalDatum.WGS84,
+        t_vd=VerticalDatum.CGG2013)
+
+    transformed = [
+        list(transformer([(row.lon, row.lat, row.h)]))[0][2]
+        for row in tqdm(gdf_nodes.itertuples(), total=len(gdf_nodes), desc="Transformation")]
+
+    gdf_nodes['wse_transformed'] = transformed
+
+    os.makedirs('./ref_change', exist_ok=True)
+    gdf_nodes.to_file('./ref_change/nodes_transformed.shp')
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Défis et limites
+
+    Le budget d'erreur de SWOT combine des effets de propagation (ionosphère, troposphère), des effets liés à la surface observée et des effets liés à la géométrie de visée.
+
+    **Le chatouillement spéculaire (*specular ringing*).** Une surface d'eau très lisse se comporte comme un miroir : le retour est extrêmement fort à un endroit et provoque des artefacts en anneaux dans l'image radar.
+
+    **L'eau sombre (*dark water*).** Le phénomène inverse : en l'absence de vent et de vagues, la surface dévie le signal loin de l'antenne et **très peu d'énergie revient** au radar. La surface est alors mal classée, voire non détectée. L'eau sombre est plus fréquente aux grandes distances au nadir (`xtrk_dist` supérieur à 40 km) et, en deçà, lorsque les vitesses de vent sont faibles.
+
+    **Le repliement (*layover*).** Un relief ou un ouvrage proche du plan d'eau peut renvoyer un écho à la même distance oblique que la surface d'eau, contaminant la mesure.
+
+    **La géolocalisation.** L'exactitude de la position dépend de la connaissance de l'attitude et de l'orbite du satellite; les points de croisement (*cross-over*) servent à corriger ces dérives.
+
+    **Les bases a priori.** SWORD et le PLD ne sont pas parfaits : polygones de lacs mal délimités (le lac Témiscamingue, par exemple, a dû être corrigé manuellement), tronçons traversant des îles, décalages entre les nœuds SWORD et le lit réel. Comme les produits `RiverSP` et `LakeSP` **agrègent les pixels selon ces bases**, une erreur dans la base se propage directement dans la mesure. Les nœuds associés à des lacs ou à des barrages (`node_id` se terminant par 3 ou 4) présentent une proportion nettement plus élevée de `node_q = 3`.
+
+    **La glace.** La glace de rivière et de lac modifie profondément la réponse radar. C'est à la fois une limite (les mesures hivernales sont à interpréter avec prudence, filtrer avec `ice_clim_f`) et une **occasion** : SWOT permet de suivre l'évolution du couvert de glace à une fréquence inaccessible aux capteurs optiques, souvent bloqués par les nuages.
+
+    **Exercices de révision**
+
+    **Exercice 1.** Un collègue vous transmet un extrait de `RiverSP` dans lequel la colonne `wse` contient des valeurs autour de $-10^{12}$. Que représentent ces valeurs et comment les traiter?
+
+    <details>
+
+    <summary>Correction</summary>
+
+    Il s'agit de la valeur de remplissage `-999999999999`, utilisée lorsque le nœud n'a pas pu être mesuré. Elle doit être écartée par filtrage (`df[df['wse'] != -999999999999]`) et **non** remplacée par zéro ni incluse dans une moyenne.
+
+    </details>
+
+    **Exercice 2.** Vous disposez de la WSE d'un nœud SWOT et vous souhaitez la comparer au relevé d'une station hydrométrique du Nouveau-Brunswick. Énumérez les trois différences de référentiel à réconcilier.
+
+    <details>
+
+    <summary>Correction</summary>
+
+    Le **datum** (ITRF2014 pour SWOT contre NAD83(SCRS) pour la station), l'**époque** (date d'acquisition contre 2010) et le **géoïde** (EGM2008 *mean-tide* contre CGVD2013 *tide-free*).
+
+    </details>
+
+    **Exercice 3.** Vous cherchez à suivre l'évolution du niveau d'un lac sur deux ans. Quel produit et quel type de fichier choisissez-vous, et pourquoi?
+
+    <details>
+
+    <summary>Correction</summary>
+
+    Le produit `L2_HR_LakeSP`, fichier **`Prior`** : les identifiants `lake_id` y sont issus de la base PLD et restent stables d'une date à l'autre, ce qui permet de construire une série temporelle. Les fichiers `Obs` et `Unassigned` utilisent des identifiants d'observation qui changent à chaque passage. En pratique, l'API Hydrocron avec `feature=PriorLake` évite d'avoir à télécharger un granule par date.
+
+    </details>
+
+    **Exercice 4.** Un lac apparaît avec `dark_frac = 0.85`. Faut-il retenir cette observation?
+
+    <details>
+
+    <summary>Correction</summary>
+
+    Non. 85 % de la superficie du lac est classée comme eau sombre : la surface était probablement trop lisse pour renvoyer un signal exploitable, et l'étendue comme l'élévation mesurées sont peu fiables. Un seuil usuel est d'écarter les observations dont `dark_frac` dépasse 0,5.
+
+    </details>
+
+    ## Ressources
+
+    -   Notes techniques de tous les produits SWOT : <https://podaac.jpl.nasa.gov/SWOT?tab=datasets-information&sections=about>
+    -   Earthdata Search : <https://search.earthdata.nasa.gov/search?q=SWOT_L2_HR>
+    -   Le site de la mission (NASA) : <https://swot.jpl.nasa.gov/>
+    -   Visualiseur de fauchée, pour trouver la passe et la date de survol : <https://swot.jpl.nasa.gov/mission/swath-visualizer/>
+    -   Tutoriels du PO.DAAC Cookbook : <https://podaac.github.io/tutorials/quarto_text/SWOT.html>
+    -   Dépôt SWOT-Canada (couches de passes/tuiles, ateliers) : <https://github.com/sfoucher/SWOT-Canada>
+    -   SWORD Explorer, pour trouver un `reach_id` ou un `node_id` : <https://www.swordexplorer.com/>
+
+    Ce chapitre s'appuie sur l'atelier *SWOT and Height Reference* présenté par Mélanie Trudel, Gabriela Siles, Samuel Foucher et Victoria Litalien à la conférence mi-mandat de l'ACRH (CWRA) du 29 janvier 2026, ainsi que sur le tutoriel *SWOT Hydrology Dataset Exploration on a Local Machine* du PO.DAAC (Cassie Nickles et collaborateurs), adapté par les équipes de l'Université de Sherbrooke et de l'Université Laval.
+    """)
+    return
+
+
+if __name__ == "__main__":
+    app.run()

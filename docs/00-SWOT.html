@@ -6,6 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Mélanie Trudel">
+<meta name="author" content="Victoria Litalien">
+<meta name="author" content="Samuel Foucher">
 
 <title>1&nbsp; Hydrologie spatiale avec la mission SWOT – Traitement de la donnée géospatiale avec Python - applications thématiques</title>
 <style>
@@ -283,12 +286,21 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title"><span id="sec-swot" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Hydrologie spatiale avec la mission SWOT</span></span></h1>
+<p class="subtitle lead">Première édition · Version 1.9</p>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Auteurs</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mélanie Trudel </p>
+             <p>Victoria Litalien </p>
+             <p>Samuel Foucher </p>
+          </div>
+  </div>
     
   
     
@@ -350,11 +362,13 @@ window.Quarto = {
 </div>
 <p><strong>Installation</strong></p>
 </div>
-<p>Dans l’environnement Google Colab, les bibliothèques suivantes doivent être installées:</p>
+<div class="bloc_package-body">
+<p>Dans l’environnement Google Colab, les bibliothèques listées ci-dessus doivent être installées avant la première exécution (cellule suivante).</p>
+</div>
+</div>
 <div id="706e7759" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q earthaccess geopandas rioxarray rasterio contextily shapely pyproj</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q h5netcdf holoviews hvplot bokeh geoviews folium tqdm</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </div>
 <p>Vérifier les importations:</p>
 <div id="74fbf142" class="cell" data-execution_count="3">

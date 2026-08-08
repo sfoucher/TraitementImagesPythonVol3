@@ -1,5 +1,9 @@
 ---
 jupyter: python3
+author:
+  - Mélanie Trudel
+  - Victoria Litalien
+  - Samuel Foucher
 from: markdown+emoji
 execute:
   echo: true
@@ -9,6 +13,10 @@ execute:
 ---
 
 # Hydrologie spatiale avec la mission SWOT {#sec-swot}
+
+::: {.content-hidden when-format="html"}
+*Mélanie Trudel, Victoria Litalien, Samuel Foucher*
+:::
 
 ## Préambule
 
@@ -65,14 +73,16 @@ Les bibliothèques utilisées dans ce chapitre sont les suivantes:
 **Installation**
 ::::
 
-Dans l'environnement Google Colab, les bibliothèques suivantes doivent être installées:
+::: bloc_package-body
+Dans l'environnement Google Colab, les bibliothèques listées ci-dessus doivent être installées avant la première exécution (cellule suivante).
+:::
+::::::
 
 ```{python}
 #| eval: false
 !pip install -q earthaccess geopandas rioxarray rasterio contextily shapely pyproj
 !pip install -q h5netcdf holoviews hvplot bokeh geoviews folium tqdm
 ```
-::::::
 
 Vérifier les importations:
 

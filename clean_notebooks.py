@@ -66,16 +66,29 @@ def strip_images(lines):
 KNOWN_TYPES = (
     "bloc_objectif", "bloc_package", "bloc_exercice", "bloc_aller_loin",
     "bloc_attention", "bloc_astuce", "bloc_notes",
+    # Format-conditional divs: their content targets one output format, so it is
+    # meaningless in an exported notebook. Written `::: {.content-hidden ...}`.
+    "content-hidden", "content-visible",
 )
-_FENCE = re.compile(r"^(:{3,})\s*(\S*)\s*$")
+# A fence label is either a bare word (`::: bloc_notes`) or a pandoc attribute
+# block (`::: {.content-hidden when-format="html"}`), which contains spaces.
+_FENCE = re.compile(r"^(:{3,})\s*(\{[^}]*\}|\S*)\s*$")
 
 
 def _fence_info(line):
-    """Return (colon_count, label) for a fence line, or (None, None)."""
+    """Return (colon_count, label) for a fence line, or (None, None).
+
+    An attribute-block label is reduced to its first class, so
+    `{.content-hidden when-format="html"}` reports as `content-hidden`.
+    """
     m = _FENCE.match(line.rstrip("\n"))
     if not m:
         return None, None
-    return len(m.group(1)), m.group(2)
+    label = m.group(2)
+    if label.startswith("{"):
+        classes = re.findall(r"\.([\w-]+)", label)
+        label = classes[0] if classes else "{}"
+    return len(m.group(1)), label
 
 
 def iter_blocs_in_markdown(lines):

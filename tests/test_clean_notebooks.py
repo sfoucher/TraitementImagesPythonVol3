@@ -274,5 +274,40 @@ class TestMainEndToEnd(unittest.TestCase):
             self.assertEqual(txt1, txt2)
 
 
+class TestContentConditionalDivs(unittest.TestCase):
+    """Format-conditional divs are written with a pandoc attribute block, whose
+    spaces the bare-word fence pattern cannot match."""
+
+    def test_attribute_block_label_reduces_to_first_class(self):
+        from clean_notebooks import _fence_info
+        self.assertEqual(
+            _fence_info('::: {.content-hidden when-format="html"}\n'),
+            (3, "content-hidden"),
+        )
+
+    def test_bare_label_still_matches(self):
+        from clean_notebooks import _fence_info
+        self.assertEqual(_fence_info("::: bloc_notes\n"), (3, "bloc_notes"))
+
+    def test_removes_content_hidden_region(self):
+        lines = [
+            "# Titre\n",
+            '::: {.content-hidden when-format="html"}\n',
+            "*Auteur Un, Auteur Deux*\n",
+            ":::\n",
+            "suite\n",
+        ]
+        self.assertEqual(strip_blocs(lines), ["# Titre\n", "suite\n"])
+
+    def test_removes_content_visible_region(self):
+        lines = [
+            '::: {.content-visible when-profile="production"}\n',
+            "pdf only\n",
+            ":::\n",
+            "apres\n",
+        ]
+        self.assertEqual(strip_blocs(lines), ["apres\n"])
+
+
 if __name__ == "__main__":
     unittest.main()
