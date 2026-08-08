@@ -2,6 +2,7 @@
 jupyter: python3
 author:
   - Mélanie Trudel
+  - Gabriela Siles
   - Victoria Litalien
   - Samuel Foucher
 from: markdown+emoji
@@ -15,7 +16,7 @@ execute:
 # Hydrologie spatiale avec la mission SWOT {#sec-swot}
 
 ::: {.content-hidden when-format="html"}
-*Mélanie Trudel, Victoria Litalien, Samuel Foucher*
+*Mélanie Trudel, Gabriela Siles, Victoria Litalien, Samuel Foucher*
 :::
 
 ## Préambule
