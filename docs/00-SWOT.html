@@ -62,7 +62,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -287,7 +307,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title"><span id="sec-swot" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Hydrologie spatiale avec la mission SWOT</span></span></h1>
-<p class="subtitle lead">Première édition · Version 1.15</p>
+<p class="subtitle lead">Première édition · Version 1.16</p>
 </div>
 
 
@@ -556,8 +576,8 @@ Tableau&nbsp;1.2: Les produits SWOT HR
 </div>
 <p>Deux <strong>bases de données a priori</strong> sous-tendent les produits vectoriels :</p>
 <ul>
-<li><strong>SWORD</strong> (<em>SWOT River Database</em>, ou PRD) : le réseau hydrographique mondial découpé en tronçons (lignes) et en nœuds (points) espacés d’environ 200 m. Voir <a href="http://gaia.geosci.unc.edu/SWORD/">SWORD</a> et Altenau <em>et al.</em> (2021), <a href="https://doi.org/10.1029/2021WR030054" class="uri">https://doi.org/10.1029/2021WR030054</a>;</li>
-<li><strong>PLD</strong> (<em>Prior Lake Database</em>) : le masque mondial des lacs sous forme de polygones. Voir <a href="https://hydroweb.next.theia-land.fr/">Hydroweb.next</a> et Wang <em>et al.</em> (2025), <a href="https://doi.org/10.1029/2023WR036896" class="uri">https://doi.org/10.1029/2023WR036896</a>.</li>
+<li><strong>SWORD</strong> (<em>SWOT River Database</em>, ou PRD) : le réseau hydrographique mondial découpé en tronçons (lignes) et en nœuds (points) espacés d’environ 200 m. Voir <a href="http://gaia.geosci.unc.edu/SWORD/">SWORD</a> et <span class="citation" data-cites="altenau2021sword">Altenau et al. (<a href="references.html#ref-altenau2021sword" role="doc-biblioref">2021</a>)</span>;</li>
+<li><strong>PLD</strong> (<em>Prior Lake Database</em>) : le masque mondial des lacs sous forme de polygones. Voir <a href="https://hydroweb.next.theia-land.fr/">Hydroweb.next</a> et <span class="citation" data-cites="wang2025pld">Wang et al. (<a href="references.html#ref-wang2025pld" role="doc-biblioref">2025</a>)</span>.</li>
 </ul>
 <section id="l1b_hr_slc" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="l1b_hr_slc"><span class="header-section-number">1.3.1</span> <code>L1B_HR_SLC</code></h3>
@@ -619,7 +639,7 @@ Tableau&nbsp;1.3: Convention de nommage des attributs SWOT
 </div>
 </figure>
 </div>
-<p>Comme SWOT mesure simultanément la largeur, l’élévation et la pente d’une rivière, il devient possible d’en <strong>estimer le débit</strong> à l’aide de relations hydrauliques. Plusieurs algorithmes coexistent (MetroMan, BAM, HiVDI, MOMMA, SADS, SIC4DVar); voir Durand <em>et al.</em> (2023), <a href="https://doi.org/10.1029/2021WR031614" class="uri">https://doi.org/10.1029/2021WR031614</a>.</p>
+<p>Comme SWOT mesure simultanément la largeur, l’élévation et la pente d’une rivière, il devient possible d’en <strong>estimer le débit</strong> à l’aide de relations hydrauliques. Plusieurs algorithmes coexistent : MetroMan <span class="citation" data-cites="durand2014metroman">(<a href="references.html#ref-durand2014metroman" role="doc-biblioref">Durand et al. 2014</a>)</span>, BAM <span class="citation" data-cites="hagemann2017bam">(<a href="references.html#ref-hagemann2017bam" role="doc-biblioref">Hagemann, Gleason et Durand 2017</a>)</span>, HiVDI <span class="citation" data-cites="garambois2020hivdi">(<a href="references.html#ref-garambois2020hivdi" role="doc-biblioref">Garambois et al. 2020</a>)</span>, MOMMA <span class="citation" data-cites="bjerklie2018momma">(<a href="references.html#ref-bjerklie2018momma" role="doc-biblioref">Bjerklie et al. 2018</a>)</span>, SADS <span class="citation" data-cites="andreadis2020sads">(<a href="references.html#ref-andreadis2020sads" role="doc-biblioref">Andreadis, Brinkerhoff et Gleason 2020</a>)</span> et SIC4DVar <span class="citation" data-cites="oubanas2018sic4dvar">(<a href="references.html#ref-oubanas2018sic4dvar" role="doc-biblioref">Oubanas et al. 2018</a>)</span>. Le cadre général d’estimation du débit à l’échelle globale est décrit par <span class="citation" data-cites="durand2023discharge">Durand et al. (<a href="references.html#ref-durand2023discharge" role="doc-biblioref">2023</a>)</span>, et les facteurs qui contrôlent l’erreur de ces estimations par <span class="citation" data-cites="frasson2021errors">Frasson et al. (<a href="references.html#ref-frasson2021errors" role="doc-biblioref">2021</a>)</span>.</p>
 <div class="bloc_attention">
 <div class="bloc_attention-header">
 <div class="bloc_attention-icon">
@@ -1441,6 +1461,38 @@ Correction
 <p>Ce chapitre s’appuie sur l’atelier <em>SWOT and Height Reference</em> présenté par Mélanie Trudel, Gabriela Siles, Samuel Foucher et Victoria Litalien à la conférence mi-mandat de l’ACRH (CWRA) du 29 janvier 2026, ainsi que sur le tutoriel <em>SWOT Hydrology Dataset Exploration on a Local Machine</em> du PO.DAAC (Cassie Nickles et collaborateurs), adapté par les équipes de l’Université de Sherbrooke et de l’Université Laval.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-altenau2021sword" class="csl-entry" role="listitem">
+Altenau, Elizabeth H., Tamlin M. Pavelsky, Michael T. Durand, Xiao Yang, Renato Prata de Moraes Frasson et Liam Bendezu. 2021. <span>«&nbsp;The Surface Water and Ocean Topography (SWOT) Mission River Database (SWORD): A Global River Network for Satellite Data Products.&nbsp;»</span> <em><span>Water Resources Research</span></em> 57 (7): e2021WR030054. <a href="https://doi.org/10.1029/2021WR030054">https://doi.org/10.1029/2021WR030054</a>.
+</div>
+<div id="ref-andreadis2020sads" class="csl-entry" role="listitem">
+Andreadis, K. M., C. B. Brinkerhoff et C. J. Gleason. 2020. <span>«&nbsp;Constraining the Assimilation of SWOT Observations With Hydraulic Geometry Relations.&nbsp;»</span> <em><span>Water Resources Research</span></em> 56 (5): e2019WR026611. <a href="https://doi.org/10.1029/2019WR026611">https://doi.org/10.1029/2019WR026611</a>.
+</div>
+<div id="ref-bjerklie2018momma" class="csl-entry" role="listitem">
+Bjerklie, David M., Charon M. Birkett, John W. Jones, Claudia Carabajal, Jennifer A. Rover, John W. Fulton et Pierre-André Garambois. 2018. <span>«&nbsp;Satellite remote sensing estimation of river discharge: Application to the Yukon River Alaska.&nbsp;»</span> <em><span class="nocase">Journal of Hydrology</span></em> 561: 1000‑1018. <a href="https://doi.org/10.1016/j.jhydrol.2018.04.005">https://doi.org/10.1016/j.jhydrol.2018.04.005</a>.
+</div>
+<div id="ref-durand2023discharge" class="csl-entry" role="listitem">
+Durand, Michael, Colin J. Gleason, Tamlin M. Pavelsky, Renato Prata de Moraes Frasson, Michael Turmon, Cédric H. David, Elizabeth H. Altenau et al. 2023. <span>«&nbsp;A Framework for Estimating Global River Discharge From the Surface Water and Ocean Topography Satellite Mission.&nbsp;»</span> <em><span>Water Resources Research</span></em> 59 (4): e2021WR031614. <a href="https://doi.org/10.1029/2021WR031614">https://doi.org/10.1029/2021WR031614</a>.
+</div>
+<div id="ref-durand2014metroman" class="csl-entry" role="listitem">
+Durand, Michael, Jeffrey Neal, Ernesto Rodríguez, Konstantinos M. Andreadis, Laurence C. Smith et Yeosang Yoon. 2014. <span>«&nbsp;Estimating reach-averaged discharge for the River Severn from measurements of river water surface elevation and slope.&nbsp;»</span> <em><span class="nocase">Journal of Hydrology</span></em> 511: 92‑104. <a href="https://doi.org/10.1016/j.jhydrol.2013.12.050">https://doi.org/10.1016/j.jhydrol.2013.12.050</a>.
+</div>
+<div id="ref-frasson2021errors" class="csl-entry" role="listitem">
+Frasson, Renato Prata de Moraes, Michael T. Durand, Kevin Larnier, Colin Gleason, Konstantinos M. Andreadis, Mark Hagemann, Robert Dudley, David Bjerklie, Hind Oubanas, Pierre-André Garambois, Pierre-Olivier Malaterre, Peirong Lin, Tamlin M. Pavelsky, Jérôme Monnier, Craig B. Brinkerhoff et Cédric H. David. 2021. <span>«&nbsp;Exploring the Factors Controlling the Error Characteristics of the Surface Water and Ocean Topography Mission Discharge Estimates.&nbsp;»</span> <em><span>Water Resources Research</span></em> 57 (6): e2020WR028519. <a href="https://doi.org/10.1029/2020WR028519">https://doi.org/10.1029/2020WR028519</a>.
+</div>
+<div id="ref-garambois2020hivdi" class="csl-entry" role="listitem">
+Garambois, P.-A., K. Larnier, J. Monnier, P. Finaud-Guyot, J. Verley, A.-S. Montazem et S. Calmant. 2020. <span>«&nbsp;Variational estimation of effective channel and ungauged anabranching river discharge from multi-satellite water heights of different spatial sparsity.&nbsp;»</span> <em><span class="nocase">Journal of Hydrology</span></em> 581: 124409. <a href="https://doi.org/10.1016/j.jhydrol.2019.124409">https://doi.org/10.1016/j.jhydrol.2019.124409</a>.
+</div>
+<div id="ref-hagemann2017bam" class="csl-entry" role="listitem">
+Hagemann, M. W., C. J. Gleason et M. T. Durand. 2017. <span>«&nbsp;BAM: Bayesian AMHG-Manning Inference of Discharge Using Remotely Sensed Stream Width, Slope, and Height.&nbsp;»</span> <em><span>Water Resources Research</span></em> 53 (11): 9692‑9707. <a href="https://doi.org/10.1002/2017WR021626">https://doi.org/10.1002/2017WR021626</a>.
+</div>
+<div id="ref-oubanas2018sic4dvar" class="csl-entry" role="listitem">
+Oubanas, H., I. Gejadze, P.-O. Malaterre, M. Durand, R. Wei, R. P. M. Frasson et A. Domeneghetti. 2018. <span>«&nbsp;Discharge Estimation in Ungauged Basins Through Variational Data Assimilation: The Potential of the SWOT Mission.&nbsp;»</span> <em><span>Water Resources Research</span></em> 54 (3): 2405‑2423. <a href="https://doi.org/10.1002/2017WR021735">https://doi.org/10.1002/2017WR021735</a>.
+</div>
+<div id="ref-wang2025pld" class="csl-entry" role="listitem">
+Wang, Jida, Claire Pottier, Cécile Cazals, Marjorie Battude, Yongwei Sheng, Chunqiao Song, Md Safat Sikder, Xiao Yang, Linghong Ke, Manon Delhoume, Marielle Gosset, Rafael Reis Alencar Oliveira, Manuela Grippa, Félix Girard, George H. Allen, Xiangtao Xu, Xiaolin Zhu, Sylvain Biancamaria, Laurence C. Smith, Jean-François Crétaux et Tamlin M. Pavelsky. 2025. <span>«&nbsp;The Surface Water and Ocean Topography Mission (SWOT) Prior Lake Database (PLD): Lake Mask and Operational Auxiliaries.&nbsp;»</span> <em><span>Water Resources Research</span></em> 61 (3): e2023WR036896. <a href="https://doi.org/10.1029/2023WR036896">https://doi.org/10.1029/2023WR036896</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

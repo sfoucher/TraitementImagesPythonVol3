@@ -183,8 +183,8 @@ Les produits SWOT HR se répartissent sur un continuum allant des produits **exp
 
 Deux **bases de données a priori** sous-tendent les produits vectoriels :
 
--   **SWORD** (*SWOT River Database*, ou PRD) : le réseau hydrographique mondial découpé en tronçons (lignes) et en nœuds (points) espacés d'environ 200 m. Voir [SWORD](http://gaia.geosci.unc.edu/SWORD/) et Altenau *et al.* (2021), <https://doi.org/10.1029/2021WR030054>;
--   **PLD** (*Prior Lake Database*) : le masque mondial des lacs sous forme de polygones. Voir [Hydroweb.next](https://hydroweb.next.theia-land.fr/) et Wang *et al.* (2025), <https://doi.org/10.1029/2023WR036896>.
+-   **SWORD** (*SWOT River Database*, ou PRD) : le réseau hydrographique mondial découpé en tronçons (lignes) et en nœuds (points) espacés d'environ 200 m. Voir [SWORD](http://gaia.geosci.unc.edu/SWORD/) et @altenau2021sword;
+-   **PLD** (*Prior Lake Database*) : le masque mondial des lacs sous forme de polygones. Voir [Hydroweb.next](https://hydroweb.next.theia-land.fr/) et @wang2025pld.
 
 ### `L1B_HR_SLC`
 
@@ -217,7 +217,7 @@ Les suffixes et préfixes des attributs suivent une convention systématique :
 
 : Convention de nommage des attributs SWOT {#tbl-swot-suffixes}
 
-Comme SWOT mesure simultanément la largeur, l'élévation et la pente d'une rivière, il devient possible d'en **estimer le débit** à l'aide de relations hydrauliques. Plusieurs algorithmes coexistent (MetroMan, BAM, HiVDI, MOMMA, SADS, SIC4DVar); voir Durand *et al.* (2023), <https://doi.org/10.1029/2021WR031614>.
+Comme SWOT mesure simultanément la largeur, l'élévation et la pente d'une rivière, il devient possible d'en **estimer le débit** à l'aide de relations hydrauliques. Plusieurs algorithmes coexistent : MetroMan [@durand2014metroman], BAM [@hagemann2017bam], HiVDI [@garambois2020hivdi], MOMMA [@bjerklie2018momma], SADS [@andreadis2020sads] et SIC4DVar [@oubanas2018sic4dvar]. Le cadre général d'estimation du débit à l'échelle globale est décrit par @durand2023discharge, et les facteurs qui contrôlent l'erreur de ces estimations par @frasson2021errors.
 
 :::::: bloc_attention
 :::: bloc_attention-header
