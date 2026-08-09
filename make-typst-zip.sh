@@ -9,7 +9,7 @@
 set -euo pipefail
 
 QUARTO_VERSION="${QUARTO_VERSION:-1.9.38}"
-IMAGE="${IMAGE:-mlsysbook-linux:quarto-${QUARTO_VERSION}}"
+IMAGE="${IMAGE:-tipvol3:quarto-${QUARTO_VERSION}}"
 ZIP="typst-out/book-typst-src.zip"
 
 q() { docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD":/workspace "$IMAGE" "$@"; }

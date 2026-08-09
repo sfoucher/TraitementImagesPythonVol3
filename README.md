@@ -24,7 +24,7 @@ Ce guide couvre l'édition des fichiers `.qmd` : installation de VS Code, WSL, g
 ### Prérequis
 
 * [Docker](https://docs.docker.com/get-docker/) installé et démarré.
-* L'image de construction `mlsysbook-linux:quarto-1.9.38` (voir ci-dessous pour la bâtir).
+* L'image de construction `tipvol3:quarto-1.9.38` (voir ci-dessous pour la bâtir).
 
 ### 1. Construire l'image Docker
 
@@ -34,18 +34,18 @@ Nécessaire au premier usage, ou après modification des dépendances
 
 ```bash
 docker build --build-arg QUARTO_VERSION=1.9.38 \
-  -t mlsysbook-linux:quarto-1.9.38 -f docker/linux/Dockerfile .
+  -t tipvol3:quarto-1.9.38 -f docker/linux/Dockerfile .
 ```
 
 L'étiquette de l'image encode la version de Quarto. L'image contient Quarto,
 Python (dont `rasterio`, `geopandas`, `earthaccess`…), R et TeX Live. La
 construction est longue (~20 min, image ~11 Go).
 
-> **L'étiquette est partagée avec le volume 1.** Les deux dépôts ont leur propre
-> `docker/dependencies/requirements.txt` mais aboutissent à la même étiquette.
-> Reconstruire depuis le volume 3 après avoir élagué les dépendances du volume 1
-> casse silencieusement les constructions du volume 1 sur la même machine.
-> Utilisez alors une étiquette distincte : `IMAGE=vol3-book:quarto-1.9.38 ./process.sh`.
+> **Le nom de l'image est propre au volume 3** (`tipvol3`), afin qu'une
+> reconstruction ici n'écrase jamais l'image du volume 1
+> (`mlsysbook-linux:quarto-*`). Les deux dépôts partagent le même Dockerfile
+> mais pas la même liste de dépendances : `docker/dependencies/requirements.txt`
+> a été réduit à ce que le volume 3 utilise réellement.
 
 ### 2. Générer tout le livre (recommandé)
 
@@ -76,14 +76,14 @@ appartiennent à votre compte et non à `root`.
 
 ```bash
 docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD":/workspace \
-  mlsysbook-linux:quarto-1.9.38 quarto render --to html --output-dir ./docs
+  tipvol3:quarto-1.9.38 quarto render --to html --output-dir ./docs
 ```
 
 **PDF** (nécessite le profil `production`, où le format `pdf` est défini) :
 
 ```bash
 docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD":/workspace \
-  mlsysbook-linux:quarto-1.9.38 quarto render --profile production --to pdf --output-dir ./pdf
+  tipvol3:quarto-1.9.38 quarto render --profile production --to pdf --output-dir ./pdf
 ```
 
 **Aperçu interactif** (rechargement automatique, sur <http://localhost:3508>) :
@@ -91,7 +91,7 @@ docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD":/workspace \
 ```bash
 docker run --rm --network=host -p 3508:3508 --user "$(id -u):$(id -g)" \
   -e HOME=/tmp -v "$PWD":/workspace \
-  mlsysbook-linux:quarto-1.9.38 quarto preview --port 3508 --host 0.0.0.0
+  tipvol3:quarto-1.9.38 quarto preview --port 3508 --host 0.0.0.0
 ```
 
 ## Publication
@@ -121,7 +121,7 @@ Il n'y a ni branche `gh-pages`, ni workflow de publication.
   sortie mise en cache. Supprimez le cache pour forcer une ré-exécution.
 * **Ajouter une dépendance Python** sans reconstruire toute l'image (~20 min) :
   patch en couche —
-  `docker build -t mlsysbook-linux:quarto-1.9.38 - <<< $'FROM mlsysbook-linux:quarto-1.9.38\nRUN pip install <paquet>'`.
+  `docker build -t tipvol3:quarto-1.9.38 - <<< $'FROM tipvol3:quarto-1.9.38\nRUN pip install <paquet>'`.
   L'image diverge alors du Dockerfile jusqu'à une reconstruction propre.
 * **Tests.** Les outils en Python pur se testent sur l'hôte, sans dépendances :
   `python3 -m unittest tests.test_clean_notebooks tests.test_make_exercices`.

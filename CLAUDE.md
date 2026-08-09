@@ -12,8 +12,8 @@ Authors: Samuel Foucher, Mélanie Trudel, Victoria Litalien.
 
 ## Build toolchain
 
-- **Quarto runs in docker, not on host.** Image: `mlsysbook-linux:quarto-1.9.38` (the tag encodes the Quarto version; built from `docker/linux/Dockerfile` with `--build-arg QUARTO_VERSION`). Host quarto (`/opt/quarto`) is a different env — use the container for reproducible builds.
-- Run pattern (from repo root): `docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD":/workspace mlsysbook-linux:quarto-1.9.38 quarto <args>` (repo mounts at `/workspace`). Add `--network=host -p 3508:3508` for `quarto preview`. Full form: `q quarto preview --port N --host 0.0.0.0 --no-browser`. Stopping it leaves a `.quarto/preview` lock + a lingering container → next preview fails "Terminating existing preview server" (exit 1); clear with `rm -rf .quarto/preview` and `docker stop` the orphan (`docker ps --filter ancestor=mlsysbook-linux:quarto-1.9.38`).
+- **Quarto runs in docker, not on host.** Image: `tipvol3:quarto-1.9.38` (the tag encodes the Quarto version; built from `docker/linux/Dockerfile` with `--build-arg QUARTO_VERSION`). Host quarto (`/opt/quarto`) is a different env — use the container for reproducible builds.
+- Run pattern (from repo root): `docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD":/workspace tipvol3:quarto-1.9.38 quarto <args>` (repo mounts at `/workspace`). Add `--network=host -p 3508:3508` for `quarto preview`. Full form: `q quarto preview --port N --host 0.0.0.0 --no-browser`. Stopping it leaves a `.quarto/preview` lock + a lingering container → next preview fails "Terminating existing preview server" (exit 1); clear with `rm -rf .quarto/preview` and `docker stop` the orphan (`docker ps --filter ancestor=tipvol3:quarto-1.9.38`).
 - `--user "$(id -u):$(id -g)" -e HOME=/tmp` makes generated files (`docs/`, `pdf/`) host-owned, so host-side ops on them (e.g. `cp -f pdf/*.pdf docs/`) work normally. `HOME=/tmp` is required alongside it — the image `HOME` is `/root`, unwritable for a non-root uid, and quarto/jupyter/matplotlib need a writable config dir. Without `--user` the outputs come back root-owned and host-side steps hit EACCES.
 - `process.sh` — full build+export script (HTML + PDF + typst, chapter→ipynb/marimo export). Set `-euo pipefail`; all quarto/marimo calls wrapped in a `q()` docker helper.
 - Piping a script into the container needs `-i`: `docker run --rm -i … python3 - <<'PY'`. Without `-i`, stdin isn't forwarded → `python3 -` runs an empty script and exits 0 silently.
@@ -43,14 +43,15 @@ GitHub Pages serves the book from **branch `main`, path `/docs`** at <https://sf
 
 ## Deps
 
-- Python: `docker/dependencies/requirements.txt` (the source of truth for the image). R: `docker/dependencies/install_packages.R`. TeX: `docker/dependencies/tl_packages`. Changing these needs an image rebuild: `docker build --build-arg QUARTO_VERSION=1.9.38 -t mlsysbook-linux:quarto-1.9.38 -f docker/linux/Dockerfile .`
+- Python: `docker/dependencies/requirements.txt` (the source of truth for the image). R: `docker/dependencies/install_packages.R`. TeX: `docker/dependencies/tl_packages`. Changing these needs an image rebuild: `docker build --build-arg QUARTO_VERSION=1.9.38 -t tipvol3:quarto-1.9.38 -f docker/linux/Dockerfile .`
 - Root `requirements.txt` is the **reader-facing** list (referenced by `jupyter_env.yaml`), not the image's. `requirements.yaml` is a separate conda env (`atelier`) and still carries volume 1 packages — unused by the build.
 - Quarto version is a build arg (`ARG QUARTO_VERSION`, default 1.7.31). process.sh derives `IMAGE` from `QUARTO_VERSION` (default 1.9.38, env-overridable: `QUARTO_VERSION=1.10.x ./process.sh`).
-- **The image tag is shared with volume 1.** Both repos have their own `docker/dependencies/requirements.txt` but both resolve to `mlsysbook-linux:quarto-1.9.38`. Rebuilding from volume 3 with volume 1 deps pruned silently breaks volume 1 builds on the same machine. `IMAGE` is env-overridable — use a distinct tag (`IMAGE=vol3-book:quarto-1.9.38`) when volume 3 diverges for real.
-- Fast dep-add without full ~20min rebuild: layer-patch — `docker build -t mlsysbook-linux:quarto-1.9.38 - <<EOF` / `FROM mlsysbook-linux:quarto-1.9.38` / `RUN pip install <pkg>` / `EOF`. Caveat: image then diverges from Dockerfile until a clean rebuild.
-- The image still carries volume 1 deps that no volume 3 chapter uses (`torch`, `supertree`, `spyndex`, `geemap`, `xrscipy`, `numba`, `opencv`, `seaborn`, `gdown`). Pruning shrinks the image but costs a clean rebuild.
-- `torch` must be CPU wheel: `pip install torch==2.4.0+cpu --index-url https://download.pytorch.org/whl/cpu` (avoids ~2GB CUDA wheel).
+- **The image name is volume-specific** (`tipvol3`), so a rebuild here cannot clobber volume 1's `mlsysbook-linux:quarto-*`. Keep it that way: the two repos share a Dockerfile lineage but not a dependency list.
+- Fast dep-add without full ~20min rebuild: layer-patch — `docker build -t tipvol3:quarto-1.9.38 - <<EOF` / `FROM tipvol3:quarto-1.9.38` / `RUN pip install <pkg>` / `EOF`. Caveat: image then diverges from Dockerfile until a clean rebuild.
+- `requirements.txt` was pruned to what volume 3 actually imports. Gone: volume 1's ML/imagery stack (`torch`, `scikit-learn`, `scikit-image`, `scipy`, `opencv`, `seaborn`, `numba`, `spyndex`, `supertree`, `xrscipy`, `leafmap`, `mapclassify`, `localtileserver`, `gdown`) and the upstream MLSysBook tooling (`gradio`, `openai`, `groq`, `ollama`, `nltk`, `betterbib`, `black`, `pre-commit`, …). The file's trailing comment records why, so the list does not creep back.
+- R, Inkscape and TeX Live are **kept as-is** by decision. Note that `code-link: true` currently yields **zero** links (downlit only handles R code; this book is Python), so R earns its place only if an R chunk or a working code-link appears later — measure before assuming otherwise.
 - `marimo` is in the image; chapter→marimo `.py` export active in process.sh.
+- `download_data.py` fetches volume 1 data files (`sentinel2.tif`, `berkeley.jpg`, …) and is dead here; its only dep, `gdown`, was dropped.
 
 ## Chapter conventions
 

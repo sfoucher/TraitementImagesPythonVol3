@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Build book (HTML + LaTeX PDF + Typst PDF + revealjs slides) in the mlsysbook docker container, export notebooks.
+# Build book (HTML + LaTeX PDF + Typst PDF) in the volume 3 docker container, export notebooks.
 set -euo pipefail
 
-# Image tag encodes the Quarto version. Override: QUARTO_VERSION=1.10.x ./process.sh
-# (or set IMAGE directly). Build it: docker build --build-arg QUARTO_VERSION=$QUARTO_VERSION -t $IMAGE -f docker/linux/Dockerfile .
+# Image name is volume-specific so a rebuild here never clobbers volume 1's
+# image; the tag encodes the Quarto version. Override: QUARTO_VERSION=1.10.x
+# ./process.sh (or set IMAGE directly). Build it:
+#   docker build --build-arg QUARTO_VERSION=$QUARTO_VERSION -t $IMAGE -f docker/linux/Dockerfile .
 QUARTO_VERSION="${QUARTO_VERSION:-1.9.38}"
-IMAGE="${IMAGE:-mlsysbook-linux:quarto-${QUARTO_VERSION}}"
+IMAGE="${IMAGE:-tipvol3:quarto-${QUARTO_VERSION}}"
 # Quarto derives the PDF filename from the book title, so glob it after render
 # instead of hard-coding (see step 2).
 
