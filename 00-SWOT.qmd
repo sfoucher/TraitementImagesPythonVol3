@@ -81,7 +81,7 @@ Dans l'environnement Google Colab, les bibliothèques listées ci-dessus doivent
 
 ```{python}
 #| eval: false
-!pip install -q earthaccess geopandas rioxarray rasterio contextily shapely pyproj
+!pip install -q earthaccess geopandas rioxarray rasterio contextily shapely pyproj python-dotenv
 !pip install -q h5netcdf holoviews hvplot bokeh geoviews folium tqdm
 ```
 
@@ -308,8 +308,35 @@ Dans la suite, nous privilégions l'accès programmatique avec `earthaccess`, qu
 
 Un compte **Earthdata Login** est nécessaire pour accéder aux données de la NASA. La création du compte est gratuite : <https://urs.earthdata.nasa.gov>. La bibliothèque `earthaccess` gère l'authentification et le renouvellement des jetons.
 
+La meilleure pratique consiste à stocker le jeton dans un fichier `.env` à la racine du projet, puis à le charger avec `python-dotenv`. Le code suivant crée le fichier `.env` et y écrit votre jeton. Remplacez `'votre_token_ici'` par votre jeton personnel.
+
 ```{python}
-auth = earthaccess.login()
+%%writefile .env
+EARTHDATA_TOKEN='votre_token_ici'
+```
+
+Le fichier est ensuite chargé et le jeton est utilisé pour se connecter à Earthdata. Si le jeton n'est pas défini ou est laissé à la valeur par défaut, le code retombe sur la méthode de connexion originale, qui peut demander vos identifiants.
+
+```{python}
+from dotenv import dotenv_values, load_dotenv
+import os
+
+# Load the .env file
+load_dotenv()
+
+# Retrieve the token from environment variables
+token = os.getenv('EARTHDATA_TOKEN')
+
+if token and token != 'votre_token_ici':
+    print("Token loaded from .env file successfully!")
+    # Now you can use this token to log in
+    auth = earthaccess.login(strategy='token')
+    print("Successfully logged in to Earthdata using token from .env file!")
+else:
+    print("Please replace 'votre_token_ici' in the .env file with your actual Earthdata token.")
+    print("Falling back to original login attempt (which might prompt for credentials or use existing env var if set).")
+    # Fallback to the original login method if the .env token is not set or is placeholder
+    auth = earthaccess.login()
 ```
 
 ## Produit rivières `L2_HR_RiverSP` {#sec-swot-riversp}

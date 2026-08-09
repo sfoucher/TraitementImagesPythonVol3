@@ -43,3 +43,6 @@ __pycache__/
 _quarto_internal_scss_error.scss
 get-pip.py
 scratchpad-*.log
+
+# Earthdata credentials written by the .env cell in 00-SWOT.qmd — never commit
+.env

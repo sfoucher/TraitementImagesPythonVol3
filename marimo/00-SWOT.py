@@ -1,5 +1,5 @@
 # /// script
-# dependencies = ["bokeh", "contextily", "earthaccess", "folium", "geopandas", "geoviews", "h5netcdf", "holoviews", "hvplot", "pyproj", "rasterio", "rioxarray", "shapely", "tqdm"]
+# dependencies = ["bokeh", "contextily", "earthaccess", "folium", "geopandas", "geoviews", "h5netcdf", "holoviews", "hvplot", "pyproj", "python-dotenv", "rasterio", "rioxarray", "shapely", "tqdm"]
 # ///
 
 import marimo
@@ -49,7 +49,7 @@ def _(mo):
 
 @app.cell
 def _():
-    # packages added via marimo's package management: earthaccess geopandas rioxarray rasterio contextily shapely pyproj !pip install -q earthaccess geopandas rioxarray rasterio contextily shapely pyproj
+    # packages added via marimo's package management: earthaccess geopandas rioxarray rasterio contextily shapely pyproj python-dotenv !pip install -q earthaccess geopandas rioxarray rasterio contextily shapely pyproj python-dotenv
     # packages added via marimo's package management: h5netcdf holoviews hvplot bokeh geoviews folium tqdm !pip install -q h5netcdf holoviews hvplot bokeh geoviews folium tqdm
     return
 
@@ -255,13 +255,43 @@ def _(mo):
     ### Authentification Earthdata
 
     Un compte **Earthdata Login** est nécessaire pour accéder aux données de la NASA. La création du compte est gratuite : <https://urs.earthdata.nasa.gov>. La bibliothèque `earthaccess` gère l'authentification et le renouvellement des jetons.
+
+    La meilleure pratique consiste à stocker le jeton dans un fichier `.env` à la racine du projet, puis à le charger avec `python-dotenv`. Le code suivant crée le fichier `.env` et y écrit votre jeton. Remplacez `'votre_token_ici'` par votre jeton personnel.
     """)
     return
 
 
 @app.cell
-def _(earthaccess):
-    auth = earthaccess.login()
+def _():
+    # magic command not supported in marimo; please file an issue to add support
+    # %%writefile .env
+    # EARTHDATA_TOKEN='votre_token_ici'
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Le fichier est ensuite chargé et le jeton est utilisé pour se connecter à Earthdata. Si le jeton n'est pas défini ou est laissé à la valeur par défaut, le code retombe sur la méthode de connexion originale, qui peut demander vos identifiants.
+    """)
+    return
+
+
+@app.cell
+def _(earthaccess, os):
+    from dotenv import dotenv_values, load_dotenv
+    load_dotenv()
+    token = os.getenv('EARTHDATA_TOKEN')
+    # Load the .env file
+    if token and token != 'votre_token_ici':
+        print('Token loaded from .env file successfully!')
+    # Retrieve the token from environment variables
+        auth = earthaccess.login(strategy='token')
+        print('Successfully logged in to Earthdata using token from .env file!')
+    else:
+        print("Please replace 'votre_token_ici' in the .env file with your actual Earthdata token.")
+        print('Falling back to original login attempt (which might prompt for credentials or use existing env var if set).')  # Now you can use this token to log in
+        auth = earthaccess.login()  # Fallback to the original login method if the .env token is not set or is placeholder
     return
 
 
