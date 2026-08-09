@@ -309,5 +309,37 @@ class TestContentConditionalDivs(unittest.TestCase):
         self.assertEqual(strip_blocs(lines), ["apres\n"])
 
 
+class TestQuizzCell(unittest.TestCase):
+    """The quiz cell needs code_complementaire/ and quiz/*.yml, which a reader
+    downloading the notebook does not have."""
+
+    def test_detects_import_form(self):
+        from clean_notebooks import is_quizz_cell
+        self.assertTrue(is_quizz_cell(
+            ["from code_complementaire.quizz_functions import Quiz, render_quizz\n"]))
+
+    def test_detects_call_form(self):
+        from clean_notebooks import is_quizz_cell
+        self.assertTrue(is_quizz_cell(["render_quizz(ChapSWOTQuiz)\n"]))
+
+    def test_ignores_ordinary_code(self):
+        from clean_notebooks import is_quizz_cell
+        self.assertFalse(is_quizz_cell(["import numpy as np\n", "np.arange(3)\n"]))
+
+    def test_clean_notebook_drops_the_cell(self):
+        from clean_notebooks import clean_notebook
+        nb = {"cells": [
+            {"cell_type": "markdown", "source": ["# Titre\n"]},
+            {"cell_type": "code", "source": [
+                "from code_complementaire.quizz_functions import Quiz, render_quizz\n",
+                'Q = Quiz("quiz/ChapSWOT.yml", "ChapSWOT")\n',
+                "render_quizz(Q)\n"]},
+            {"cell_type": "code", "source": ["import numpy as np\n"]},
+        ]}
+        out = clean_notebook(nb)["cells"]
+        self.assertEqual(len(out), 2)
+        self.assertNotIn("quizz_functions", "".join(out[1]["source"]))
+
+
 if __name__ == "__main__":
     unittest.main()

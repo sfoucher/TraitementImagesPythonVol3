@@ -143,6 +143,17 @@ def strip_blocs(lines):
     return out
 
 
+# The chapter quiz is an HTML-only widget built from code_complementaire/ and
+# quiz/*.yml, neither of which a reader who downloads the notebook has. Left in,
+# the cell fails with ModuleNotFoundError on "run all".
+_QUIZZ = re.compile(r"\bquizz_functions\b|\brender_quizz\b")
+
+
+def is_quizz_cell(source):
+    """True if a code cell only exists to render the chapter quiz."""
+    return bool(_QUIZZ.search("".join(source)))
+
+
 def clean_notebook(nb):
     """Return a cleaned copy of an nbformat notebook dict."""
     cells = nb.get("cells", [])
@@ -165,6 +176,8 @@ def clean_notebook(nb):
                 continue          # drop empty markdown cell
             cell = dict(cell, source=src)
         elif cell["cell_type"] == "code":
+            if is_quizz_cell(cell["source"]):
+                continue          # drop the chapter quiz cell
             src = strip_cell_directives(cell["source"])
             if "".join(src).strip() == "":
                 continue          # drop empty code cell
