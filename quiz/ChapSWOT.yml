@@ -1,0 +1,115 @@
+- label: "Quel est l'instrument principal de la mission SWOT ?"
+  type: uc
+  response: 3
+  answers:
+     - "Un altimètre radar à visée nadir classique"
+     - "Un spectromètre imageur en bande Ka"
+     - "KaRIn, un interféromètre radar en bande Ka"
+     - "Un lidar bathymétrique"
+  help: "Relisez au besoin la section « La mission SWOT »."
+
+- label: "Dans les produits SWOT, à quoi se réfère l'attribut `wse` ?"
+  type: uc
+  response: 2
+  answers:
+     - "À l'ellipsoïde : c'est une hauteur ellipsoïdale"
+     - "Au géoïde : c'est une hauteur orthométrique"
+     - "Au niveau moyen de la station hydrométrique la plus proche"
+     - "Au fond du lit de la rivière"
+  help: "Retenez la règle : « height » signifie ellipsoïde, « WSE » signifie géoïde. Voir la section « Systèmes de référence verticaux »."
+
+- label: "Quelle est la période de répétitivité de l'orbite Science de SWOT ?"
+  type: uc
+  response: 3
+  answers:
+     - "1 jour"
+     - "10 jours"
+     - "21 jours"
+     - "35 jours"
+  help: "Relisez au besoin la section « La mission SWOT »."
+
+- label: "Un nœud porte l'indicateur `node_q = 3`. Que signifie cette valeur ?"
+  type: uc
+  response: 4
+  answers:
+     - "Bonne qualité"
+     - "Qualité suspecte"
+     - "Qualité dégradée"
+     - "Mauvaise qualité : la mesure peut être aberrante et devrait être ignorée"
+  help: "Voir le tableau d'interprétation de `node_q` dans la section sur le produit rivières."
+
+- label: "Vous voulez suivre l'évolution du niveau d'un lac sur deux ans. Quel fichier du produit `L2_HR_LakeSP` choisissez-vous ?"
+  type: uc
+  response: 2
+  answers:
+     - "Obs, car il contient les entités réellement observées"
+     - "Prior, car les identifiants `lake_id` y sont stables dans le temps"
+     - "Unassigned, car il contient les entités non rattachées"
+     - "N'importe lequel : les trois contiennent les mêmes identifiants"
+  help: "Relisez au besoin la section « Produit lacs »."
+
+- label: "Que représente la valeur `-999999999999` dans la colonne `wse` d'un fichier RiverSP ?"
+  type: uc
+  response: 3
+  answers:
+     - "Une élévation située sous le niveau de la mer"
+     - "Une erreur de conversion d'unités"
+     - "Une valeur de remplissage : le nœud n'a pas pu être mesuré"
+     - "Un nœud situé hors de la fauchée"
+  help: "Ces valeurs doivent être écartées par filtrage, et non remplacées par zéro."
+
+- label: "Qu'est-ce que l'« eau sombre » (*dark water*) et pourquoi pose-t-elle problème ?"
+  type: uc
+  response: 1
+  answers:
+     - "Une surface trop lisse qui dévie le signal radar loin de l'antenne, si bien que l'eau est mal classée voire non détectée"
+     - "Une eau chargée en sédiments qui absorbe le signal radar"
+     - "Une zone d'ombre créée par le relief environnant"
+     - "Une surface gelée qui réfléchit trop fortement le signal"
+  help: "Voir la section « Défis et limites » et l'attribut `dark_frac`."
+
+- label: "Lequel de ces produits SWOT HR est fourni sur une grille régulière en deux dimensions ?"
+  type: uc
+  response: 4
+  answers:
+     - "L2_HR_RiverSP"
+     - "L2_HR_PIXC"
+     - "L1B_HR_SLC"
+     - "L2_HR_Raster"
+  help: "Relisez au besoin le tableau des produits SWOT HR."
+
+- label: "À quoi sert l'API Hydrocron ?"
+  type: uc
+  response: 2
+  answers:
+     - "À convertir les référentiels verticaux canadiens"
+     - "À obtenir une série temporelle pour un tronçon, un nœud ou un lac sans télécharger un granule par date"
+     - "À rechercher les granules disponibles dans le catalogue Earthdata"
+     - "À corriger la géolocalisation des pixels du produit PIXC"
+  help: "Relisez au besoin la section « Séries temporelles avec Hydrocron »."
+
+- label: "Parmi les éléments suivants, lesquels contribuent au budget d'erreur de SWOT ?"
+  type: mc
+  response:
+     - 1
+     - 2
+     - 4
+  answers:
+     - "L'eau sombre (*dark water*)"
+     - "Le repliement (*layover*) dû au relief ou aux ouvrages"
+     - "La couverture nuageuse au moment de l'acquisition"
+     - "Les erreurs des bases de données a priori (SWORD, PLD)"
+  help: "SWOT est un capteur radar : les nuages ne l'affectent pas. Voir la section « Défis et limites »."
+
+- label: "Pour comparer une WSE SWOT à un relevé de station hydrométrique canadienne, quelles différences faut-il réconcilier ?"
+  type: mc
+  response:
+     - 1
+     - 2
+     - 3
+  answers:
+     - "Le datum (ITRF2014 contre NAD83(SCRS))"
+     - "L'époque (date d'acquisition contre époque de la station)"
+     - "Le géoïde (EGM2008 contre CGVD2013)"
+     - "La projection cartographique (UTM contre Lambert conforme)"
+  help: "Voir le tableau des différences de référentiel dans la section « Systèmes de référence verticaux »."

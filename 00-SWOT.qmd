@@ -1043,6 +1043,21 @@ Non. 85 % de la superficie du lac est classée comme eau sombre : la surface ét
 :::
 ::::::
 
+## Quiz
+
+::: {.content-visible when-profile="production"}
+Utilisez la version html.
+:::
+
+```{python .content-visible when-format="html"}
+#| echo: false
+#| eval: true
+#| results: asis
+from code_complementaire.quizz_functions import Quiz, render_quizz
+ChapSWOTQuiz = Quiz("quiz/ChapSWOT.yml", "ChapSWOT")
+render_quizz(ChapSWOTQuiz)
+```
+
 ## Ressources
 
 -   Notes techniques de tous les produits SWOT : <https://podaac.jpl.nasa.gov/SWOT?tab=datasets-information&sections=about>

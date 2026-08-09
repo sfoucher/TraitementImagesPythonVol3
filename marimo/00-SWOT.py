@@ -1088,6 +1088,22 @@ def _(mo):
 
     </details>
 
+    ## Quiz
+    """)
+    return
+
+
+@app.cell
+def _():
+    from code_complementaire.quizz_functions import Quiz, render_quizz
+    ChapSWOTQuiz = Quiz("quiz/ChapSWOT.yml", "ChapSWOT")
+    render_quizz(ChapSWOTQuiz)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ## Ressources
 
     -   Notes techniques de tous les produits SWOT : <https://podaac.jpl.nasa.gov/SWOT?tab=datasets-information&sections=about>
